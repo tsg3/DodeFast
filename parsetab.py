@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftPLUSMINUSleftMULTIPLYDIVIDEASSIGN DCL DIVIDE EQUALS IDEN INT MINUS MULTIPLY PLUS\n    parse : expression\n          | var_declare\n          | var_assign\n          | empty\n    \n    var_declare : DCL IDEN value\n    \n    value : initialize\n          | empty\n    \n    initialize : ASSIGN expression\n    \n    var_assign : IDEN EQUALS expression\n               | IDEN EQUALS IDEN\n    \n    expression : expression MULTIPLY expression\n               | expression DIVIDE expression\n               | expression PLUS expression\n               | expression MINUS expression\n    \n    expression : INT\n    \n    expression : IDEN\n    \n    empty :\n    '
+_lr_signature = 'leftPLUSMINUSleftMULTIPLYDIVIDEASSIGN DCL DIVIDE EQUALS IDEN INT MINUS MULTIPLY PLUS\n    parse : expression\n          | var_declare\n          | var_assign\n          | empty\n    \n    var_declare : DCL IDEN value\n    \n    value : initialize\n          | empty\n    \n    initialize : ASSIGN expression\n    \n    var_assign : IDEN EQUALS expression\n    \n    expression : expression MULTIPLY expression\n               | expression DIVIDE expression\n               | expression PLUS expression\n               | expression MINUS expression\n    \n    expression : INT\n    \n    expression : IDEN\n    \n    empty :\n    '
     
-_lr_action_items = {'INT':([0,9,10,11,12,13,25,],[6,6,6,6,6,6,6,]),'IDEN':([0,8,9,10,11,12,13,25,],[7,14,16,16,16,16,20,16,]),'DCL':([0,],[8,]),'$end':([0,1,2,3,4,5,6,7,14,15,16,17,18,19,20,21,22,23,24,26,],[-17,0,-1,-2,-3,-4,-15,-16,-17,-11,-16,-12,-13,-14,-10,-9,-5,-6,-7,-8,]),'MULTIPLY':([2,6,7,15,16,17,18,19,20,21,26,],[9,-15,-16,-11,-16,-12,9,9,-16,9,9,]),'DIVIDE':([2,6,7,15,16,17,18,19,20,21,26,],[10,-15,-16,-11,-16,-12,10,10,-16,10,10,]),'PLUS':([2,6,7,15,16,17,18,19,20,21,26,],[11,-15,-16,-11,-16,-12,-13,-14,-16,11,11,]),'MINUS':([2,6,7,15,16,17,18,19,20,21,26,],[12,-15,-16,-11,-16,-12,-13,-14,-16,12,12,]),'EQUALS':([7,],[13,]),'ASSIGN':([14,],[25,]),}
+_lr_action_items = {'INT':([0,9,10,11,12,13,24,],[6,6,6,6,6,6,6,]),'IDEN':([0,8,9,10,11,12,13,24,],[7,14,16,16,16,16,16,16,]),'DCL':([0,],[8,]),'$end':([0,1,2,3,4,5,6,7,14,15,16,17,18,19,20,21,22,23,25,],[-16,0,-1,-2,-3,-4,-14,-15,-16,-10,-15,-11,-12,-13,-9,-5,-6,-7,-8,]),'MULTIPLY':([2,6,7,15,16,17,18,19,20,25,],[9,-14,-15,-10,-15,-11,9,9,9,9,]),'DIVIDE':([2,6,7,15,16,17,18,19,20,25,],[10,-14,-15,-10,-15,-11,10,10,10,10,]),'PLUS':([2,6,7,15,16,17,18,19,20,25,],[11,-14,-15,-10,-15,-11,-12,-13,11,11,]),'MINUS':([2,6,7,15,16,17,18,19,20,25,],[12,-14,-15,-10,-15,-11,-12,-13,12,12,]),'EQUALS':([7,],[13,]),'ASSIGN':([14,],[24,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'parse':([0,],[1,]),'expression':([0,9,10,11,12,13,25,],[2,15,17,18,19,21,26,]),'var_declare':([0,],[3,]),'var_assign':([0,],[4,]),'empty':([0,14,],[5,24,]),'value':([14,],[22,]),'initialize':([14,],[23,]),}
+_lr_goto_items = {'parse':([0,],[1,]),'expression':([0,9,10,11,12,13,24,],[2,15,17,18,19,20,25,]),'var_declare':([0,],[3,]),'var_assign':([0,],[4,]),'empty':([0,14,],[5,23,]),'value':([14,],[21,]),'initialize':([14,],[22,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,21 +27,20 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> parse","S'",1,None,None,None),
-  ('parse -> expression','parse',1,'p_parse','test.py',58),
-  ('parse -> var_declare','parse',1,'p_parse','test.py',59),
-  ('parse -> var_assign','parse',1,'p_parse','test.py',60),
-  ('parse -> empty','parse',1,'p_parse','test.py',61),
-  ('var_declare -> DCL IDEN value','var_declare',3,'p_var_declare','test.py',67),
-  ('value -> initialize','value',1,'p_value','test.py',73),
-  ('value -> empty','value',1,'p_value','test.py',74),
-  ('initialize -> ASSIGN expression','initialize',2,'p_initialize','test.py',80),
-  ('var_assign -> IDEN EQUALS expression','var_assign',3,'p_var_assign','test.py',86),
-  ('var_assign -> IDEN EQUALS IDEN','var_assign',3,'p_var_assign','test.py',87),
-  ('expression -> expression MULTIPLY expression','expression',3,'p_expression','test.py',93),
-  ('expression -> expression DIVIDE expression','expression',3,'p_expression','test.py',94),
-  ('expression -> expression PLUS expression','expression',3,'p_expression','test.py',95),
-  ('expression -> expression MINUS expression','expression',3,'p_expression','test.py',96),
-  ('expression -> INT','expression',1,'p_expression_int','test.py',102),
-  ('expression -> IDEN','expression',1,'p_expression_var','test.py',108),
-  ('empty -> <empty>','empty',0,'p_empty','test.py',117),
+  ('parse -> expression','parse',1,'p_parse','test.py',60),
+  ('parse -> var_declare','parse',1,'p_parse','test.py',61),
+  ('parse -> var_assign','parse',1,'p_parse','test.py',62),
+  ('parse -> empty','parse',1,'p_parse','test.py',63),
+  ('var_declare -> DCL IDEN value','var_declare',3,'p_var_declare','test.py',70),
+  ('value -> initialize','value',1,'p_value','test.py',76),
+  ('value -> empty','value',1,'p_value','test.py',77),
+  ('initialize -> ASSIGN expression','initialize',2,'p_initialize','test.py',83),
+  ('var_assign -> IDEN EQUALS expression','var_assign',3,'p_var_assign','test.py',89),
+  ('expression -> expression MULTIPLY expression','expression',3,'p_expression','test.py',95),
+  ('expression -> expression DIVIDE expression','expression',3,'p_expression','test.py',96),
+  ('expression -> expression PLUS expression','expression',3,'p_expression','test.py',97),
+  ('expression -> expression MINUS expression','expression',3,'p_expression','test.py',98),
+  ('expression -> INT','expression',1,'p_expression_int','test.py',104),
+  ('expression -> IDEN','expression',1,'p_expression_var','test.py',110),
+  ('empty -> <empty>','empty',0,'p_empty','test.py',119),
 ]

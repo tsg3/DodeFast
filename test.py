@@ -87,7 +87,6 @@ def p_initialize(p):
 def p_var_assign(p):
     '''
     var_assign : IDEN EQUALS expression
-               | IDEN EQUALS IDEN
     '''
     p[0] = ('=', p[1], p[3])
 
