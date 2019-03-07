@@ -2,6 +2,8 @@ import ply.lex as lex
 import ply.yacc as yacc
 import sys
 
+variables = {}
+
 tokens = [
     'INT',
     'IDEN',
@@ -60,6 +62,7 @@ def p_parse(p):
           | var_assign
           | empty
     '''
+    print(p[1])
     print(run(p[1]))
 
 def p_var_declare(p):
@@ -120,34 +123,47 @@ def p_empty(p):
 
 parser = yacc.yacc()
 
-variables = {}
-
 def run(p):
     if type(p) == tuple:
         if p[0] == '+':
-            return run(p[1]) + run(p[2])
+            try:
+                return run(p[1]) + run(p[2])
+            except TypeError:
+                return "Undefined Variable Found!"
         elif p[0] == '-':
-            return run(p[1]) - run(p[2])
+            try:
+                return run(p[1]) - run(p[2])
+            except TypeError:
+                return "Undefined Variable Found!"
         elif p[0] == '*':
-            return run(p[1]) * run(p[2])
+            try:
+                return run(p[1]) * run(p[2])
+            except TypeError:
+                return "Undefined Variable Found!"
         elif p[0] == '/':
-            return run(p[1]) / run(p[2])
+            try:
+                return run(p[1]) / run(p[2])
+            except TypeError:
+                return "Undefined Variable Found!"
         elif p[0] == '=':
-            variables[p[1]] = run(p[2])
-            print(variables)
+            if p[1] not in variables:
+                return "Undeclared variable Found!"
+            else:
+                variables[p[1]] = run(p[2])
+                print(variables)
         elif p[0] == 'var':
             if p[1] not in variables:
-                return 'Undeclared variable Found!'
+                return 
             else:
                 return variables[p[1]]
-        elif p[0] == 'DCL':            
-            variables[p[1]] = run(p[2])
-            print(p)
-            print(variables)
+        elif p[0] == 'DCL':
+            if p[1] in variables:
+                return "You've already declared this variable!"
+            else:
+                variables[p[1]] = run(p[2])
+                print(variables)
     else:
         return p
-
-# ortegajosant
 
 while True:
     try:
