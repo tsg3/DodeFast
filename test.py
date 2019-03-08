@@ -13,7 +13,12 @@ tokens = [
     'MULTIPLY',
     'DIVIDE',
     'DCL',
-    'ASSIGN'
+    'ASSIGN',
+    'LESS',
+    'MORE',
+    'NON_EQUAL',
+    'LESS_EQUAL',
+    'MORE_EQUAL'
 ]
 
 t_EQUALS = r'[\s]*\=[\s]*'
@@ -21,6 +26,16 @@ t_PLUS = r'[\s]*\+[\s]*'
 t_MINUS = r'[\s]*\-[\s]*'
 t_MULTIPLY = r'[\s]*\*[\s]*'
 t_DIVIDE = r'[\s]*\/[\s]*'
+
+t_LESS = r'[\s]*<[\s]*'
+t_MORE = r'[\s]*>[\s]*'
+t_NON_EQUAL = r'[\s]*<>[\s]*'
+t_LESS_EQUAL = r'[\s]*<=[\s]*'
+t_MORE_EQUAL = r'[\s]*>=[\s]*'
+
+#Tomar medidas con print's y return's
+
+#Modificar la condicion "igual que"
 
 #t_ignore = r' '
 
@@ -66,7 +81,7 @@ def p_parse(p):
           | var_declare
           | var_assign
           | empty
-    '''
+    ''' 
     print(p[1])
     print(run(p[1]))
 
@@ -101,6 +116,7 @@ def p_expression(p):
                | expression DIVIDE expression
                | expression PLUS expression
                | expression MINUS expression
+               | expression condition expression
     '''
     p[0] = (p[2], p[1], p[3])
     
@@ -116,6 +132,20 @@ def p_expression_var(p):
     '''
     p[0] = ('var', p[1])
 
+def p_condition(p):
+    '''
+    condition : EQUALS
+              | LESS
+              | MORE
+              | NON_EQUAL
+              | LESS_EQUAL
+              | MORE_EQUAL
+    '''
+    sign = p[1].strip()
+    if sign == '=':
+        sign += '='
+    p[0] = sign
+
 def p_error(p):
     print("Syntax error found!")
 
@@ -129,26 +159,36 @@ parser = yacc.yacc()
 
 def run(p):
     if type(p) == tuple:
+
+        #   SUMA
         if p[0] == '+':
             try:
                 return run(p[1]) + run(p[2])
             except TypeError:
                 return "Undefined Variable Found!"
+
+        #   RESTA
         elif p[0] == '-':
             try:
                 return run(p[1]) - run(p[2])
             except TypeError:
                 return "Undefined Variable Found!"
+
+        #   MULTIPLICACION
         elif p[0] == '*':
             try:
                 return run(p[1]) * run(p[2])
             except TypeError:
                 return "Undefined Variable Found!"
+
+        #   DIVISION
         elif p[0] == '/':
             try:
                 return int (run(p[1]) / run(p[2]))
             except TypeError:
                 return "Undefined Variable Found!"
+        
+        #   ASIGNACION    
         elif p[0] == '=':
             if p[1] not in variables:
                 return "Undeclared variable Found!"
@@ -159,17 +199,83 @@ def run(p):
                     print(variables)
                 except TypeError:
                     return x
+
+        #   VARIABLE
         elif p[0] == 'var':
             if p[1] not in variables:
                 return "Undeclared variable Found!"
             else:
                 return variables[p[1]]
+
+        #   DECLARACION
         elif p[0] == 'DCL':
             if p[1] in variables:
                 return "You've already declared this variable!"
             else:
                 variables[p[1]] = run(p[2])
                 print(variables)
+
+        #   'IGUAL QUE'                
+        elif p[0] == '==': #MODIFICAR
+            try:
+                return run(p[1]) == run(p[2])
+            except TypeError:
+                return "Undeclared Variable Found!"
+
+        #   'MENOR QUE'
+        elif p[0] == '<':
+            first_compared = run(p[1])
+            second_compared = run(p[2])
+            if type(first_compared) == int and type(second_compared) == int:
+                return first_compared < second_compared
+            elif type(first_compared) == str and type(second_compared) == str:
+                return "Both variables are undeclared!"
+            else:
+                return "One variable is undeclared!"
+
+        #   'MAYOR QUE'
+        elif p[0] == '>':
+            first_compared = run(p[1])
+            second_compared = run(p[2])
+            if type(first_compared) == int and type(second_compared) == int:
+                return first_compared > second_compared
+            elif type(first_compared) == str and type(second_compared) == str:
+                return "Both variables are undeclared!"
+            else:
+                return "One variable is undeclared!"
+
+        #   'DIFERENTE QUE'
+        elif p[0] == '<>':
+            first_compared = run(p[1])
+            second_compared = run(p[2])
+            if type(first_compared) == int and type(second_compared) == int:
+                return first_compared != second_compared
+            elif type(first_compared) == str and type(second_compared) == str:
+                return "Both variables are undeclared!"
+            else:
+                return "One variable is undeclared!"
+
+        #   'MENOR O IGUAL QUE'
+        elif p[0] == '<=':
+            first_compared = run(p[1])
+            second_compared = run(p[2])
+            if type(first_compared) == int and type(second_compared) == int:
+                return first_compared <= second_compared
+            elif type(first_compared) == str and type(second_compared) == str:
+                return "Both variables are undeclared!"
+            else:
+                return "One variable is undeclared!"
+
+        #   'MAYOR O IGUAL QUE'
+        elif p[0] == '>=':
+            first_compared = run(p[1])
+            second_compared = run(p[2])
+            if type(first_compared) == int and type(second_compared) == int:
+                return first_compared >= second_compared
+            elif type(first_compared) == str and type(second_compared) == str:
+                return "Both variables are undeclared!"
+            else:
+                return "One variable is undeclared!"
     else:
         return p
 

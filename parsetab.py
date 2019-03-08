@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftPLUSMINUSleftMULTIPLYDIVIDEASSIGN DCL DIVIDE EQUALS IDEN INT MINUS MULTIPLY PLUS\n    parse : expression\n          | var_declare\n          | var_assign\n          | empty\n    \n    var_declare : DCL IDEN value\n    \n    value : initialize\n          | empty\n    \n    initialize : ASSIGN expression\n    \n    var_assign : IDEN EQUALS expression\n    \n    expression : expression MULTIPLY expression\n               | expression DIVIDE expression\n               | expression PLUS expression\n               | expression MINUS expression\n    \n    expression : INT\n    \n    expression : IDEN\n    \n    empty :\n    '
+_lr_signature = 'leftPLUSMINUSleftMULTIPLYDIVIDEASSIGN DCL DIVIDE EQUALS IDEN INT LESS LESS_EQUAL MINUS MORE MORE_EQUAL MULTIPLY NON_EQUAL PLUS\n    parse : expression\n          | var_declare\n          | var_assign\n          | empty\n    \n    var_declare : DCL IDEN value\n    \n    value : initialize\n          | empty\n    \n    initialize : ASSIGN expression\n    \n    var_assign : IDEN EQUALS expression\n    \n    expression : expression MULTIPLY expression\n               | expression DIVIDE expression\n               | expression PLUS expression\n               | expression MINUS expression\n               | expression condition expression\n    \n    expression : INT\n    \n    expression : IDEN\n    \n    condition : EQUALS\n              | LESS\n              | MORE\n              | NON_EQUAL\n              | LESS_EQUAL\n              | MORE_EQUAL\n    \n    empty :\n    '
     
-_lr_action_items = {'INT':([0,9,10,11,12,13,24,],[6,6,6,6,6,6,6,]),'IDEN':([0,8,9,10,11,12,13,24,],[7,14,16,16,16,16,16,16,]),'DCL':([0,],[8,]),'$end':([0,1,2,3,4,5,6,7,14,15,16,17,18,19,20,21,22,23,25,],[-16,0,-1,-2,-3,-4,-14,-15,-16,-10,-15,-11,-12,-13,-9,-5,-6,-7,-8,]),'MULTIPLY':([2,6,7,15,16,17,18,19,20,25,],[9,-14,-15,-10,-15,-11,9,9,9,9,]),'DIVIDE':([2,6,7,15,16,17,18,19,20,25,],[10,-14,-15,-10,-15,-11,10,10,10,10,]),'PLUS':([2,6,7,15,16,17,18,19,20,25,],[11,-14,-15,-10,-15,-11,-12,-13,11,11,]),'MINUS':([2,6,7,15,16,17,18,19,20,25,],[12,-14,-15,-10,-15,-11,-12,-13,12,12,]),'EQUALS':([7,],[13,]),'ASSIGN':([14,],[24,]),}
+_lr_action_items = {'INT':([0,9,10,11,12,13,14,15,16,17,18,19,20,32,],[6,6,6,6,6,6,-17,-18,-19,-20,-21,-22,6,6,]),'IDEN':([0,8,9,10,11,12,13,14,15,16,17,18,19,20,32,],[7,21,23,23,23,23,23,-17,-18,-19,-20,-21,-22,23,23,]),'DCL':([0,],[8,]),'$end':([0,1,2,3,4,5,6,7,21,22,23,24,25,26,27,28,29,30,31,33,],[-23,0,-1,-2,-3,-4,-15,-16,-23,-10,-16,-11,-12,-13,-14,-9,-5,-6,-7,-8,]),'MULTIPLY':([2,6,7,22,23,24,25,26,27,28,33,],[9,-15,-16,-10,-16,-11,9,9,9,9,9,]),'DIVIDE':([2,6,7,22,23,24,25,26,27,28,33,],[10,-15,-16,-10,-16,-11,10,10,10,10,10,]),'PLUS':([2,6,7,22,23,24,25,26,27,28,33,],[11,-15,-16,-10,-16,-11,-12,-13,11,11,11,]),'MINUS':([2,6,7,22,23,24,25,26,27,28,33,],[12,-15,-16,-10,-16,-11,-12,-13,12,12,12,]),'EQUALS':([2,6,7,22,23,24,25,26,27,28,33,],[14,-15,20,-10,-16,-11,-12,-13,14,14,14,]),'LESS':([2,6,7,22,23,24,25,26,27,28,33,],[15,-15,-16,-10,-16,-11,-12,-13,15,15,15,]),'MORE':([2,6,7,22,23,24,25,26,27,28,33,],[16,-15,-16,-10,-16,-11,-12,-13,16,16,16,]),'NON_EQUAL':([2,6,7,22,23,24,25,26,27,28,33,],[17,-15,-16,-10,-16,-11,-12,-13,17,17,17,]),'LESS_EQUAL':([2,6,7,22,23,24,25,26,27,28,33,],[18,-15,-16,-10,-16,-11,-12,-13,18,18,18,]),'MORE_EQUAL':([2,6,7,22,23,24,25,26,27,28,33,],[19,-15,-16,-10,-16,-11,-12,-13,19,19,19,]),'ASSIGN':([21,],[32,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'parse':([0,],[1,]),'expression':([0,9,10,11,12,13,24,],[2,15,17,18,19,20,25,]),'var_declare':([0,],[3,]),'var_assign':([0,],[4,]),'empty':([0,14,],[5,23,]),'value':([14,],[21,]),'initialize':([14,],[22,]),}
+_lr_goto_items = {'parse':([0,],[1,]),'expression':([0,9,10,11,12,13,20,32,],[2,22,24,25,26,27,28,33,]),'var_declare':([0,],[3,]),'var_assign':([0,],[4,]),'empty':([0,21,],[5,31,]),'condition':([2,22,24,25,26,27,28,33,],[13,13,13,13,13,13,13,13,]),'value':([21,],[29,]),'initialize':([21,],[30,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,20 +27,27 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> parse","S'",1,None,None,None),
-  ('parse -> expression','parse',1,'p_parse','test.py',60),
-  ('parse -> var_declare','parse',1,'p_parse','test.py',61),
-  ('parse -> var_assign','parse',1,'p_parse','test.py',62),
-  ('parse -> empty','parse',1,'p_parse','test.py',63),
-  ('var_declare -> DCL IDEN value','var_declare',3,'p_var_declare','test.py',70),
-  ('value -> initialize','value',1,'p_value','test.py',76),
-  ('value -> empty','value',1,'p_value','test.py',77),
-  ('initialize -> ASSIGN expression','initialize',2,'p_initialize','test.py',83),
-  ('var_assign -> IDEN EQUALS expression','var_assign',3,'p_var_assign','test.py',89),
-  ('expression -> expression MULTIPLY expression','expression',3,'p_expression','test.py',95),
-  ('expression -> expression DIVIDE expression','expression',3,'p_expression','test.py',96),
-  ('expression -> expression PLUS expression','expression',3,'p_expression','test.py',97),
-  ('expression -> expression MINUS expression','expression',3,'p_expression','test.py',98),
-  ('expression -> INT','expression',1,'p_expression_int','test.py',104),
-  ('expression -> IDEN','expression',1,'p_expression_var','test.py',110),
-  ('empty -> <empty>','empty',0,'p_empty','test.py',119),
+  ('parse -> expression','parse',1,'p_parse','test.py',76),
+  ('parse -> var_declare','parse',1,'p_parse','test.py',77),
+  ('parse -> var_assign','parse',1,'p_parse','test.py',78),
+  ('parse -> empty','parse',1,'p_parse','test.py',79),
+  ('var_declare -> DCL IDEN value','var_declare',3,'p_var_declare','test.py',86),
+  ('value -> initialize','value',1,'p_value','test.py',92),
+  ('value -> empty','value',1,'p_value','test.py',93),
+  ('initialize -> ASSIGN expression','initialize',2,'p_initialize','test.py',99),
+  ('var_assign -> IDEN EQUALS expression','var_assign',3,'p_var_assign','test.py',105),
+  ('expression -> expression MULTIPLY expression','expression',3,'p_expression','test.py',111),
+  ('expression -> expression DIVIDE expression','expression',3,'p_expression','test.py',112),
+  ('expression -> expression PLUS expression','expression',3,'p_expression','test.py',113),
+  ('expression -> expression MINUS expression','expression',3,'p_expression','test.py',114),
+  ('expression -> expression condition expression','expression',3,'p_expression','test.py',115),
+  ('expression -> INT','expression',1,'p_expression_int','test.py',121),
+  ('expression -> IDEN','expression',1,'p_expression_var','test.py',127),
+  ('condition -> EQUALS','condition',1,'p_condition','test.py',133),
+  ('condition -> LESS','condition',1,'p_condition','test.py',134),
+  ('condition -> MORE','condition',1,'p_condition','test.py',135),
+  ('condition -> NON_EQUAL','condition',1,'p_condition','test.py',136),
+  ('condition -> LESS_EQUAL','condition',1,'p_condition','test.py',137),
+  ('condition -> MORE_EQUAL','condition',1,'p_condition','test.py',138),
+  ('empty -> <empty>','empty',0,'p_empty','test.py',150),
 ]
