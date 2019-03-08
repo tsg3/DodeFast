@@ -43,7 +43,7 @@ def t_INT(t):
     return t
 
 def t_DCL(t):
-    r'DCL[\s]*'
+    r'[\s]*DCL[\s]+'
     t.type = 'DCL'
     return t
 
@@ -289,9 +289,17 @@ def run(p):
     else:
         return p
 
+'''
 while True:
     try:
         s = input('>>> ')
     except EOFError:
         break
     parser.parse(s)
+'''
+
+s = 'DCL a DEFAULT 7;a=6+4;a>3'
+s = s.strip()
+code = s.split(';')
+for i in code:
+    parser.parse(i)
