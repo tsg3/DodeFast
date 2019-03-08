@@ -16,13 +16,13 @@ tokens = [
     'ASSIGN'
 ]
 
-t_EQUALS = r'\='
-t_PLUS = r'\+'
-t_MINUS = r'\-'
-t_MULTIPLY = r'\*'
-t_DIVIDE = r'\/'
+t_EQUALS = r'[\s]*\=[\s]*'
+t_PLUS = r'[\s]*\+[\s]*'
+t_MINUS = r'[\s]*\-[\s]*'
+t_MULTIPLY = r'[\s]*\*[\s]*'
+t_DIVIDE = r'[\s]*\/[\s]*'
 
-t_ignore = r' '
+#t_ignore = r' '
 
 def t_INT(t):
     r'\d+'
@@ -30,12 +30,12 @@ def t_INT(t):
     return t
 
 def t_DCL(t):
-    r'DCL'
+    r'DCL[\s]*'
     t.type = 'DCL'
     return t
 
 def t_ASSIGN(t):
-    r'DEFAULT'
+    r'[\s]+DEFAULT[\s]+'
     t.type = 'ASSIGN'
     return t
 
@@ -45,7 +45,12 @@ def t_IDEN(t):
     return t
 
 def t_error(t):
-    print ("Illegal input!")
+    if ("DEFAULT" in t.value):
+        print ("Wrong declaration of variable!")
+    elif (" " == t.value[0]):
+        print ("You should use 'DEFAULT' to assign a value!")
+    else:
+        print ("Illegal input!")
     t.lexer.skip(1)
 
 lexer = lex.lex()
@@ -141,18 +146,22 @@ def run(p):
                 return "Undefined Variable Found!"
         elif p[0] == '/':
             try:
-                return run(p[1]) / run(p[2])
+                return int (run(p[1]) / run(p[2]))
             except TypeError:
                 return "Undefined Variable Found!"
         elif p[0] == '=':
             if p[1] not in variables:
                 return "Undeclared variable Found!"
             else:
-                variables[p[1]] = run(p[2])
-                print(variables)
+                x = run(p[2])
+                try:
+                    variables[p[1]] = 0 + x
+                    print(variables)
+                except TypeError:
+                    return x
         elif p[0] == 'var':
             if p[1] not in variables:
-                return 
+                return "Undeclared variable Found!"
             else:
                 return variables[p[1]]
         elif p[0] == 'DCL':
