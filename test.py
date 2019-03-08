@@ -35,8 +35,6 @@ t_MORE_EQUAL = r'[\s]*>=[\s]*'
 
 #Tomar medidas con print's y return's
 
-#Modificar la condicion "igual que"
-
 #t_ignore = r' '
 
 def t_INT(t):
@@ -77,11 +75,12 @@ precedence = (
 
 def p_parse(p):
     '''
-    parse : expression
+    parse : comparative
+          | expression
           | var_declare
           | var_assign
           | empty
-    ''' 
+    '''
     print(p[1])
     print(run(p[1]))
 
@@ -104,6 +103,16 @@ def p_initialize(p):
     '''
     p[0] = p[2]
 
+def p_comparative(p):
+    '''
+    comparative : expression EQUALS EQUALS expression
+                | IDEN EQUALS EQUALS expression
+    '''
+    comp1 = p[1]
+    if type(p[1]) == str:
+        comp1 = ('var', p[1])
+    p[0] = ('==', comp1, p[4])
+
 def p_var_assign(p):
     '''
     var_assign : IDEN EQUALS expression
@@ -120,31 +129,28 @@ def p_expression(p):
     '''
     p[0] = (p[2], p[1], p[3])
     
-def p_expression_int(p):
-    '''
-    expression : INT
-    '''
-    p[0] = p[1]
-
 def p_expression_var(p):
     '''
     expression : IDEN
     '''
     p[0] = ('var', p[1])
 
+def p_expression_int(p):
+    '''
+    expression : INT
+    '''
+    p[0] = p[1]
+
 def p_condition(p):
     '''
-    condition : EQUALS
-              | LESS
+    condition : LESS
               | MORE
               | NON_EQUAL
               | LESS_EQUAL
               | MORE_EQUAL
     '''
-    sign = p[1].strip()
-    if sign == '=':
-        sign += '='
-    p[0] = sign
+
+    p[0] = p[1].strip()
 
 def p_error(p):
     print("Syntax error found!")
@@ -216,11 +222,15 @@ def run(p):
                 print(variables)
 
         #   'IGUAL QUE'                
-        elif p[0] == '==': #MODIFICAR
-            try:
-                return run(p[1]) == run(p[2])
-            except TypeError:
-                return "Undeclared Variable Found!"
+        elif p[0] == '==':
+            first_compared = run(p[1])
+            second_compared = run(p[2])
+            if type(first_compared) == int and type(second_compared) == int:
+                return first_compared == second_compared
+            elif type(first_compared) == str and type(second_compared) == str:
+                return "Both variables are undeclared!"
+            else:
+                return "One variable is undeclared!"
 
         #   'MENOR QUE'
         elif p[0] == '<':
