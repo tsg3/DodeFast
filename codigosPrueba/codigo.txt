@@ -1,2 +1,4 @@
-oijasdf
+DCLr DEFAULT 5;
+r < 5;
+r + 4;
 
