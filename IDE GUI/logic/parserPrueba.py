@@ -3,6 +3,8 @@ import lib.ply.yacc as yacc
 
 variables = {}
 
+st = ''
+
 tokens = [
     'INT',
     'IDEN',
@@ -31,11 +33,6 @@ t_MORE = r'[\s]*>[\s]*'
 t_NON_EQUAL = r'[\s]*<>[\s]*'
 t_LESS_EQUAL = r'[\s]*<=[\s]*'
 t_MORE_EQUAL = r'[\s]*>=[\s]*'
-
-
-# Tomar medidas con print's y return's
-
-# t_ignore = r' '
 
 def t_INT(t):
     r'\d+'
@@ -88,7 +85,7 @@ def p_parse(p):
           | empty
     '''
     # print(p[1])
-    return run(p[1])
+    run(p[1])
 
 
 def p_var_declare(p):
@@ -184,19 +181,20 @@ parser = yacc.yacc()
 
 
 def run(p):
+    global st
     if type(p) == tuple:
 
         #   SUMA
         if p[0] == '+':
             try:
-                run(p[1]) + run(p[2])
+                return run(p[1]) + run(p[2])
             except TypeError:
                 return "Undefined Variable Found!"
 
         #   RESTA
         elif p[0] == '-':
             try:
-                run(p[1]) - run(p[2])
+                return run(p[1]) - run(p[2])
             except TypeError:
                 return "Undefined Variable Found!"
 
@@ -217,14 +215,14 @@ def run(p):
         #   ASIGNACION
         elif p[0] == '=':
             if p[1] not in variables:
-                return "Undeclared variable Found!"
+                st += "Undeclared variable Found!"
             else:
                 x = run(p[2])
                 try:
                     variables[p[1]] = 0 + x
-                    return variables
+                    st += '--> ' + p[1] + ' = ' + str(x)
                 except TypeError:
-                    return x
+                    st += x
 
         #   VARIABLE
         elif p[0] == 'var':
@@ -236,10 +234,10 @@ def run(p):
         #   DECLARACION
         elif p[0] == 'DCL':
             if p[1] in variables:
-                return "You've already declared this variable!"
+                st += "--> You've already declared the variable " + p[1] + " !"
             else:
                 variables[p[1]] = run(p[2])
-                return variables
+                st += '--> New variable: ' + p[1] + ' = ' + str(p[2])
 
         #   'IGUAL QUE'
         elif p[0] == '==':
@@ -309,19 +307,10 @@ def run(p):
     else:
         return p
 
-
-'''
-while True:
-    try:
-        s = input('>>> ')
-    except EOFError:
-        break
-    parser.parse(s)
-'''
-
-s = 'DCL a DEFAULT 7;a=6+4;a>3'
-
-
 def Parse_Code(code):
     code = code.strip()
-    return parser.parse(code)
+    parser.parse(code)
+    global st
+    final_st = st
+    st = ''
+    return final_st

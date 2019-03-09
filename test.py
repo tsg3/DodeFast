@@ -81,8 +81,8 @@ def p_parse(p):
           | var_assign
           | empty
     '''
-    print(p[1])
-    print(run(p[1]))
+    #print(p[1])
+    run(p[1])
 
 def p_var_declare(p):
     '''
@@ -298,10 +298,10 @@ while True:
     parser.parse(s)
 '''
 
-s = 'DCL a DEFAULT 7;a=6+4;a>3'
+s = 'DCL a DEFAULT 7;a=6+4;DCL b DEFAULT 1; a = a+b'
 
 def Parse_Code(code):
-    code = s.split(';')
+    code = s.strip().replace('\n','').split(';')
     for i in code:
         i = i.strip()
         parser.parse(i)

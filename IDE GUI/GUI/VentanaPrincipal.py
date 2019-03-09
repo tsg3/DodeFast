@@ -11,17 +11,20 @@ def obtener_codigo():
     else:
         printTerminal("Before saving, upload or create a program!", True)
 
+# codeurl = C:\Users\este0\Desktop\TEC\2019 - I Semestre\Compiladores, Intérpretes y Lenguajes\DodeFast\codigosPrueba\codigo.txt
 
 def correr_codigo():
     if len(current_URL) != 0:
         archivoCodigo = open(current_URL, "r")
         codigo = archivoCodigo.read()
         archivoCodigo.close()
-        codigo = codigo.strip()
+        codigo = codigo.strip().replace('\n','')
         codigo = codigo.split(';')
         printTerminal("", True)
         for i in codigo:
-            printTerminal(str(Parse_Code(i)), False)
+            printTerminal(Parse_Code(i), False)
+        global variables
+        variables.clear()
 
     else:
         printTerminal("Before running, load a program!", True)
@@ -67,7 +70,8 @@ def printTerminal(code, delete):
         textTerminal.delete('1.0', END)
         textTerminal.insert(END, titleMessage + code + "\n")
     else:
-        textTerminal.insert(END, code + "\n")
+        textTerminal.insert(END, code)
+        textTerminal.insert(END, "\n")
         textTerminal.config(state=DISABLED)
 
 

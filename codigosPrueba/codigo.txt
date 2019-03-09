@@ -1,4 +1,8 @@
-DCLr DEFAULT 5;
-r < 5;
-r + 4;
-
+DCL r DEFAULT 5;
+DCL r_4 DEFAULT 7;
+DCL _@3;
+r = 4;
+r_4 = 5;
+_@3 = 6;
+DCL a;
+DCL r DEFAULT 100
