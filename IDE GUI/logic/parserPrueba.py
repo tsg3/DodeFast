@@ -141,7 +141,7 @@ def p_expression(p):
                | expression MINUS expression
                | expression condition expression
     '''
-    p[0] = (p[2], p[1], p[3])
+    p[0] = (p[2].strip(), p[1], p[3])
 
 
 def p_expression_var(p):
@@ -278,9 +278,9 @@ def run(p):
             if type(first_compared) == int and type(second_compared) == int:
                 st += '--> ' + str(first_compared < second_compared)
             elif type(first_compared) == str and type(second_compared) == str:
-                st += "Both expression are undeclared!"
+                st += "--> Both expression are undeclared!"
             else:
-                st += "One expression is undeclared!"
+                st += "--> One expression is undeclared!"
 
         #   'MAYOR QUE'
         elif p[0] == '>':
@@ -289,9 +289,9 @@ def run(p):
             if type(first_compared) == int and type(second_compared) == int:
                 st += '--> ' + str(first_compared > second_compared)
             elif type(first_compared) == str and type(second_compared) == str:
-                st += "Both expression are undeclared!"
+                st += "--> Both expression are undeclared!"
             else:
-                st += "One expression is undeclared!"
+                st += "--> One expression is undeclared!"
 
         #   'DIFERENTE QUE'
         elif p[0] == '<>':
@@ -300,9 +300,9 @@ def run(p):
             if type(first_compared) == int and type(second_compared) == int:
                 st += '--> ' + str(first_compared != second_compared)
             elif type(first_compared) == str and type(second_compared) == str:
-                st += "Both expression are undeclared!"
+                st += "-->Both expression are undeclared!"
             else:
-                st += "One expression is undeclared!"
+                st += "-->One expression is undeclared!"
 
         #   'MENOR O IGUAL QUE'
         elif p[0] == '<=':
@@ -311,9 +311,9 @@ def run(p):
             if type(first_compared) == int and type(second_compared) == int:
                 st += '--> ' + str(first_compared <= second_compared)
             elif type(first_compared) == str and type(second_compared) == str:
-                st += "Both expression are undeclared!"
+                st += "--> Both expression are undeclared!"
             else:
-                st += "One expression is undeclared!"
+                st += "--> One expression is undeclared!"
 
         #   'MAYOR O IGUAL QUE'
         elif p[0] == '>=':
@@ -322,9 +322,9 @@ def run(p):
             if type(first_compared) == int and type(second_compared) == int:
                 st += '--> ' + str(first_compared >= second_compared)
             elif type(first_compared) == str and type(second_compared) == str:
-                st += "Both expression are undeclared!"
+                st += "--> Both expression are undeclared!"
             else:
-                st += "One expression is undeclared!"
+                st += "--> One expression is undeclared!"
     else:
         return p
 

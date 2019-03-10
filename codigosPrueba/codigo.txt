@@ -1,2 +1,4 @@
-DCL g g = 6 
-
+DCL a1 DEFAULT 6;
+DCL a2 DEFAULT a1 + 1;
+a1 = a1   + 1;
+a1 <> a2
