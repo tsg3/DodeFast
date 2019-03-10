@@ -5,6 +5,8 @@ variables = {}
 
 st = ''
 
+error = False
+
 tokens = [
     'INT',
     'IDEN',
@@ -59,12 +61,15 @@ def t_IDEN(t):
 
 
 def t_error(t):
+    global error
+    global st
+    error = True
     if ("DEFAULT" in t.value):
-        print("Wrong declaration of variable!")
-    elif (" " == t.value[0]):
-        print("You should use 'DEFAULT' to assign a value!")
+        st += "Wrong declaration of variable!"
     else:
-        print("Illegal input!")
+        st += " because there's a illegal input"
+    while t.lexer.lexpos < t.lexer.lexlen:
+        t.lexer.skip(1)
     t.lexer.skip(1)
 
 
@@ -166,8 +171,10 @@ def p_condition(p):
 
 
 def p_error(p):
-    print("Syntax error found!")
-    return "Syntax error found!"
+    global st
+    global error
+    error = True
+    st = "--> A syntax error was found" + st + "!"
 
 
 def p_empty(p):
@@ -182,6 +189,7 @@ parser = yacc.yacc()
 
 def run(p):
     global st
+    global error
     if type(p) == tuple:
 
         #   SUMA
@@ -189,6 +197,7 @@ def run(p):
             try:
                 return run(p[1]) + run(p[2])
             except TypeError:
+                error = True
                 return "Undefined Variable Found!"
 
         #   RESTA
@@ -196,6 +205,7 @@ def run(p):
             try:
                 return run(p[1]) - run(p[2])
             except TypeError:
+                error = True
                 return "Undefined Variable Found!"
 
         #   MULTIPLICACION
@@ -203,6 +213,7 @@ def run(p):
             try:
                 return run(p[1]) * run(p[2])
             except TypeError:
+                error = True
                 return "Undefined Variable Found!"
 
         #   DIVISION
@@ -210,100 +221,110 @@ def run(p):
             try:
                 return int(run(p[1]) / run(p[2]))
             except TypeError:
+                error = True
                 return "Undefined Variable Found!"
 
         #   ASIGNACION
         elif p[0] == '=':
             if p[1] not in variables:
-                st += "Undeclared variable Found!"
+                error = True
+                st += "--> You tried to assign a value to an undeclared variable!"
             else:
                 x = run(p[2])
                 try:
                     variables[p[1]] = 0 + x
                     st += '--> ' + p[1] + ' = ' + str(x)
                 except TypeError:
+                    error = True
                     st += x
 
         #   VARIABLE
         elif p[0] == 'var':
             if p[1] not in variables:
-                return "Undeclared variable Found!"
+                error = True
+                return "--> Undeclared variable found!"
             else:
                 return variables[p[1]]
 
         #   DECLARACION
         elif p[0] == 'DCL':
             if p[1] in variables:
+                error = True
                 st += "--> You've already declared the variable " + p[1] + " !"
             else:
-                variables[p[1]] = run(p[2])
-                st += '--> New variable: ' + p[1] + ' = ' + str(p[2])
+                assignment = run(p[2])
+                if type(assignment) == str:
+                    error = True
+                    st += "--> You put a non-valid default value" + "!"
+                else:
+                    variables[p[1]] = assignment
+                    st += '--> New variable: ' + p[1] + ' = ' + str(run(p[2]))
 
         #   'IGUAL QUE'
         elif p[0] == '==':
             first_compared = run(p[1])
             second_compared = run(p[2])
             if type(first_compared) == int and type(second_compared) == int:
-                return first_compared == second_compared
+                st += '--> ' + str(first_compared == second_compared)
             elif type(first_compared) == str and type(second_compared) == str:
-                return "Both variables are undeclared!"
+                st += "--> Both expressions are undeclared!"
             else:
-                return "One variable is undeclared!"
+                st += "--> One expression is undeclared!"
 
         #   'MENOR QUE'
         elif p[0] == '<':
             first_compared = run(p[1])
             second_compared = run(p[2])
             if type(first_compared) == int and type(second_compared) == int:
-                return first_compared < second_compared
+                st += '--> ' + str(first_compared < second_compared)
             elif type(first_compared) == str and type(second_compared) == str:
-                return "Both variables are undeclared!"
+                st += "Both expression are undeclared!"
             else:
-                return "One variable is undeclared!"
+                st += "One expression is undeclared!"
 
         #   'MAYOR QUE'
         elif p[0] == '>':
             first_compared = run(p[1])
             second_compared = run(p[2])
             if type(first_compared) == int and type(second_compared) == int:
-                return first_compared > second_compared
+                st += '--> ' + str(first_compared > second_compared)
             elif type(first_compared) == str and type(second_compared) == str:
-                return "Both variables are undeclared!"
+                st += "Both expression are undeclared!"
             else:
-                return "One variable is undeclared!"
+                st += "One expression is undeclared!"
 
         #   'DIFERENTE QUE'
         elif p[0] == '<>':
             first_compared = run(p[1])
             second_compared = run(p[2])
             if type(first_compared) == int and type(second_compared) == int:
-                return first_compared != second_compared
+                st += '--> ' + str(first_compared != second_compared)
             elif type(first_compared) == str and type(second_compared) == str:
-                return "Both variables are undeclared!"
+                st += "Both expression are undeclared!"
             else:
-                return "One variable is undeclared!"
+                st += "One expression is undeclared!"
 
         #   'MENOR O IGUAL QUE'
         elif p[0] == '<=':
             first_compared = run(p[1])
             second_compared = run(p[2])
             if type(first_compared) == int and type(second_compared) == int:
-                return first_compared <= second_compared
+                st += '--> ' + str(first_compared <= second_compared)
             elif type(first_compared) == str and type(second_compared) == str:
-                return "Both variables are undeclared!"
+                st += "Both expression are undeclared!"
             else:
-                return "One variable is undeclared!"
+                st += "One expression is undeclared!"
 
         #   'MAYOR O IGUAL QUE'
         elif p[0] == '>=':
             first_compared = run(p[1])
             second_compared = run(p[2])
             if type(first_compared) == int and type(second_compared) == int:
-                return first_compared >= second_compared
+                st += '--> ' + str(first_compared >= second_compared)
             elif type(first_compared) == str and type(second_compared) == str:
-                return "Both variables are undeclared!"
+                st += "Both expression are undeclared!"
             else:
-                return "One variable is undeclared!"
+                st += "One expression is undeclared!"
     else:
         return p
 
@@ -311,6 +332,9 @@ def Parse_Code(code):
     code = code.strip()
     parser.parse(code)
     global st
+    global error
     final_st = st
     st = ''
-    return final_st
+    error_Found = error
+    error = False
+    return final_st, error_Found

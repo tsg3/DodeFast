@@ -22,7 +22,10 @@ def correr_codigo():
         codigo = codigo.split(';')
         printTerminal("", True)
         for i in codigo:
-            printTerminal(Parse_Code(i), False)
+            result = Parse_Code(i)
+            printTerminal(result[0], False)
+            if result[1]:
+                break
         global variables
         variables.clear()
 

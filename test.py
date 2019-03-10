@@ -298,7 +298,7 @@ while True:
     parser.parse(s)
 '''
 
-s = 'DCL a DEFAULT 7;a=6+4;DCL b DEFAULT 1; a = a+b'
+s = 'DCL a;a=3+57*788+79-90*2;a=10+r'uty'
 
 def Parse_Code(code):
     code = s.strip().replace('\n','').split(';')
