@@ -7,6 +7,8 @@ st = ''
 
 error = False
 
+line = 0
+
 tokens = [
     'INT',
     'IDEN',
@@ -173,9 +175,10 @@ def p_condition(p):
 def p_error(p):
     global st
     global error
+    global line
     error = True
-    st = "--> A syntax error was found" + st + "!"
-
+    if not ("--> A syntax error was found" in st):
+        st = "--> A syntax error was found in line " + str(line) + "!"
 
 def p_empty(p):
     '''
@@ -333,8 +336,10 @@ def Parse_Code(code):
     parser.parse(code)
     global st
     global error
+    global line
     final_st = st
     st = ''
     error_Found = error
     error = False
+    line += 1
     return final_st, error_Found

@@ -1,5 +1,5 @@
 from tkinter import *
-from logic.parserPrueba import *
+import logic.parserPrueba
 
 
 def obtener_codigo():
@@ -15,6 +15,7 @@ def obtener_codigo():
 
 def correr_codigo():
     if len(current_URL) != 0:
+        logic.parserPrueba.line = 0
         archivoCodigo = open(current_URL, "r")
         codigo = archivoCodigo.read()
         archivoCodigo.close()
@@ -22,12 +23,11 @@ def correr_codigo():
         codigo = codigo.split(';')
         printTerminal("", True)
         for i in codigo:
-            result = Parse_Code(i)
+            result = logic.parserPrueba.Parse_Code(i)
             printTerminal(result[0], False)
             if result[1]:
                 break
-        global variables
-        variables.clear()
+        logic.parserPrueba.variables.clear()
 
     else:
         printTerminal("Before running, load a program!", True)
