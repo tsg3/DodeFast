@@ -1,4 +1,5 @@
 DCL a DEFAULT 8;
 a = 8+4;
 a==12;
-DCL final_a DEFAULT a
+DCL final_a DEFAULT a;
+
