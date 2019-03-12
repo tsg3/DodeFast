@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="998eef22-3398-429b-800a-8453cf429418" name="Default Changelist" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/IDE GUI.iml" afterPath="$PROJECT_DIR$/.idea/IDE GUI.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/GUI/VentanaPrincipal.py" afterPath="$PROJECT_DIR$/GUI/VentanaPrincipal.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logic/parser.out" afterPath="$PROJECT_DIR$/logic/parser.out" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logic/parserPrueba.py" afterPath="$PROJECT_DIR$/logic/parserPrueba.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logic/parsetab.py" afterPath="$PROJECT_DIR$/logic/parsetab.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../codigosPrueba/codigo.txt" afterPath="$PROJECT_DIR$/../codigosPrueba/codigo.txt" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -41,8 +34,8 @@
       <file leaf-file-name="parserPrueba.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/logic/parserPrueba.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="468" column="52" lean-forward="true" selection-start-line="468" selection-start-column="52" selection-end-line="468" selection-end-column="52" />
+            <state relative-caret-position="221">
+              <caret line="435" column="38" lean-forward="true" selection-start-line="435" selection-start-column="38" selection-end-line="435" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -472,8 +465,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/logic/parserPrueba.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="468" column="52" lean-forward="true" selection-start-line="468" selection-start-column="52" selection-end-line="468" selection-end-column="52" />
+        <state relative-caret-position="221">
+          <caret line="435" column="38" lean-forward="true" selection-start-line="435" selection-start-column="38" selection-end-line="435" selection-end-column="38" />
           <folding />
         </state>
       </provider>

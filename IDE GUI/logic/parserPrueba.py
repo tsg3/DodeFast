@@ -435,11 +435,9 @@ def run(p):
                         exit = True
                         for j in i[1]:
                             run(j)
-                        break
+                        st += " --> Acciones del Caso " + str(case) + " bien hechas!"
                     case += 1
-                if exit == True:
-                    st += " --> Acciones del Caso " + str(case) + " bien hechas!"
-                else:
+                if exit == False:
                     for k in p[2]:
                         run(k)
                     st += " --> Acciones del SINO bien hechas!"
