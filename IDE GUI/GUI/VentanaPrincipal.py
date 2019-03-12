@@ -12,6 +12,32 @@ def obtener_codigo():
     else:
         printTerminal("Before saving, upload or create a program!", True)
 
+def separate_code(code):
+    openbrace = 0
+    pos = []
+    x = 0
+    for i in code:
+        if i == '{':
+            openbrace += 1
+        elif i == '}':
+            openbrace -= 1
+        elif i == ';' and openbrace == 0:
+            pos.append(x)
+        x += 1
+    lista = []
+    n = len(pos)
+    y = 0
+    while y < n:
+        if y == 0:
+            lista.append(code[:pos[y]])
+        else:
+            lista.append(code[pos[y - 1] + 1:pos[y]])
+        y += 1
+    lista.append(code[pos[-1] + 1:])
+    if openbrace == 0:
+        return lista
+    else:
+        return "--> Bad distribution of brackets!"
 
 # codeurl = C:\Users\este0\Desktop\TEC\2019 - I Semestre\Compiladores, Intérpretes y Lenguajes\DodeFast\codigosPrueba\codigo.txt
 
@@ -21,15 +47,22 @@ def correr_codigo():
         archivoCodigo = open(current_URL, "r")
         codigo = archivoCodigo.read()
         archivoCodigo.close()
-        codigo = codigo.strip().replace('\n', '')
-        codigo = codigo.split(';')
+        #codigo = codigo.strip().replace('\n', '')
+        #codigo = codigo.split(';')
         printTerminal("", True)
-        for i in codigo:
-            result = logic.parserPrueba.Parse_Code(i)
-            printTerminal(result[0], False)
-            if result[1]:
-                break
-        logic.parserPrueba.variables.clear()
+        codigo = codigo.strip().replace('\n','').replace('\t','')
+        codigo = separate_code(codigo)
+        if type(codigo) == str:
+            printTerminal(codigo, False)
+        else:
+            for i in codigo:
+                print(i)
+                result = logic.parserPrueba.Parse_Code(i)
+                if len(result[0]) > 0:
+                    printTerminal(result[0], False)
+                if result[1]:
+                    break
+            logic.parserPrueba.variables.clear()
 
     else:
         printTerminal("Before running, load a program!", True)
