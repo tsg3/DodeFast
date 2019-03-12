@@ -9,9 +9,9 @@ error = False
 
 line = 0
 
-tokens = ['INT','IDEN','EQUALS','PLUS','MINUS','MULTIPLY','DIVIDE','DCL','ASSIGN','SAME','LESS','MORE','NON_EQUAL','LESS_EQUAL','MORE_EQUAL','ENCASO','CUANDO','ENTONS','SINO','FINCASO','SEPARATOR','LBRACE','RBRACE']
+tokens = ['INT','IDEN','EQUALS','PLUS','MINUS','MULTIPLY','DIVIDE','DCL','ASSIGN','SAME','LESS','MORE','NON_EQUAL','LESS_EQUAL','MORE_EQUAL','ENCASO','CUANDO','ENTONS','SINO','FINCASO','SEPARATOR','LBRACE','RBRACE','REPITA','MIENTRAS']
 
-reserved_words = ['DCL','DEFAULT','ENCASO','FINCASO','SINO','ENTONS','CUANDO']
+#reserved_words = ['DCL','DEFAULT','ENCASO','FINCASO','SINO','ENTONS','CUANDO','REPITA','HASTAENCONTRAR']
 
 t_SAME = r'[\s]*\=\=[\s]*'
 t_LESS = r'[\s]*\<[\s]*'
@@ -72,18 +72,27 @@ def t_FINCASO(t):
     t.type = 'FINCASO'
     return t
 
+def t_REPITA(t):
+    r'[\s]*REPITA[\s]+'
+    t.type = 'REPITA'
+    return t
+
+def t_MIENTRAS(t):
+    r'[\s]*MIENTRAS[\s]+'
+    t.type = 'MIENTRAS'
+    return t
 
 def t_IDEN(t):
     r'[a-zA-Z_][a-zA-Z_0-9@#]*'
-    global reserved_words
+    '''global reserved_words
     if t.value in reserved_words:
         if reserved_words.index(t.value) == 'DEFAULT':
             t.type = reserved_words(reserved_words.index(t.value))
         else:
             t.type = t.value
 
-    else:
-        t.type = 'IDEN'
+    else:'''
+    t.type = 'IDEN'
     return t
 
 def t_error(t):
@@ -112,9 +121,16 @@ def p_parse(p):
           | sentence
           | cases
           | empty
+          | repeat
     '''
     print(p[1])
     run(p[1])
+
+def p_repeat(p):
+    '''
+    repeat : REPITA actions MIENTRAS comparative
+    '''
+    p[0] = ('repetir',p[2],p[4])
 
 def p_cases(p):
     '''
@@ -167,7 +183,7 @@ def p_more_options1(p):
 
 def p_actions(p):
     '''
-    actions : sentence more_actions
+    actions : var_assign more_actions
     '''
     p[0] = (p[1],) + p[2]
 
@@ -465,6 +481,18 @@ def run(p):
                     for k in p[3]:
                         run(k)
                     st += " --> Acciones del SINO bien hechas!"
+
+
+        elif p[0] == 'repetir':
+            st += "--> Repeticion"
+            while True:
+                for i in p[1]:
+                    st += " "
+                    run(i)
+                if (run(p[2]) == False):
+                    break;
+            st += " --> Repeticion finalizada!"
+
     else:
         return p
 
