@@ -1,18 +1,9 @@
 DCL a DEFAULT 1;
 ENCASO
-   CUANDO a == 2 ENTONS
-    {DCL b DEFAULT 1}
-   CUANDO a < 4 ENTONS
-    {DCL b DEFAULT 2}
-   CUANDO a > 2 ENTONS
-    {DCL b DEFAULT 3}
-   CUANDO a <> 1 ENTONS
-    {DCL b DEFAULT 4}
-   CUANDO a >= 2 ENTONS
-    {DCL b DEFAULT 5}
-   CUANDO a <= 2 ENTONS
-    {DCL d DEFAULT 9 ; DCL d_2 DEFAULT d+2}
+   CUANDO a > 1 ENTONS
+    {a = 1}
    SINO
-    {DCL b DEFAULT 7}
+    {a = 7}
 FINCASO;
-DCL c DEFAULT a+b
+DCL c DEFAULT a
+
