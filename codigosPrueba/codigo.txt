@@ -3,3 +3,7 @@ a = 8+4;
 a==12;
 DCL final_a DEFAULT a;
 
+a < 14;
+a == 3+4;
+a == final_a
+

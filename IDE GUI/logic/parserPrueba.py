@@ -9,22 +9,16 @@ error = False
 
 line = 0
 
-tokens = [
-    'INT',
-    'IDEN',
-    'EQUALS',
-    'PLUS',
-    'MINUS',
-    'MULTIPLY',
-    'DIVIDE',
-    'DCL',
-    'ASSIGN',
-    'LESS',
-    'MORE',
-    'NON_EQUAL',
-    'LESS_EQUAL',
-    'MORE_EQUAL'
-]
+tokens = ['INT','IDEN','EQUALS','PLUS','MINUS','MULTIPLY','DIVIDE','DCL','ASSIGN','SAME','LESS','MORE','NON_EQUAL','LESS_EQUAL','MORE_EQUAL','ENCASO','CUANDO','ENTONS','SINO','FINCASO','SEPARATOR','LBRACE','RBRACE']
+
+reserved_words = ['DCL','DEFAULT','ENCASO','FINCASO','SINO','ENTONS','CUANDO']
+
+t_SAME = r'[\s]*\=\=[\s]*'
+t_LESS = r'[\s]*\<[\s]*'
+t_MORE = r'[\s]*\>[\s]*'
+t_NON_EQUAL = r'[\s]*\<\>[\s]*'
+t_LESS_EQUAL = r'[\s]*\<\=[\s]*'
+t_MORE_EQUAL = r'[\s]*\>\=[\s]*'
 
 t_EQUALS = r'[\s]*\=[\s]*'
 t_PLUS = r'[\s]*\+[\s]*'
@@ -32,11 +26,9 @@ t_MINUS = r'[\s]*\-[\s]*'
 t_MULTIPLY = r'[\s]*\*[\s]*'
 t_DIVIDE = r'[\s]*\/[\s]*'
 
-t_LESS = r'[\s]*<[\s]*'
-t_MORE = r'[\s]*>[\s]*'
-t_NON_EQUAL = r'[\s]*<>[\s]*'
-t_LESS_EQUAL = r'[\s]*<=[\s]*'
-t_MORE_EQUAL = r'[\s]*>=[\s]*'
+t_SEPARATOR = r'[\s]*\;[\s]*'
+t_LBRACE = r'[\s]*\{[\s]*'
+t_RBRACE = r'[\s]*\}[\s]*'
 
 def t_INT(t):
     r'\d+'
@@ -55,12 +47,44 @@ def t_ASSIGN(t):
     t.type = 'ASSIGN'
     return t
 
+def t_ENCASO(t):
+    r'[\s]*ENCASO[\s]+'
+    t.type = 'ENCASO'
+    return t
+
+def t_CUANDO(t):
+    r'[\s]*CUANDO[\s]+'
+    t.type = 'CUANDO'
+    return t
+
+def t_ENTONS(t):
+    r'[\s]+ENTONS[\s]*'
+    t.type = 'ENTONS'
+    return t
+
+def t_SINO(t):
+    r'[\s]*SINO[\s]*'
+    t.type = 'SINO'
+    return t
+
+def t_FINCASO(t):
+    r'[\s]*FINCASO[\s]*'
+    t.type = 'FINCASO'
+    return t
+
 
 def t_IDEN(t):
     r'[a-zA-Z_][a-zA-Z_0-9@#]*'
-    t.type = 'IDEN'
-    return t
+    global reserved_words
+    if t.value in reserved_words:
+        if reserved_words.index(t.value) == 'DEFAULT':
+            t.type = reserved_words(reserved_words.index(t.value))
+        else:
+            t.type = t.value
 
+    else:
+        t.type = 'IDEN'
+    return t
 
 def t_error(t):
     global error
@@ -82,18 +106,87 @@ precedence = (
     ('left', 'MULTIPLY', 'DIVIDE')
 )
 
-
 def p_parse(p):
     '''
     parse : comparative
-          | expression
-          | var_declare
-          | var_assign
+          | sentence
+          | cases
           | empty
     '''
-    # print(p[1])
+    print(p[1])
     run(p[1])
 
+def p_cases(p):
+    '''
+    cases : syntax1
+          | syntax2
+    '''
+    p[0] = p[1]
+
+def p_syntax2(p):
+    '''
+    syntax2 : ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO
+    '''
+    p[0] = ('caso',('var',p[2]),p[3],p[6])
+
+def p_options2(p):
+    '''
+    options2 : CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2
+    '''
+    p[0] = () + ((p[2].strip(),p[3],p[6]),) + p[8]
+
+def p_more_options2(p):
+    '''
+    more_options2 : options2
+                 | empty
+    '''
+    p[0] = p[1]
+    if p[0] == 0:
+        p[0] = ()
+
+def p_syntax1(p):
+    '''
+    syntax1 : ENCASO options1 SINO LBRACE actions RBRACE FINCASO
+    '''
+    p[0] = ('caso',p[2],p[5])
+
+def p_options1(p):
+    '''
+    options1 : CUANDO comparative ENTONS LBRACE actions RBRACE more_options1
+    '''
+    p[0] = () + ((p[2],p[5]),) + p[7]
+
+def p_more_options1(p):
+    '''
+    more_options1 : options1
+                 | empty
+    '''
+    p[0] = p[1]
+    if p[0] == 0:
+        p[0] = ()
+
+def p_actions(p):
+    '''
+    actions : sentence more_actions
+    '''
+    p[0] = (p[1],) + p[2]
+
+def p_more_actions(p):
+    '''
+    more_actions : SEPARATOR actions
+                 | empty
+    '''
+    if p[1] == 0:
+        p[0] = ()
+    else:
+        p[0] = p[2]
+
+def p_sentence(p):
+    '''
+    sentence : var_declare
+             | var_assign
+    '''
+    p[0] = p[1]
 
 def p_var_declare(p):
     '''
@@ -119,29 +212,20 @@ def p_initialize(p):
 
 def p_comparative(p):
     '''
-    comparative : expression EQUALS EQUALS expression
-                | IDEN EQUALS EQUALS expression
+    comparative : IDEN condition expression
     '''
-    comp1 = p[1]
-    if type(p[1]) == str:
-        comp1 = ('var', p[1])
-    p[0] = ('==', comp1, p[4])
+    p[0] = (p[2].strip(), ('var',p[1]), p[3])
 
 
 def p_var_assign(p):
     '''
     var_assign : IDEN EQUALS expression
     '''
-    p[0] = ('=', p[1], p[3])
-
+    p[0] = (p[2].strip(), ('var',p[1]), p[3])
 
 def p_expression(p):
     '''
-    expression : expression MULTIPLY expression
-               | expression DIVIDE expression
-               | expression PLUS expression
-               | expression MINUS expression
-               | expression condition expression
+    expression : expression operator expression
     '''
     p[0] = (p[2].strip(), p[1], p[3])
 
@@ -159,18 +243,26 @@ def p_expression_int(p):
     '''
     p[0] = p[1]
 
+def p_operator(p):
+    '''
+    operator : MULTIPLY
+             | DIVIDE
+             | PLUS
+             | MINUS
+    '''
+    p[0] = p[1]
 
 def p_condition(p):
     '''
-    condition : LESS
+    condition : SAME
+              | LESS
               | MORE
               | NON_EQUAL
               | LESS_EQUAL
               | MORE_EQUAL
     '''
 
-    p[0] = p[1].strip()
-
+    p[0] = p[1]
 
 def p_error(p):
     global st
@@ -229,14 +321,14 @@ def run(p):
 
         #   ASIGNACION
         elif p[0] == '=':
-            if p[1] not in variables:
+            if p[1][1] not in variables:
                 error = True
                 st += "--> You tried to assign a value to an undeclared variable!"
             else:
                 x = run(p[2])
                 try:
-                    variables[p[1]] = 0 + x
-                    st += '--> ' + p[1] + ' = ' + str(x)
+                    variables[p[1][1]] = 0 + x
+                    st += '--> ' + p[1][1] + ' = ' + str(x)
                 except TypeError:
                     error = True
                     st += x
@@ -268,66 +360,113 @@ def run(p):
             first_compared = run(p[1])
             second_compared = run(p[2])
             if type(first_compared) == int and type(second_compared) == int:
-                st += '--> ' + str(first_compared == second_compared)
+                return first_compared == second_compared
             elif type(first_compared) == str and type(second_compared) == str:
-                st += "--> Both expressions are undeclared!"
+                return "Both expressions are undeclared!"
             else:
-                st += "--> One expression is undeclared!"
+                return "One expression is undeclared!"
 
         #   'MENOR QUE'
         elif p[0] == '<':
             first_compared = run(p[1])
             second_compared = run(p[2])
             if type(first_compared) == int and type(second_compared) == int:
-                st += '--> ' + str(first_compared < second_compared)
+                return first_compared < second_compared
             elif type(first_compared) == str and type(second_compared) == str:
-                st += "--> Both expression are undeclared!"
+                return "Both expressions are undeclared!"
             else:
-                st += "--> One expression is undeclared!"
+                return "One expression is undeclared!"
 
         #   'MAYOR QUE'
         elif p[0] == '>':
             first_compared = run(p[1])
             second_compared = run(p[2])
             if type(first_compared) == int and type(second_compared) == int:
-                st += '--> ' + str(first_compared > second_compared)
+                return first_compared > second_compared
             elif type(first_compared) == str and type(second_compared) == str:
-                st += "--> Both expression are undeclared!"
+                return "Both expressions are undeclared!"
             else:
-                st += "--> One expression is undeclared!"
+                return "One expression is undeclared!"
 
         #   'DIFERENTE QUE'
         elif p[0] == '<>':
             first_compared = run(p[1])
             second_compared = run(p[2])
             if type(first_compared) == int and type(second_compared) == int:
-                st += '--> ' + str(first_compared != second_compared)
+                return first_compared != second_compared
             elif type(first_compared) == str and type(second_compared) == str:
-                st += "-->Both expression are undeclared!"
+                return "Both expressions are undeclared!"
             else:
-                st += "-->One expression is undeclared!"
+                return "One expression is undeclared!"
 
         #   'MENOR O IGUAL QUE'
         elif p[0] == '<=':
             first_compared = run(p[1])
             second_compared = run(p[2])
             if type(first_compared) == int and type(second_compared) == int:
-                st += '--> ' + str(first_compared <= second_compared)
+                return first_compared <= second_compared
             elif type(first_compared) == str and type(second_compared) == str:
-                st += "--> Both expression are undeclared!"
+                return "Both expressions are undeclared!"
             else:
-                st += "--> One expression is undeclared!"
+                return "One expression is undeclared!"
 
         #   'MAYOR O IGUAL QUE'
         elif p[0] == '>=':
             first_compared = run(p[1])
             second_compared = run(p[2])
             if type(first_compared) == int and type(second_compared) == int:
-                st += '--> ' + str(first_compared >= second_compared)
+                return first_compared >= second_compared
             elif type(first_compared) == str and type(second_compared) == str:
-                st += "--> Both expression are undeclared!"
+                return "Both expressions are undeclared!"
             else:
-                st += "--> One expression is undeclared!"
+                return "One expression is undeclared!"
+
+        elif p[0] == 'caso':
+            if len(p) == 3:
+                st += "--> Syntax 1 "
+                exit = False
+                case = 1
+                for i in p[1]:
+                    x = run(i[0])
+                    if type(x) == str:
+                        st += x
+                        return
+                    elif x == True:
+                        exit = True
+                        for j in i[1]:
+                            run(j)
+                        break
+                    case += 1
+                if exit == True:
+                    st += " --> Acciones del Caso " + str(case) + " bien hechas!"
+                else:
+                    for k in p[2]:
+                        run(k)
+                    st += " --> Acciones del SINO bien hechas!"
+            else:
+                st += "--> Syntax 2"
+                exit = False
+                case = 1
+                for i in p[2]:
+                    y = (i[0],p[1],i[1])
+                    x = run(y)
+                    print(y)
+                    print(x)
+                    if type(x) == str:
+                        st += x
+                        return
+                    elif x == True:
+                        exit = True
+                        for j in i[2]:
+                            run(j)
+                        break
+                    case += 1
+                if exit == True:
+                    st += " --> Acciones del Caso " + str(case) + " bien hechas!"
+                else:
+                    for k in p[3]:
+                        run(k)
+                    st += " --> Acciones del SINO bien hechas!"
     else:
         return p
 
