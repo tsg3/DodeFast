@@ -11,9 +11,11 @@ error = False
 
 line = 0
 
+
 tokens = ['INT', 'IDEN', 'EQUALS', 'PLUS', 'MINUS', 'MULTIPLY', 'DIVIDE', 'DCL', 'ASSIGN', 'SAME', 'LESS', 'MORE',
           'NON_EQUAL', 'LESS_EQUAL', 'MORE_EQUAL', 'ENCASO', 'CUANDO', 'ENTONS', 'SINO', 'FINCASO', 'SEPARATOR',
           'LBRACE', 'RBRACE', 'REPITA', 'MIENTRAS']
+
 
 # reserved_words = ['DCL','DEFAULT','ENCASO','FINCASO','SINO','ENTONS','CUANDO','REPITA','HASTAENCONTRAR']
 
@@ -90,8 +92,28 @@ def t_REPITA(t):
 
 
 def t_MIENTRAS(t):
-    r'[\s]*MIENTRAS[\s]+'
+    r'[\s]+MIENTRAS[\s]+'
     t.type = 'MIENTRAS'
+    return t
+
+def t_FINDESDE(t):
+    r'[\s]*FINDESDE[\s]*'
+    t.type = 'FINDESDE'
+    return t
+
+def t_DESDE(t):
+    r'[\s]*DESDE[\s]*'
+    t.type = 'DESDE'
+    return t
+
+def t_HASTA(t):
+    r'[\s]*HASTA[\s]*'
+    t.type = 'HASTA'
+    return t
+
+def t_HAGA(t):
+    r'[\s]*HAGA[\s]*'
+    t.type = 'HAGA'
     return t
 
 
@@ -137,10 +159,17 @@ def p_parse(p):
           | cases
           | empty
           | repeat
+          | do
     '''
     print(p[1])
     run(p[1])
 
+
+def p_do(p):
+    '''
+    do : DESDE IDEN EQUALS expression HASTA expression HAGA FINDESDE
+    '''
+    p[0] = ('haga','esto')
 
 def p_repeat(p):
     '''
@@ -524,6 +553,9 @@ def run(p):
                 if (run(p[2]) == False):
                     break
             st += " --> Repeticion finalizada!"
+
+        elif p[0] == 'haga':
+            st += "--> Haga esto!"
 
     else:
         return p
