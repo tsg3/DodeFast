@@ -1,0 +1,4 @@
+DCL a DEFAULT 100;
+a = 7 + 4;
+DESDE itr = 5 HASTA 9 HAGA FINDESDE;
+a = a * a

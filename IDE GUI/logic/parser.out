@@ -8,95 +8,102 @@ Rule 2     parse -> sentence
 Rule 3     parse -> cases
 Rule 4     parse -> empty
 Rule 5     parse -> repeat
-Rule 6     repeat -> REPITA actions MIENTRAS comparative
-Rule 7     cases -> syntax1
-Rule 8     cases -> syntax2
-Rule 9     syntax2 -> ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO
-Rule 10    options2 -> CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2
-Rule 11    more_options2 -> options2
-Rule 12    more_options2 -> empty
-Rule 13    syntax1 -> ENCASO options1 SINO LBRACE actions RBRACE FINCASO
-Rule 14    options1 -> CUANDO comparative ENTONS LBRACE actions RBRACE more_options1
-Rule 15    more_options1 -> options1
-Rule 16    more_options1 -> empty
-Rule 17    actions -> var_assign more_actions
-Rule 18    more_actions -> SEPARATOR actions
-Rule 19    more_actions -> empty
-Rule 20    sentence -> var_declare
-Rule 21    sentence -> var_assign
-Rule 22    var_declare -> DCL IDEN value
-Rule 23    value -> initialize
-Rule 24    value -> empty
-Rule 25    initialize -> ASSIGN expression
-Rule 26    comparative -> IDEN condition expression
-Rule 27    var_assign -> IDEN EQUALS expression
-Rule 28    expression -> expression operator expression
-Rule 29    expression -> IDEN
-Rule 30    expression -> INT
-Rule 31    operator -> MULTIPLY
-Rule 32    operator -> DIVIDE
-Rule 33    operator -> PLUS
-Rule 34    operator -> MINUS
-Rule 35    condition -> SAME
-Rule 36    condition -> LESS
-Rule 37    condition -> MORE
-Rule 38    condition -> NON_EQUAL
-Rule 39    condition -> LESS_EQUAL
-Rule 40    condition -> MORE_EQUAL
-Rule 41    empty -> <empty>
+Rule 6     parse -> do
+Rule 7     do -> DESDE IDEN EQUALS expression HASTA expression HAGA FINDESDE
+Rule 8     repeat -> REPITA actions MIENTRAS comparative
+Rule 9     cases -> syntax1
+Rule 10    cases -> syntax2
+Rule 11    syntax2 -> ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO
+Rule 12    options2 -> CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2
+Rule 13    more_options2 -> options2
+Rule 14    more_options2 -> empty
+Rule 15    syntax1 -> ENCASO options1 SINO LBRACE actions RBRACE FINCASO
+Rule 16    options1 -> CUANDO comparative ENTONS LBRACE actions RBRACE more_options1
+Rule 17    more_options1 -> options1
+Rule 18    more_options1 -> empty
+Rule 19    actions -> var_assign more_actions
+Rule 20    more_actions -> SEPARATOR actions
+Rule 21    more_actions -> empty
+Rule 22    sentence -> var_declare
+Rule 23    sentence -> var_assign
+Rule 24    var_declare -> DCL IDEN value
+Rule 25    value -> initialize
+Rule 26    value -> empty
+Rule 27    initialize -> ASSIGN expression
+Rule 28    comparative -> IDEN condition expression
+Rule 29    var_assign -> IDEN EQUALS expression
+Rule 30    expression -> expression operator expression
+Rule 31    expression -> IDEN
+Rule 32    expression -> INT
+Rule 33    operator -> MULTIPLY
+Rule 34    operator -> DIVIDE
+Rule 35    operator -> PLUS
+Rule 36    operator -> MINUS
+Rule 37    condition -> SAME
+Rule 38    condition -> LESS
+Rule 39    condition -> MORE
+Rule 40    condition -> NON_EQUAL
+Rule 41    condition -> LESS_EQUAL
+Rule 42    condition -> MORE_EQUAL
+Rule 43    empty -> <empty>
 
 Terminals, with rules where they appear
 
-ASSIGN               : 25
-CUANDO               : 10 14
-DCL                  : 22
-DIVIDE               : 32
-ENCASO               : 9 13
-ENTONS               : 10 14
-EQUALS               : 27
-FINCASO              : 9 13
-IDEN                 : 9 22 26 27 29
-INT                  : 30
-LBRACE               : 9 10 13 14
-LESS                 : 36
-LESS_EQUAL           : 39
-MIENTRAS             : 6
-MINUS                : 34
-MORE                 : 37
-MORE_EQUAL           : 40
-MULTIPLY             : 31
-NON_EQUAL            : 38
-PLUS                 : 33
-RBRACE               : 9 10 13 14
-REPITA               : 6
-SAME                 : 35
-SEPARATOR            : 18
-SINO                 : 9 13
+ASSIGN               : 27
+CUANDO               : 12 16
+DCL                  : 24
+DESDE                : 7
+DIVIDE               : 34
+ENCASO               : 11 15
+ENTONS               : 12 16
+EQUALS               : 7 29
+FINCASO              : 11 15
+FINDESDE             : 7
+HAGA                 : 7
+HASTA                : 7
+IDEN                 : 7 11 24 28 29 31
+INT                  : 32
+LBRACE               : 11 12 15 16
+LESS                 : 38
+LESS_EQUAL           : 41
+MIENTRAS             : 8
+MINUS                : 36
+MORE                 : 39
+MORE_EQUAL           : 42
+MULTIPLY             : 33
+NON_EQUAL            : 40
+PLUS                 : 35
+RBRACE               : 11 12 15 16
+REPITA               : 8
+SAME                 : 37
+SEPARATOR            : 20
+SINO                 : 11 15
 error                : 
 
 Nonterminals, with rules where they appear
 
-actions              : 6 9 10 13 14 18
+actions              : 8 11 12 15 16 20
 cases                : 3
-comparative          : 1 6 14
-condition            : 10 26
-empty                : 4 12 16 19 24
-expression           : 10 25 26 27 28 28
-initialize           : 23
-more_actions         : 17
-more_options1        : 14
-more_options2        : 10
-operator             : 28
-options1             : 13 15
-options2             : 9 11
+comparative          : 1 8 16
+condition            : 12 28
+do                   : 6
+empty                : 4 14 18 21 26
+expression           : 7 7 12 27 28 29 30 30
+initialize           : 25
+more_actions         : 19
+more_options1        : 16
+more_options2        : 12
+operator             : 30
+options1             : 15 17
+options2             : 11 13
 parse                : 0
 repeat               : 5
 sentence             : 2
-syntax1              : 7
-syntax2              : 8
-value                : 22
-var_assign           : 17 21
-var_declare          : 20
+syntax1              : 9
+syntax2              : 10
+value                : 24
+var_assign           : 19 23
+var_declare          : 22
 
 Parsing method: LALR
 
@@ -108,23 +115,26 @@ state 0
     (3) parse -> . cases
     (4) parse -> . empty
     (5) parse -> . repeat
-    (26) comparative -> . IDEN condition expression
-    (20) sentence -> . var_declare
-    (21) sentence -> . var_assign
-    (7) cases -> . syntax1
-    (8) cases -> . syntax2
-    (41) empty -> .
-    (6) repeat -> . REPITA actions MIENTRAS comparative
-    (22) var_declare -> . DCL IDEN value
-    (27) var_assign -> . IDEN EQUALS expression
-    (13) syntax1 -> . ENCASO options1 SINO LBRACE actions RBRACE FINCASO
-    (9) syntax2 -> . ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO
+    (6) parse -> . do
+    (28) comparative -> . IDEN condition expression
+    (22) sentence -> . var_declare
+    (23) sentence -> . var_assign
+    (9) cases -> . syntax1
+    (10) cases -> . syntax2
+    (43) empty -> .
+    (8) repeat -> . REPITA actions MIENTRAS comparative
+    (7) do -> . DESDE IDEN EQUALS expression HASTA expression HAGA FINDESDE
+    (24) var_declare -> . DCL IDEN value
+    (29) var_assign -> . IDEN EQUALS expression
+    (15) syntax1 -> . ENCASO options1 SINO LBRACE actions RBRACE FINCASO
+    (11) syntax2 -> . ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO
 
-    IDEN            shift and go to state 7
-    $end            reduce using rule 41 (empty -> .)
-    REPITA          shift and go to state 12
-    DCL             shift and go to state 13
-    ENCASO          shift and go to state 14
+    IDEN            shift and go to state 8
+    $end            reduce using rule 43 (empty -> .)
+    REPITA          shift and go to state 13
+    DESDE           shift and go to state 14
+    DCL             shift and go to state 15
+    ENCASO          shift and go to state 16
 
     parse                          shift and go to state 1
     comparative                    shift and go to state 2
@@ -132,10 +142,11 @@ state 0
     cases                          shift and go to state 4
     empty                          shift and go to state 5
     repeat                         shift and go to state 6
-    var_declare                    shift and go to state 8
-    var_assign                     shift and go to state 9
-    syntax1                        shift and go to state 10
-    syntax2                        shift and go to state 11
+    do                             shift and go to state 7
+    var_declare                    shift and go to state 9
+    var_assign                     shift and go to state 10
+    syntax1                        shift and go to state 11
+    syntax2                        shift and go to state 12
 
 state 1
 
@@ -180,749 +191,848 @@ state 6
 
 state 7
 
-    (26) comparative -> IDEN . condition expression
-    (27) var_assign -> IDEN . EQUALS expression
-    (35) condition -> . SAME
-    (36) condition -> . LESS
-    (37) condition -> . MORE
-    (38) condition -> . NON_EQUAL
-    (39) condition -> . LESS_EQUAL
-    (40) condition -> . MORE_EQUAL
+    (6) parse -> do .
 
-    EQUALS          shift and go to state 16
-    SAME            shift and go to state 17
-    LESS            shift and go to state 18
-    MORE            shift and go to state 19
-    NON_EQUAL       shift and go to state 20
-    LESS_EQUAL      shift and go to state 21
-    MORE_EQUAL      shift and go to state 22
+    $end            reduce using rule 6 (parse -> do .)
 
-    condition                      shift and go to state 15
 
 state 8
 
-    (20) sentence -> var_declare .
+    (28) comparative -> IDEN . condition expression
+    (29) var_assign -> IDEN . EQUALS expression
+    (37) condition -> . SAME
+    (38) condition -> . LESS
+    (39) condition -> . MORE
+    (40) condition -> . NON_EQUAL
+    (41) condition -> . LESS_EQUAL
+    (42) condition -> . MORE_EQUAL
 
-    $end            reduce using rule 20 (sentence -> var_declare .)
+    EQUALS          shift and go to state 18
+    SAME            shift and go to state 19
+    LESS            shift and go to state 20
+    MORE            shift and go to state 21
+    NON_EQUAL       shift and go to state 22
+    LESS_EQUAL      shift and go to state 23
+    MORE_EQUAL      shift and go to state 24
 
+    condition                      shift and go to state 17
 
 state 9
 
-    (21) sentence -> var_assign .
+    (22) sentence -> var_declare .
 
-    $end            reduce using rule 21 (sentence -> var_assign .)
+    $end            reduce using rule 22 (sentence -> var_declare .)
 
 
 state 10
 
-    (7) cases -> syntax1 .
+    (23) sentence -> var_assign .
 
-    $end            reduce using rule 7 (cases -> syntax1 .)
+    $end            reduce using rule 23 (sentence -> var_assign .)
 
 
 state 11
 
-    (8) cases -> syntax2 .
+    (9) cases -> syntax1 .
 
-    $end            reduce using rule 8 (cases -> syntax2 .)
+    $end            reduce using rule 9 (cases -> syntax1 .)
 
 
 state 12
 
-    (6) repeat -> REPITA . actions MIENTRAS comparative
-    (17) actions -> . var_assign more_actions
-    (27) var_assign -> . IDEN EQUALS expression
+    (10) cases -> syntax2 .
 
-    IDEN            shift and go to state 25
+    $end            reduce using rule 10 (cases -> syntax2 .)
 
-    actions                        shift and go to state 23
-    var_assign                     shift and go to state 24
 
 state 13
 
-    (22) var_declare -> DCL . IDEN value
+    (8) repeat -> REPITA . actions MIENTRAS comparative
+    (19) actions -> . var_assign more_actions
+    (29) var_assign -> . IDEN EQUALS expression
 
-    IDEN            shift and go to state 26
+    IDEN            shift and go to state 27
 
+    actions                        shift and go to state 25
+    var_assign                     shift and go to state 26
 
 state 14
 
-    (13) syntax1 -> ENCASO . options1 SINO LBRACE actions RBRACE FINCASO
-    (9) syntax2 -> ENCASO . IDEN options2 SINO LBRACE actions RBRACE FINCASO
-    (14) options1 -> . CUANDO comparative ENTONS LBRACE actions RBRACE more_options1
+    (7) do -> DESDE . IDEN EQUALS expression HASTA expression HAGA FINDESDE
 
     IDEN            shift and go to state 28
-    CUANDO          shift and go to state 29
 
-    options1                       shift and go to state 27
 
 state 15
 
-    (26) comparative -> IDEN condition . expression
-    (28) expression -> . expression operator expression
-    (29) expression -> . IDEN
-    (30) expression -> . INT
+    (24) var_declare -> DCL . IDEN value
 
-    IDEN            shift and go to state 30
-    INT             shift and go to state 32
+    IDEN            shift and go to state 29
 
-    expression                     shift and go to state 31
 
 state 16
 
-    (27) var_assign -> IDEN EQUALS . expression
-    (28) expression -> . expression operator expression
-    (29) expression -> . IDEN
-    (30) expression -> . INT
+    (15) syntax1 -> ENCASO . options1 SINO LBRACE actions RBRACE FINCASO
+    (11) syntax2 -> ENCASO . IDEN options2 SINO LBRACE actions RBRACE FINCASO
+    (16) options1 -> . CUANDO comparative ENTONS LBRACE actions RBRACE more_options1
 
-    IDEN            shift and go to state 30
-    INT             shift and go to state 32
+    IDEN            shift and go to state 31
+    CUANDO          shift and go to state 32
 
-    expression                     shift and go to state 33
+    options1                       shift and go to state 30
 
 state 17
 
-    (35) condition -> SAME .
+    (28) comparative -> IDEN condition . expression
+    (30) expression -> . expression operator expression
+    (31) expression -> . IDEN
+    (32) expression -> . INT
 
-    IDEN            reduce using rule 35 (condition -> SAME .)
-    INT             reduce using rule 35 (condition -> SAME .)
+    IDEN            shift and go to state 33
+    INT             shift and go to state 35
 
+    expression                     shift and go to state 34
 
 state 18
 
-    (36) condition -> LESS .
+    (29) var_assign -> IDEN EQUALS . expression
+    (30) expression -> . expression operator expression
+    (31) expression -> . IDEN
+    (32) expression -> . INT
 
-    IDEN            reduce using rule 36 (condition -> LESS .)
-    INT             reduce using rule 36 (condition -> LESS .)
+    IDEN            shift and go to state 33
+    INT             shift and go to state 35
 
+    expression                     shift and go to state 36
 
 state 19
 
-    (37) condition -> MORE .
+    (37) condition -> SAME .
 
-    IDEN            reduce using rule 37 (condition -> MORE .)
-    INT             reduce using rule 37 (condition -> MORE .)
+    IDEN            reduce using rule 37 (condition -> SAME .)
+    INT             reduce using rule 37 (condition -> SAME .)
 
 
 state 20
 
-    (38) condition -> NON_EQUAL .
+    (38) condition -> LESS .
 
-    IDEN            reduce using rule 38 (condition -> NON_EQUAL .)
-    INT             reduce using rule 38 (condition -> NON_EQUAL .)
+    IDEN            reduce using rule 38 (condition -> LESS .)
+    INT             reduce using rule 38 (condition -> LESS .)
 
 
 state 21
 
-    (39) condition -> LESS_EQUAL .
+    (39) condition -> MORE .
 
-    IDEN            reduce using rule 39 (condition -> LESS_EQUAL .)
-    INT             reduce using rule 39 (condition -> LESS_EQUAL .)
+    IDEN            reduce using rule 39 (condition -> MORE .)
+    INT             reduce using rule 39 (condition -> MORE .)
 
 
 state 22
 
-    (40) condition -> MORE_EQUAL .
+    (40) condition -> NON_EQUAL .
 
-    IDEN            reduce using rule 40 (condition -> MORE_EQUAL .)
-    INT             reduce using rule 40 (condition -> MORE_EQUAL .)
+    IDEN            reduce using rule 40 (condition -> NON_EQUAL .)
+    INT             reduce using rule 40 (condition -> NON_EQUAL .)
 
 
 state 23
 
-    (6) repeat -> REPITA actions . MIENTRAS comparative
+    (41) condition -> LESS_EQUAL .
 
-    MIENTRAS        shift and go to state 34
+    IDEN            reduce using rule 41 (condition -> LESS_EQUAL .)
+    INT             reduce using rule 41 (condition -> LESS_EQUAL .)
 
 
 state 24
 
-    (17) actions -> var_assign . more_actions
-    (18) more_actions -> . SEPARATOR actions
-    (19) more_actions -> . empty
-    (41) empty -> .
+    (42) condition -> MORE_EQUAL .
 
-    SEPARATOR       shift and go to state 36
-    MIENTRAS        reduce using rule 41 (empty -> .)
-    RBRACE          reduce using rule 41 (empty -> .)
+    IDEN            reduce using rule 42 (condition -> MORE_EQUAL .)
+    INT             reduce using rule 42 (condition -> MORE_EQUAL .)
 
-    more_actions                   shift and go to state 35
-    empty                          shift and go to state 37
 
 state 25
 
-    (27) var_assign -> IDEN . EQUALS expression
+    (8) repeat -> REPITA actions . MIENTRAS comparative
 
-    EQUALS          shift and go to state 16
+    MIENTRAS        shift and go to state 37
 
 
 state 26
 
-    (22) var_declare -> DCL IDEN . value
-    (23) value -> . initialize
-    (24) value -> . empty
-    (25) initialize -> . ASSIGN expression
-    (41) empty -> .
+    (19) actions -> var_assign . more_actions
+    (20) more_actions -> . SEPARATOR actions
+    (21) more_actions -> . empty
+    (43) empty -> .
 
-    ASSIGN          shift and go to state 41
-    $end            reduce using rule 41 (empty -> .)
+    SEPARATOR       shift and go to state 39
+    MIENTRAS        reduce using rule 43 (empty -> .)
+    RBRACE          reduce using rule 43 (empty -> .)
 
-    value                          shift and go to state 38
-    initialize                     shift and go to state 39
+    more_actions                   shift and go to state 38
     empty                          shift and go to state 40
 
 state 27
 
-    (13) syntax1 -> ENCASO options1 . SINO LBRACE actions RBRACE FINCASO
+    (29) var_assign -> IDEN . EQUALS expression
 
-    SINO            shift and go to state 42
+    EQUALS          shift and go to state 18
 
 
 state 28
 
-    (9) syntax2 -> ENCASO IDEN . options2 SINO LBRACE actions RBRACE FINCASO
-    (10) options2 -> . CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2
+    (7) do -> DESDE IDEN . EQUALS expression HASTA expression HAGA FINDESDE
 
-    CUANDO          shift and go to state 44
+    EQUALS          shift and go to state 41
 
-    options2                       shift and go to state 43
 
 state 29
 
-    (14) options1 -> CUANDO . comparative ENTONS LBRACE actions RBRACE more_options1
-    (26) comparative -> . IDEN condition expression
+    (24) var_declare -> DCL IDEN . value
+    (25) value -> . initialize
+    (26) value -> . empty
+    (27) initialize -> . ASSIGN expression
+    (43) empty -> .
 
-    IDEN            shift and go to state 46
+    ASSIGN          shift and go to state 45
+    $end            reduce using rule 43 (empty -> .)
 
-    comparative                    shift and go to state 45
+    value                          shift and go to state 42
+    initialize                     shift and go to state 43
+    empty                          shift and go to state 44
 
 state 30
 
-    (29) expression -> IDEN .
+    (15) syntax1 -> ENCASO options1 . SINO LBRACE actions RBRACE FINCASO
 
-    MULTIPLY        reduce using rule 29 (expression -> IDEN .)
-    DIVIDE          reduce using rule 29 (expression -> IDEN .)
-    PLUS            reduce using rule 29 (expression -> IDEN .)
-    MINUS           reduce using rule 29 (expression -> IDEN .)
-    $end            reduce using rule 29 (expression -> IDEN .)
-    ENTONS          reduce using rule 29 (expression -> IDEN .)
-    SEPARATOR       reduce using rule 29 (expression -> IDEN .)
-    MIENTRAS        reduce using rule 29 (expression -> IDEN .)
-    RBRACE          reduce using rule 29 (expression -> IDEN .)
+    SINO            shift and go to state 46
 
 
 state 31
 
-    (26) comparative -> IDEN condition expression .
-    (28) expression -> expression . operator expression
-    (31) operator -> . MULTIPLY
-    (32) operator -> . DIVIDE
-    (33) operator -> . PLUS
-    (34) operator -> . MINUS
+    (11) syntax2 -> ENCASO IDEN . options2 SINO LBRACE actions RBRACE FINCASO
+    (12) options2 -> . CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2
 
-    $end            reduce using rule 26 (comparative -> IDEN condition expression .)
-    ENTONS          reduce using rule 26 (comparative -> IDEN condition expression .)
-    MULTIPLY        shift and go to state 48
-    DIVIDE          shift and go to state 49
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
+    CUANDO          shift and go to state 48
 
-    operator                       shift and go to state 47
+    options2                       shift and go to state 47
 
 state 32
 
-    (30) expression -> INT .
+    (16) options1 -> CUANDO . comparative ENTONS LBRACE actions RBRACE more_options1
+    (28) comparative -> . IDEN condition expression
 
-    MULTIPLY        reduce using rule 30 (expression -> INT .)
-    DIVIDE          reduce using rule 30 (expression -> INT .)
-    PLUS            reduce using rule 30 (expression -> INT .)
-    MINUS           reduce using rule 30 (expression -> INT .)
-    $end            reduce using rule 30 (expression -> INT .)
-    ENTONS          reduce using rule 30 (expression -> INT .)
-    SEPARATOR       reduce using rule 30 (expression -> INT .)
-    MIENTRAS        reduce using rule 30 (expression -> INT .)
-    RBRACE          reduce using rule 30 (expression -> INT .)
+    IDEN            shift and go to state 50
 
+    comparative                    shift and go to state 49
 
 state 33
 
-    (27) var_assign -> IDEN EQUALS expression .
-    (28) expression -> expression . operator expression
-    (31) operator -> . MULTIPLY
-    (32) operator -> . DIVIDE
-    (33) operator -> . PLUS
-    (34) operator -> . MINUS
+    (31) expression -> IDEN .
 
-    $end            reduce using rule 27 (var_assign -> IDEN EQUALS expression .)
-    SEPARATOR       reduce using rule 27 (var_assign -> IDEN EQUALS expression .)
-    MIENTRAS        reduce using rule 27 (var_assign -> IDEN EQUALS expression .)
-    RBRACE          reduce using rule 27 (var_assign -> IDEN EQUALS expression .)
-    MULTIPLY        shift and go to state 48
-    DIVIDE          shift and go to state 49
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
+    MULTIPLY        reduce using rule 31 (expression -> IDEN .)
+    DIVIDE          reduce using rule 31 (expression -> IDEN .)
+    PLUS            reduce using rule 31 (expression -> IDEN .)
+    MINUS           reduce using rule 31 (expression -> IDEN .)
+    $end            reduce using rule 31 (expression -> IDEN .)
+    ENTONS          reduce using rule 31 (expression -> IDEN .)
+    SEPARATOR       reduce using rule 31 (expression -> IDEN .)
+    MIENTRAS        reduce using rule 31 (expression -> IDEN .)
+    RBRACE          reduce using rule 31 (expression -> IDEN .)
+    HASTA           reduce using rule 31 (expression -> IDEN .)
+    HAGA            reduce using rule 31 (expression -> IDEN .)
 
-    operator                       shift and go to state 47
 
 state 34
 
-    (6) repeat -> REPITA actions MIENTRAS . comparative
-    (26) comparative -> . IDEN condition expression
+    (28) comparative -> IDEN condition expression .
+    (30) expression -> expression . operator expression
+    (33) operator -> . MULTIPLY
+    (34) operator -> . DIVIDE
+    (35) operator -> . PLUS
+    (36) operator -> . MINUS
 
-    IDEN            shift and go to state 46
+    $end            reduce using rule 28 (comparative -> IDEN condition expression .)
+    ENTONS          reduce using rule 28 (comparative -> IDEN condition expression .)
+    MULTIPLY        shift and go to state 52
+    DIVIDE          shift and go to state 53
+    PLUS            shift and go to state 54
+    MINUS           shift and go to state 55
 
-    comparative                    shift and go to state 52
+    operator                       shift and go to state 51
 
 state 35
 
-    (17) actions -> var_assign more_actions .
+    (32) expression -> INT .
 
-    MIENTRAS        reduce using rule 17 (actions -> var_assign more_actions .)
-    RBRACE          reduce using rule 17 (actions -> var_assign more_actions .)
+    MULTIPLY        reduce using rule 32 (expression -> INT .)
+    DIVIDE          reduce using rule 32 (expression -> INT .)
+    PLUS            reduce using rule 32 (expression -> INT .)
+    MINUS           reduce using rule 32 (expression -> INT .)
+    $end            reduce using rule 32 (expression -> INT .)
+    ENTONS          reduce using rule 32 (expression -> INT .)
+    SEPARATOR       reduce using rule 32 (expression -> INT .)
+    MIENTRAS        reduce using rule 32 (expression -> INT .)
+    RBRACE          reduce using rule 32 (expression -> INT .)
+    HASTA           reduce using rule 32 (expression -> INT .)
+    HAGA            reduce using rule 32 (expression -> INT .)
 
 
 state 36
 
-    (18) more_actions -> SEPARATOR . actions
-    (17) actions -> . var_assign more_actions
-    (27) var_assign -> . IDEN EQUALS expression
+    (29) var_assign -> IDEN EQUALS expression .
+    (30) expression -> expression . operator expression
+    (33) operator -> . MULTIPLY
+    (34) operator -> . DIVIDE
+    (35) operator -> . PLUS
+    (36) operator -> . MINUS
 
-    IDEN            shift and go to state 25
+    $end            reduce using rule 29 (var_assign -> IDEN EQUALS expression .)
+    SEPARATOR       reduce using rule 29 (var_assign -> IDEN EQUALS expression .)
+    MIENTRAS        reduce using rule 29 (var_assign -> IDEN EQUALS expression .)
+    RBRACE          reduce using rule 29 (var_assign -> IDEN EQUALS expression .)
+    MULTIPLY        shift and go to state 52
+    DIVIDE          shift and go to state 53
+    PLUS            shift and go to state 54
+    MINUS           shift and go to state 55
 
-    actions                        shift and go to state 53
-    var_assign                     shift and go to state 24
+    operator                       shift and go to state 51
 
 state 37
 
-    (19) more_actions -> empty .
+    (8) repeat -> REPITA actions MIENTRAS . comparative
+    (28) comparative -> . IDEN condition expression
 
-    MIENTRAS        reduce using rule 19 (more_actions -> empty .)
-    RBRACE          reduce using rule 19 (more_actions -> empty .)
+    IDEN            shift and go to state 50
 
+    comparative                    shift and go to state 56
 
 state 38
 
-    (22) var_declare -> DCL IDEN value .
+    (19) actions -> var_assign more_actions .
 
-    $end            reduce using rule 22 (var_declare -> DCL IDEN value .)
+    MIENTRAS        reduce using rule 19 (actions -> var_assign more_actions .)
+    RBRACE          reduce using rule 19 (actions -> var_assign more_actions .)
 
 
 state 39
 
-    (23) value -> initialize .
+    (20) more_actions -> SEPARATOR . actions
+    (19) actions -> . var_assign more_actions
+    (29) var_assign -> . IDEN EQUALS expression
 
-    $end            reduce using rule 23 (value -> initialize .)
+    IDEN            shift and go to state 27
 
+    actions                        shift and go to state 57
+    var_assign                     shift and go to state 26
 
 state 40
 
-    (24) value -> empty .
+    (21) more_actions -> empty .
 
-    $end            reduce using rule 24 (value -> empty .)
+    MIENTRAS        reduce using rule 21 (more_actions -> empty .)
+    RBRACE          reduce using rule 21 (more_actions -> empty .)
 
 
 state 41
 
-    (25) initialize -> ASSIGN . expression
-    (28) expression -> . expression operator expression
-    (29) expression -> . IDEN
-    (30) expression -> . INT
+    (7) do -> DESDE IDEN EQUALS . expression HASTA expression HAGA FINDESDE
+    (30) expression -> . expression operator expression
+    (31) expression -> . IDEN
+    (32) expression -> . INT
 
-    IDEN            shift and go to state 30
-    INT             shift and go to state 32
+    IDEN            shift and go to state 33
+    INT             shift and go to state 35
 
-    expression                     shift and go to state 54
+    expression                     shift and go to state 58
 
 state 42
 
-    (13) syntax1 -> ENCASO options1 SINO . LBRACE actions RBRACE FINCASO
+    (24) var_declare -> DCL IDEN value .
 
-    LBRACE          shift and go to state 55
+    $end            reduce using rule 24 (var_declare -> DCL IDEN value .)
 
 
 state 43
 
-    (9) syntax2 -> ENCASO IDEN options2 . SINO LBRACE actions RBRACE FINCASO
+    (25) value -> initialize .
 
-    SINO            shift and go to state 56
+    $end            reduce using rule 25 (value -> initialize .)
 
 
 state 44
 
-    (10) options2 -> CUANDO . condition expression ENTONS LBRACE actions RBRACE more_options2
-    (35) condition -> . SAME
-    (36) condition -> . LESS
-    (37) condition -> . MORE
-    (38) condition -> . NON_EQUAL
-    (39) condition -> . LESS_EQUAL
-    (40) condition -> . MORE_EQUAL
+    (26) value -> empty .
 
-    SAME            shift and go to state 17
-    LESS            shift and go to state 18
-    MORE            shift and go to state 19
-    NON_EQUAL       shift and go to state 20
-    LESS_EQUAL      shift and go to state 21
-    MORE_EQUAL      shift and go to state 22
+    $end            reduce using rule 26 (value -> empty .)
 
-    condition                      shift and go to state 57
 
 state 45
 
-    (14) options1 -> CUANDO comparative . ENTONS LBRACE actions RBRACE more_options1
+    (27) initialize -> ASSIGN . expression
+    (30) expression -> . expression operator expression
+    (31) expression -> . IDEN
+    (32) expression -> . INT
 
-    ENTONS          shift and go to state 58
-
-
-state 46
-
-    (26) comparative -> IDEN . condition expression
-    (35) condition -> . SAME
-    (36) condition -> . LESS
-    (37) condition -> . MORE
-    (38) condition -> . NON_EQUAL
-    (39) condition -> . LESS_EQUAL
-    (40) condition -> . MORE_EQUAL
-
-    SAME            shift and go to state 17
-    LESS            shift and go to state 18
-    MORE            shift and go to state 19
-    NON_EQUAL       shift and go to state 20
-    LESS_EQUAL      shift and go to state 21
-    MORE_EQUAL      shift and go to state 22
-
-    condition                      shift and go to state 15
-
-state 47
-
-    (28) expression -> expression operator . expression
-    (28) expression -> . expression operator expression
-    (29) expression -> . IDEN
-    (30) expression -> . INT
-
-    IDEN            shift and go to state 30
-    INT             shift and go to state 32
+    IDEN            shift and go to state 33
+    INT             shift and go to state 35
 
     expression                     shift and go to state 59
 
+state 46
+
+    (15) syntax1 -> ENCASO options1 SINO . LBRACE actions RBRACE FINCASO
+
+    LBRACE          shift and go to state 60
+
+
+state 47
+
+    (11) syntax2 -> ENCASO IDEN options2 . SINO LBRACE actions RBRACE FINCASO
+
+    SINO            shift and go to state 61
+
+
 state 48
 
-    (31) operator -> MULTIPLY .
+    (12) options2 -> CUANDO . condition expression ENTONS LBRACE actions RBRACE more_options2
+    (37) condition -> . SAME
+    (38) condition -> . LESS
+    (39) condition -> . MORE
+    (40) condition -> . NON_EQUAL
+    (41) condition -> . LESS_EQUAL
+    (42) condition -> . MORE_EQUAL
 
-    IDEN            reduce using rule 31 (operator -> MULTIPLY .)
-    INT             reduce using rule 31 (operator -> MULTIPLY .)
+    SAME            shift and go to state 19
+    LESS            shift and go to state 20
+    MORE            shift and go to state 21
+    NON_EQUAL       shift and go to state 22
+    LESS_EQUAL      shift and go to state 23
+    MORE_EQUAL      shift and go to state 24
 
+    condition                      shift and go to state 62
 
 state 49
 
-    (32) operator -> DIVIDE .
+    (16) options1 -> CUANDO comparative . ENTONS LBRACE actions RBRACE more_options1
 
-    IDEN            reduce using rule 32 (operator -> DIVIDE .)
-    INT             reduce using rule 32 (operator -> DIVIDE .)
+    ENTONS          shift and go to state 63
 
 
 state 50
 
-    (33) operator -> PLUS .
+    (28) comparative -> IDEN . condition expression
+    (37) condition -> . SAME
+    (38) condition -> . LESS
+    (39) condition -> . MORE
+    (40) condition -> . NON_EQUAL
+    (41) condition -> . LESS_EQUAL
+    (42) condition -> . MORE_EQUAL
 
-    IDEN            reduce using rule 33 (operator -> PLUS .)
-    INT             reduce using rule 33 (operator -> PLUS .)
+    SAME            shift and go to state 19
+    LESS            shift and go to state 20
+    MORE            shift and go to state 21
+    NON_EQUAL       shift and go to state 22
+    LESS_EQUAL      shift and go to state 23
+    MORE_EQUAL      shift and go to state 24
 
+    condition                      shift and go to state 17
 
 state 51
 
-    (34) operator -> MINUS .
+    (30) expression -> expression operator . expression
+    (30) expression -> . expression operator expression
+    (31) expression -> . IDEN
+    (32) expression -> . INT
 
-    IDEN            reduce using rule 34 (operator -> MINUS .)
-    INT             reduce using rule 34 (operator -> MINUS .)
+    IDEN            shift and go to state 33
+    INT             shift and go to state 35
 
+    expression                     shift and go to state 64
 
 state 52
 
-    (6) repeat -> REPITA actions MIENTRAS comparative .
+    (33) operator -> MULTIPLY .
 
-    $end            reduce using rule 6 (repeat -> REPITA actions MIENTRAS comparative .)
+    IDEN            reduce using rule 33 (operator -> MULTIPLY .)
+    INT             reduce using rule 33 (operator -> MULTIPLY .)
 
 
 state 53
 
-    (18) more_actions -> SEPARATOR actions .
+    (34) operator -> DIVIDE .
 
-    MIENTRAS        reduce using rule 18 (more_actions -> SEPARATOR actions .)
-    RBRACE          reduce using rule 18 (more_actions -> SEPARATOR actions .)
+    IDEN            reduce using rule 34 (operator -> DIVIDE .)
+    INT             reduce using rule 34 (operator -> DIVIDE .)
 
 
 state 54
 
-    (25) initialize -> ASSIGN expression .
-    (28) expression -> expression . operator expression
-    (31) operator -> . MULTIPLY
-    (32) operator -> . DIVIDE
-    (33) operator -> . PLUS
-    (34) operator -> . MINUS
+    (35) operator -> PLUS .
 
-    $end            reduce using rule 25 (initialize -> ASSIGN expression .)
-    MULTIPLY        shift and go to state 48
-    DIVIDE          shift and go to state 49
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
+    IDEN            reduce using rule 35 (operator -> PLUS .)
+    INT             reduce using rule 35 (operator -> PLUS .)
 
-    operator                       shift and go to state 47
 
 state 55
 
-    (13) syntax1 -> ENCASO options1 SINO LBRACE . actions RBRACE FINCASO
-    (17) actions -> . var_assign more_actions
-    (27) var_assign -> . IDEN EQUALS expression
+    (36) operator -> MINUS .
 
-    IDEN            shift and go to state 25
+    IDEN            reduce using rule 36 (operator -> MINUS .)
+    INT             reduce using rule 36 (operator -> MINUS .)
 
-    actions                        shift and go to state 60
-    var_assign                     shift and go to state 24
 
 state 56
 
-    (9) syntax2 -> ENCASO IDEN options2 SINO . LBRACE actions RBRACE FINCASO
+    (8) repeat -> REPITA actions MIENTRAS comparative .
 
-    LBRACE          shift and go to state 61
+    $end            reduce using rule 8 (repeat -> REPITA actions MIENTRAS comparative .)
 
 
 state 57
 
-    (10) options2 -> CUANDO condition . expression ENTONS LBRACE actions RBRACE more_options2
-    (28) expression -> . expression operator expression
-    (29) expression -> . IDEN
-    (30) expression -> . INT
+    (20) more_actions -> SEPARATOR actions .
 
-    IDEN            shift and go to state 30
-    INT             shift and go to state 32
+    MIENTRAS        reduce using rule 20 (more_actions -> SEPARATOR actions .)
+    RBRACE          reduce using rule 20 (more_actions -> SEPARATOR actions .)
 
-    expression                     shift and go to state 62
 
 state 58
 
-    (14) options1 -> CUANDO comparative ENTONS . LBRACE actions RBRACE more_options1
+    (7) do -> DESDE IDEN EQUALS expression . HASTA expression HAGA FINDESDE
+    (30) expression -> expression . operator expression
+    (33) operator -> . MULTIPLY
+    (34) operator -> . DIVIDE
+    (35) operator -> . PLUS
+    (36) operator -> . MINUS
 
-    LBRACE          shift and go to state 63
+    HASTA           shift and go to state 65
+    MULTIPLY        shift and go to state 52
+    DIVIDE          shift and go to state 53
+    PLUS            shift and go to state 54
+    MINUS           shift and go to state 55
 
+    operator                       shift and go to state 51
 
 state 59
 
-    (28) expression -> expression operator expression .
-    (28) expression -> expression . operator expression
-    (31) operator -> . MULTIPLY
-    (32) operator -> . DIVIDE
-    (33) operator -> . PLUS
-    (34) operator -> . MINUS
+    (27) initialize -> ASSIGN expression .
+    (30) expression -> expression . operator expression
+    (33) operator -> . MULTIPLY
+    (34) operator -> . DIVIDE
+    (35) operator -> . PLUS
+    (36) operator -> . MINUS
+
+    $end            reduce using rule 27 (initialize -> ASSIGN expression .)
+    MULTIPLY        shift and go to state 52
+    DIVIDE          shift and go to state 53
+    PLUS            shift and go to state 54
+    MINUS           shift and go to state 55
+
+    operator                       shift and go to state 51
+
+state 60
+
+    (15) syntax1 -> ENCASO options1 SINO LBRACE . actions RBRACE FINCASO
+    (19) actions -> . var_assign more_actions
+    (29) var_assign -> . IDEN EQUALS expression
+
+    IDEN            shift and go to state 27
+
+    actions                        shift and go to state 66
+    var_assign                     shift and go to state 26
+
+state 61
+
+    (11) syntax2 -> ENCASO IDEN options2 SINO . LBRACE actions RBRACE FINCASO
+
+    LBRACE          shift and go to state 67
+
+
+state 62
+
+    (12) options2 -> CUANDO condition . expression ENTONS LBRACE actions RBRACE more_options2
+    (30) expression -> . expression operator expression
+    (31) expression -> . IDEN
+    (32) expression -> . INT
+
+    IDEN            shift and go to state 33
+    INT             shift and go to state 35
+
+    expression                     shift and go to state 68
+
+state 63
+
+    (16) options1 -> CUANDO comparative ENTONS . LBRACE actions RBRACE more_options1
+
+    LBRACE          shift and go to state 69
+
+
+state 64
+
+    (30) expression -> expression operator expression .
+    (30) expression -> expression . operator expression
+    (33) operator -> . MULTIPLY
+    (34) operator -> . DIVIDE
+    (35) operator -> . PLUS
+    (36) operator -> . MINUS
 
   ! shift/reduce conflict for MULTIPLY resolved as shift
   ! shift/reduce conflict for DIVIDE resolved as shift
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
-    $end            reduce using rule 28 (expression -> expression operator expression .)
-    ENTONS          reduce using rule 28 (expression -> expression operator expression .)
-    SEPARATOR       reduce using rule 28 (expression -> expression operator expression .)
-    MIENTRAS        reduce using rule 28 (expression -> expression operator expression .)
-    RBRACE          reduce using rule 28 (expression -> expression operator expression .)
-    MULTIPLY        shift and go to state 48
-    DIVIDE          shift and go to state 49
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
+    $end            reduce using rule 30 (expression -> expression operator expression .)
+    ENTONS          reduce using rule 30 (expression -> expression operator expression .)
+    SEPARATOR       reduce using rule 30 (expression -> expression operator expression .)
+    MIENTRAS        reduce using rule 30 (expression -> expression operator expression .)
+    RBRACE          reduce using rule 30 (expression -> expression operator expression .)
+    HASTA           reduce using rule 30 (expression -> expression operator expression .)
+    HAGA            reduce using rule 30 (expression -> expression operator expression .)
+    MULTIPLY        shift and go to state 52
+    DIVIDE          shift and go to state 53
+    PLUS            shift and go to state 54
+    MINUS           shift and go to state 55
 
-  ! MULTIPLY        [ reduce using rule 28 (expression -> expression operator expression .) ]
-  ! DIVIDE          [ reduce using rule 28 (expression -> expression operator expression .) ]
-  ! PLUS            [ reduce using rule 28 (expression -> expression operator expression .) ]
-  ! MINUS           [ reduce using rule 28 (expression -> expression operator expression .) ]
+  ! MULTIPLY        [ reduce using rule 30 (expression -> expression operator expression .) ]
+  ! DIVIDE          [ reduce using rule 30 (expression -> expression operator expression .) ]
+  ! PLUS            [ reduce using rule 30 (expression -> expression operator expression .) ]
+  ! MINUS           [ reduce using rule 30 (expression -> expression operator expression .) ]
 
-    operator                       shift and go to state 47
-
-state 60
-
-    (13) syntax1 -> ENCASO options1 SINO LBRACE actions . RBRACE FINCASO
-
-    RBRACE          shift and go to state 64
-
-
-state 61
-
-    (9) syntax2 -> ENCASO IDEN options2 SINO LBRACE . actions RBRACE FINCASO
-    (17) actions -> . var_assign more_actions
-    (27) var_assign -> . IDEN EQUALS expression
-
-    IDEN            shift and go to state 25
-
-    actions                        shift and go to state 65
-    var_assign                     shift and go to state 24
-
-state 62
-
-    (10) options2 -> CUANDO condition expression . ENTONS LBRACE actions RBRACE more_options2
-    (28) expression -> expression . operator expression
-    (31) operator -> . MULTIPLY
-    (32) operator -> . DIVIDE
-    (33) operator -> . PLUS
-    (34) operator -> . MINUS
-
-    ENTONS          shift and go to state 66
-    MULTIPLY        shift and go to state 48
-    DIVIDE          shift and go to state 49
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
-
-    operator                       shift and go to state 47
-
-state 63
-
-    (14) options1 -> CUANDO comparative ENTONS LBRACE . actions RBRACE more_options1
-    (17) actions -> . var_assign more_actions
-    (27) var_assign -> . IDEN EQUALS expression
-
-    IDEN            shift and go to state 25
-
-    actions                        shift and go to state 67
-    var_assign                     shift and go to state 24
-
-state 64
-
-    (13) syntax1 -> ENCASO options1 SINO LBRACE actions RBRACE . FINCASO
-
-    FINCASO         shift and go to state 68
-
+    operator                       shift and go to state 51
 
 state 65
 
-    (9) syntax2 -> ENCASO IDEN options2 SINO LBRACE actions . RBRACE FINCASO
+    (7) do -> DESDE IDEN EQUALS expression HASTA . expression HAGA FINDESDE
+    (30) expression -> . expression operator expression
+    (31) expression -> . IDEN
+    (32) expression -> . INT
 
-    RBRACE          shift and go to state 69
+    IDEN            shift and go to state 33
+    INT             shift and go to state 35
 
+    expression                     shift and go to state 70
 
 state 66
 
-    (10) options2 -> CUANDO condition expression ENTONS . LBRACE actions RBRACE more_options2
-
-    LBRACE          shift and go to state 70
-
-
-state 67
-
-    (14) options1 -> CUANDO comparative ENTONS LBRACE actions . RBRACE more_options1
+    (15) syntax1 -> ENCASO options1 SINO LBRACE actions . RBRACE FINCASO
 
     RBRACE          shift and go to state 71
 
 
+state 67
+
+    (11) syntax2 -> ENCASO IDEN options2 SINO LBRACE . actions RBRACE FINCASO
+    (19) actions -> . var_assign more_actions
+    (29) var_assign -> . IDEN EQUALS expression
+
+    IDEN            shift and go to state 27
+
+    actions                        shift and go to state 72
+    var_assign                     shift and go to state 26
+
 state 68
 
-    (13) syntax1 -> ENCASO options1 SINO LBRACE actions RBRACE FINCASO .
+    (12) options2 -> CUANDO condition expression . ENTONS LBRACE actions RBRACE more_options2
+    (30) expression -> expression . operator expression
+    (33) operator -> . MULTIPLY
+    (34) operator -> . DIVIDE
+    (35) operator -> . PLUS
+    (36) operator -> . MINUS
 
-    $end            reduce using rule 13 (syntax1 -> ENCASO options1 SINO LBRACE actions RBRACE FINCASO .)
+    ENTONS          shift and go to state 73
+    MULTIPLY        shift and go to state 52
+    DIVIDE          shift and go to state 53
+    PLUS            shift and go to state 54
+    MINUS           shift and go to state 55
 
+    operator                       shift and go to state 51
 
 state 69
 
-    (9) syntax2 -> ENCASO IDEN options2 SINO LBRACE actions RBRACE . FINCASO
+    (16) options1 -> CUANDO comparative ENTONS LBRACE . actions RBRACE more_options1
+    (19) actions -> . var_assign more_actions
+    (29) var_assign -> . IDEN EQUALS expression
 
-    FINCASO         shift and go to state 72
+    IDEN            shift and go to state 27
 
+    actions                        shift and go to state 74
+    var_assign                     shift and go to state 26
 
 state 70
 
-    (10) options2 -> CUANDO condition expression ENTONS LBRACE . actions RBRACE more_options2
-    (17) actions -> . var_assign more_actions
-    (27) var_assign -> . IDEN EQUALS expression
+    (7) do -> DESDE IDEN EQUALS expression HASTA expression . HAGA FINDESDE
+    (30) expression -> expression . operator expression
+    (33) operator -> . MULTIPLY
+    (34) operator -> . DIVIDE
+    (35) operator -> . PLUS
+    (36) operator -> . MINUS
 
-    IDEN            shift and go to state 25
+    HAGA            shift and go to state 75
+    MULTIPLY        shift and go to state 52
+    DIVIDE          shift and go to state 53
+    PLUS            shift and go to state 54
+    MINUS           shift and go to state 55
 
-    actions                        shift and go to state 73
-    var_assign                     shift and go to state 24
+    operator                       shift and go to state 51
 
 state 71
 
-    (14) options1 -> CUANDO comparative ENTONS LBRACE actions RBRACE . more_options1
-    (15) more_options1 -> . options1
-    (16) more_options1 -> . empty
-    (14) options1 -> . CUANDO comparative ENTONS LBRACE actions RBRACE more_options1
-    (41) empty -> .
+    (15) syntax1 -> ENCASO options1 SINO LBRACE actions RBRACE . FINCASO
 
-    CUANDO          shift and go to state 29
-    SINO            reduce using rule 41 (empty -> .)
+    FINCASO         shift and go to state 76
 
-    more_options1                  shift and go to state 74
-    options1                       shift and go to state 75
-    empty                          shift and go to state 76
 
 state 72
 
-    (9) syntax2 -> ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO .
-
-    $end            reduce using rule 9 (syntax2 -> ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO .)
-
-
-state 73
-
-    (10) options2 -> CUANDO condition expression ENTONS LBRACE actions . RBRACE more_options2
+    (11) syntax2 -> ENCASO IDEN options2 SINO LBRACE actions . RBRACE FINCASO
 
     RBRACE          shift and go to state 77
 
 
+state 73
+
+    (12) options2 -> CUANDO condition expression ENTONS . LBRACE actions RBRACE more_options2
+
+    LBRACE          shift and go to state 78
+
+
 state 74
 
-    (14) options1 -> CUANDO comparative ENTONS LBRACE actions RBRACE more_options1 .
+    (16) options1 -> CUANDO comparative ENTONS LBRACE actions . RBRACE more_options1
 
-    SINO            reduce using rule 14 (options1 -> CUANDO comparative ENTONS LBRACE actions RBRACE more_options1 .)
+    RBRACE          shift and go to state 79
 
 
 state 75
 
-    (15) more_options1 -> options1 .
+    (7) do -> DESDE IDEN EQUALS expression HASTA expression HAGA . FINDESDE
 
-    SINO            reduce using rule 15 (more_options1 -> options1 .)
+    FINDESDE        shift and go to state 80
 
 
 state 76
 
-    (16) more_options1 -> empty .
+    (15) syntax1 -> ENCASO options1 SINO LBRACE actions RBRACE FINCASO .
 
-    SINO            reduce using rule 16 (more_options1 -> empty .)
+    $end            reduce using rule 15 (syntax1 -> ENCASO options1 SINO LBRACE actions RBRACE FINCASO .)
 
 
 state 77
 
-    (10) options2 -> CUANDO condition expression ENTONS LBRACE actions RBRACE . more_options2
-    (11) more_options2 -> . options2
-    (12) more_options2 -> . empty
-    (10) options2 -> . CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2
-    (41) empty -> .
+    (11) syntax2 -> ENCASO IDEN options2 SINO LBRACE actions RBRACE . FINCASO
 
-    CUANDO          shift and go to state 44
-    SINO            reduce using rule 41 (empty -> .)
+    FINCASO         shift and go to state 81
 
-    more_options2                  shift and go to state 78
-    options2                       shift and go to state 79
-    empty                          shift and go to state 80
 
 state 78
 
-    (10) options2 -> CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2 .
+    (12) options2 -> CUANDO condition expression ENTONS LBRACE . actions RBRACE more_options2
+    (19) actions -> . var_assign more_actions
+    (29) var_assign -> . IDEN EQUALS expression
 
-    SINO            reduce using rule 10 (options2 -> CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2 .)
+    IDEN            shift and go to state 27
 
+    actions                        shift and go to state 82
+    var_assign                     shift and go to state 26
 
 state 79
 
-    (11) more_options2 -> options2 .
+    (16) options1 -> CUANDO comparative ENTONS LBRACE actions RBRACE . more_options1
+    (17) more_options1 -> . options1
+    (18) more_options1 -> . empty
+    (16) options1 -> . CUANDO comparative ENTONS LBRACE actions RBRACE more_options1
+    (43) empty -> .
 
-    SINO            reduce using rule 11 (more_options2 -> options2 .)
+    CUANDO          shift and go to state 32
+    SINO            reduce using rule 43 (empty -> .)
 
+    more_options1                  shift and go to state 83
+    options1                       shift and go to state 84
+    empty                          shift and go to state 85
 
 state 80
 
-    (12) more_options2 -> empty .
+    (7) do -> DESDE IDEN EQUALS expression HASTA expression HAGA FINDESDE .
 
-    SINO            reduce using rule 12 (more_options2 -> empty .)
+    $end            reduce using rule 7 (do -> DESDE IDEN EQUALS expression HASTA expression HAGA FINDESDE .)
+
+
+state 81
+
+    (11) syntax2 -> ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO .
+
+    $end            reduce using rule 11 (syntax2 -> ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO .)
+
+
+state 82
+
+    (12) options2 -> CUANDO condition expression ENTONS LBRACE actions . RBRACE more_options2
+
+    RBRACE          shift and go to state 86
+
+
+state 83
+
+    (16) options1 -> CUANDO comparative ENTONS LBRACE actions RBRACE more_options1 .
+
+    SINO            reduce using rule 16 (options1 -> CUANDO comparative ENTONS LBRACE actions RBRACE more_options1 .)
+
+
+state 84
+
+    (17) more_options1 -> options1 .
+
+    SINO            reduce using rule 17 (more_options1 -> options1 .)
+
+
+state 85
+
+    (18) more_options1 -> empty .
+
+    SINO            reduce using rule 18 (more_options1 -> empty .)
+
+
+state 86
+
+    (12) options2 -> CUANDO condition expression ENTONS LBRACE actions RBRACE . more_options2
+    (13) more_options2 -> . options2
+    (14) more_options2 -> . empty
+    (12) options2 -> . CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2
+    (43) empty -> .
+
+    CUANDO          shift and go to state 48
+    SINO            reduce using rule 43 (empty -> .)
+
+    more_options2                  shift and go to state 87
+    options2                       shift and go to state 88
+    empty                          shift and go to state 89
+
+state 87
+
+    (12) options2 -> CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2 .
+
+    SINO            reduce using rule 12 (options2 -> CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2 .)
+
+
+state 88
+
+    (13) more_options2 -> options2 .
+
+    SINO            reduce using rule 13 (more_options2 -> options2 .)
+
+
+state 89
+
+    (14) more_options2 -> empty .
+
+    SINO            reduce using rule 14 (more_options2 -> empty .)
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for MULTIPLY in state 59 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 59 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 59 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 59 resolved as shift
+WARNING: shift/reduce conflict for MULTIPLY in state 64 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 64 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 64 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 64 resolved as shift
