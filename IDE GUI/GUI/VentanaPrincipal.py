@@ -1,6 +1,7 @@
 from tkinter import *
 import logic.parserPrueba
 import os.path
+import threading
 
 
 def obtener_codigo():
@@ -11,6 +12,7 @@ def obtener_codigo():
         archivoCodigo.close()
     else:
         printTerminal("Before saving, upload or create a program!", True)
+
 
 def separate_code(code):
     openbrace = 0
@@ -67,7 +69,13 @@ def separate_code(code):
     else:
         return "--> Bad distribution of brackets!"
 
+
 # codeurl = C:\Users\este0\Desktop\TEC\2019 - I Semestre\Compiladores, Intérpretes y Lenguajes\DodeFast\codigosPrueba\codigo.txt
+
+def run_thread():
+    t = threading.Thread(target=correr_codigo)
+    t.start()
+
 
 def correr_codigo():
     if len(current_URL) != 0:
@@ -75,10 +83,10 @@ def correr_codigo():
         archivoCodigo = open(current_URL, "r")
         codigo = archivoCodigo.read()
         archivoCodigo.close()
-        #codigo = codigo.strip().replace('\n', '')
-        #codigo = codigo.split(';')
+        # codigo = codigo.strip().replace('\n', '')
+        # codigo = codigo.split(';')
         printTerminal("", True)
-        codigo = codigo.strip().replace('\n','').replace('\t','')
+        codigo = codigo.strip().replace('\n', '').replace('\t', '')
         codigo = separate_code(codigo)
         if type(codigo) == str:
             printTerminal(codigo, False)
@@ -182,7 +190,7 @@ def fill_info():
     global file_name
     cont = 1
     lista = current_URL.split("\\")
-    file_name.set(lista[len(lista)-1])
+    file_name.set(lista[len(lista) - 1])
     lista = lista[0:(len(lista) - 1)]
     url = ""
     textInfo.config(state=NORMAL)
@@ -202,6 +210,10 @@ def fill_info():
         cont += 1
     textInfo.config(state=DISABLED)
 
+
+def stop():
+    logic.parserPrueba.flag_stop = True
+    pass
 
 
 # Ventana principal
@@ -252,12 +264,14 @@ scrollTerminal.place(in_=textTerminal, relx=1, relheight=1, bordermode="outside"
 # - Botones
 
 botonGuardar = Button(root, text="Guardar", command=lambda: obtener_codigo())
-botonCorrer = Button(root, text="Correr", command=lambda: correr_codigo())
+botonCorrer = Button(root, text="Correr", command=lambda: run_thread())
 botonNuevo = Button(root, text="Nuevo", command=lambda: new_file())
 botonAbrir = Button(root, text="Abrir", command=lambda: open_file())
+botonDetener = Button(root, text="Detener", command=lambda: stop())
 
-botonGuardar.place(x=1280 - 1010, y=50)
-botonCorrer.place(x=1280 - 1000, y=422)
+botonDetener.place(x=200, y=422)
+botonGuardar.place(x=270, y=50)
+botonCorrer.place(x=270, y=422)
 botonAbrir.place(x=26, y=50)
 botonNuevo.place(x=80, y=50)
 

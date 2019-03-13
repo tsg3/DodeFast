@@ -5,5 +5,6 @@ ENCASO
    SINO
     {a = 7}
 FINCASO;
-DCL c DEFAULT a
+DCL c DEFAULT a;
+
 

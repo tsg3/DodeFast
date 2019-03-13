@@ -3,15 +3,19 @@ import lib.ply.yacc as yacc
 
 variables = {}
 
+flag_stop = False
+
 st = ''
 
 error = False
 
 line = 0
 
-tokens = ['INT','IDEN','EQUALS','PLUS','MINUS','MULTIPLY','DIVIDE','DCL','ASSIGN','SAME','LESS','MORE','NON_EQUAL','LESS_EQUAL','MORE_EQUAL','ENCASO','CUANDO','ENTONS','SINO','FINCASO','SEPARATOR','LBRACE','RBRACE','REPITA','MIENTRAS']
+tokens = ['INT', 'IDEN', 'EQUALS', 'PLUS', 'MINUS', 'MULTIPLY', 'DIVIDE', 'DCL', 'ASSIGN', 'SAME', 'LESS', 'MORE',
+          'NON_EQUAL', 'LESS_EQUAL', 'MORE_EQUAL', 'ENCASO', 'CUANDO', 'ENTONS', 'SINO', 'FINCASO', 'SEPARATOR',
+          'LBRACE', 'RBRACE', 'REPITA', 'MIENTRAS']
 
-#reserved_words = ['DCL','DEFAULT','ENCASO','FINCASO','SINO','ENTONS','CUANDO','REPITA','HASTAENCONTRAR']
+# reserved_words = ['DCL','DEFAULT','ENCASO','FINCASO','SINO','ENTONS','CUANDO','REPITA','HASTAENCONTRAR']
 
 t_SAME = r'[\s]*\=\=[\s]*'
 t_LESS = r'[\s]*\<[\s]*'
@@ -30,6 +34,7 @@ t_SEPARATOR = r'[\s]*\;[\s]*'
 t_LBRACE = r'[\s]*\{[\s]*'
 t_RBRACE = r'[\s]*\}[\s]*'
 
+
 def t_INT(t):
     r'\d+'
     t.value = int(t.value)
@@ -47,40 +52,48 @@ def t_ASSIGN(t):
     t.type = 'ASSIGN'
     return t
 
+
 def t_ENCASO(t):
     r'[\s]*ENCASO[\s]+'
     t.type = 'ENCASO'
     return t
+
 
 def t_CUANDO(t):
     r'[\s]*CUANDO[\s]+'
     t.type = 'CUANDO'
     return t
 
+
 def t_ENTONS(t):
     r'[\s]+ENTONS[\s]*'
     t.type = 'ENTONS'
     return t
+
 
 def t_SINO(t):
     r'[\s]*SINO[\s]*'
     t.type = 'SINO'
     return t
 
+
 def t_FINCASO(t):
     r'[\s]*FINCASO[\s]*'
     t.type = 'FINCASO'
     return t
+
 
 def t_REPITA(t):
     r'[\s]*REPITA[\s]+'
     t.type = 'REPITA'
     return t
 
+
 def t_MIENTRAS(t):
     r'[\s]*MIENTRAS[\s]+'
     t.type = 'MIENTRAS'
     return t
+
 
 def t_IDEN(t):
     r'[a-zA-Z_][a-zA-Z_0-9@#]*'
@@ -94,6 +107,7 @@ def t_IDEN(t):
     else:'''
     t.type = 'IDEN'
     return t
+
 
 def t_error(t):
     global error
@@ -115,6 +129,7 @@ precedence = (
     ('left', 'MULTIPLY', 'DIVIDE')
 )
 
+
 def p_parse(p):
     '''
     parse : comparative
@@ -126,11 +141,13 @@ def p_parse(p):
     print(p[1])
     run(p[1])
 
+
 def p_repeat(p):
     '''
     repeat : REPITA actions MIENTRAS comparative
     '''
-    p[0] = ('repetir',p[2],p[4])
+    p[0] = ('repetir', p[2], p[4])
+
 
 def p_cases(p):
     '''
@@ -139,17 +156,20 @@ def p_cases(p):
     '''
     p[0] = p[1]
 
+
 def p_syntax2(p):
     '''
     syntax2 : ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO
     '''
-    p[0] = ('caso',('var',p[2]),p[3],p[6])
+    p[0] = ('caso', ('var', p[2]), p[3], p[6])
+
 
 def p_options2(p):
     '''
     options2 : CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2
     '''
-    p[0] = () + ((p[2].strip(),p[3],p[6]),) + p[8]
+    p[0] = () + ((p[2].strip(), p[3], p[6]),) + p[8]
+
 
 def p_more_options2(p):
     '''
@@ -160,17 +180,20 @@ def p_more_options2(p):
     if p[0] == 0:
         p[0] = ()
 
+
 def p_syntax1(p):
     '''
     syntax1 : ENCASO options1 SINO LBRACE actions RBRACE FINCASO
     '''
-    p[0] = ('caso',p[2],p[5])
+    p[0] = ('caso', p[2], p[5])
+
 
 def p_options1(p):
     '''
     options1 : CUANDO comparative ENTONS LBRACE actions RBRACE more_options1
     '''
-    p[0] = () + ((p[2],p[5]),) + p[7]
+    p[0] = () + ((p[2], p[5]),) + p[7]
+
 
 def p_more_options1(p):
     '''
@@ -181,11 +204,13 @@ def p_more_options1(p):
     if p[0] == 0:
         p[0] = ()
 
+
 def p_actions(p):
     '''
     actions : var_assign more_actions
     '''
     p[0] = (p[1],) + p[2]
+
 
 def p_more_actions(p):
     '''
@@ -197,12 +222,14 @@ def p_more_actions(p):
     else:
         p[0] = p[2]
 
+
 def p_sentence(p):
     '''
     sentence : var_declare
              | var_assign
     '''
     p[0] = p[1]
+
 
 def p_var_declare(p):
     '''
@@ -230,14 +257,15 @@ def p_comparative(p):
     '''
     comparative : IDEN condition expression
     '''
-    p[0] = (p[2].strip(), ('var',p[1]), p[3])
+    p[0] = (p[2].strip(), ('var', p[1]), p[3])
 
 
 def p_var_assign(p):
     '''
     var_assign : IDEN EQUALS expression
     '''
-    p[0] = (p[2].strip(), ('var',p[1]), p[3])
+    p[0] = (p[2].strip(), ('var', p[1]), p[3])
+
 
 def p_expression(p):
     '''
@@ -259,6 +287,7 @@ def p_expression_int(p):
     '''
     p[0] = p[1]
 
+
 def p_operator(p):
     '''
     operator : MULTIPLY
@@ -267,6 +296,7 @@ def p_operator(p):
              | MINUS
     '''
     p[0] = p[1]
+
 
 def p_condition(p):
     '''
@@ -280,6 +310,7 @@ def p_condition(p):
 
     p[0] = p[1]
 
+
 def p_error(p):
     global st
     global error
@@ -287,6 +318,7 @@ def p_error(p):
     error = True
     if not ("--> A syntax error was found" in st):
         st = "--> A syntax error was found in line " + str(line) + "!"
+
 
 def p_empty(p):
     '''
@@ -462,7 +494,7 @@ def run(p):
                 exit = False
                 case = 1
                 for i in p[2]:
-                    y = (i[0],p[1],i[1])
+                    y = (i[0], p[1], i[1])
                     x = run(y)
                     print(y)
                     print(x)
@@ -490,11 +522,12 @@ def run(p):
                     st += " "
                     run(i)
                 if (run(p[2]) == False):
-                    break;
+                    break
             st += " --> Repeticion finalizada!"
 
     else:
         return p
+
 
 def Parse_Code(code):
     code = code.strip()
