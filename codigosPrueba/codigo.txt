@@ -1,7 +1,10 @@
 DCL a DEFAULT 8;
 a = 12;
-Mover(AAO);
-a = a + a
+Mover(AA);
+Aleatorio();
+a = a * a
+
+
 
 
 

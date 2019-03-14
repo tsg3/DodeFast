@@ -1,6 +1,8 @@
 from tkinter import *
 import logic.parserPrueba
 import os.path
+import threading
+import time
 
 
 def obtener_codigo():
@@ -114,6 +116,7 @@ def correr_codigo():
             printTerminal(codigo, False)
         else:
             for i in codigo:
+                time.sleep(0.05)
                 print(i)
                 result = logic.parserPrueba.Parse_Code(i)
                 if len(result[0]) > 0:
@@ -232,7 +235,12 @@ def fill_info():
         cont += 1
     textInfo.config(state=DISABLED)
 
+def run_thread():
+    thread = threading.Thread(target=correr_codigo)
+    thread.start()
 
+def stop():
+    logic.parserPrueba.flag_stop = True
 
 # Ventana principal
 
@@ -282,12 +290,14 @@ scrollTerminal.place(in_=textTerminal, relx=1, relheight=1, bordermode="outside"
 # - Botones
 
 botonGuardar = Button(root, text="Guardar", command=lambda: obtener_codigo())
-botonCorrer = Button(root, text="Correr", command=lambda: correr_codigo())
+botonCorrer = Button(root, text="Correr", command=lambda: run_thread())
 botonNuevo = Button(root, text="Nuevo", command=lambda: new_file())
 botonAbrir = Button(root, text="Abrir", command=lambda: open_file())
+botonDetener = Button(root, text="Detener", command=lambda: stop())
 
-botonGuardar.place(x=1280 - 1010, y=50)
-botonCorrer.place(x=1280 - 1000, y=422)
+botonDetener.place(x=200, y=422)
+botonGuardar.place(x=270, y=50)
+botonCorrer.place(x=270, y=422)
 botonAbrir.place(x=26, y=50)
 botonNuevo.place(x=80, y=50)
 

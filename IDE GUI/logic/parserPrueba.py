@@ -1,8 +1,11 @@
 import lib.ply.lex as lex
 import lib.ply.yacc as yacc
 import random
+import time
 
 variables = {}
+
+flag_stop = False
 
 st = ''
 
@@ -593,14 +596,21 @@ def run(p):
 
 
         elif p[0] == 'repetir':
+            global flag_stop
             st += "--> Repeticion"
             while True:
                 for i in p[1]:
                     st += " "
                     run(i)
                 if (run(p[2]) == False):
-                    break;
-            st += " --> Repeticion finalizada!"
+                    st += " --> Repeticion finalizada!"
+                    break
+                if flag_stop == True:
+                    flag_stop = False
+                    error = True
+                    st += "\n--> La ejecución fue detenida forzosamente!\n"
+                    break
+                time.sleep(0.1)
 
         elif p[0] == 'haga':
             if p[1] not in variables:
