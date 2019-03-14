@@ -1,4 +1,4 @@
-s = 'DCL a DEFAULT 100;a - 91 == 4 + 5; khf;asfjhj;asdfj jhasd; asd;asd aaa'
+s = 'DCL a DEFAULT 100;a - 91 == 4 + 5; DESDE asd = 4 HASTA dsa HAGA QWERYT;YTREWQ FINDESDE; olakase'
 openbrace = 0
 pos = []
 
@@ -31,6 +31,32 @@ inside_while = False
 
 
 
+haga = []
+findesde = []
+y = 0
+u = len(s)
+while y < u:
+    digit = s.find('HAGA', y)
+    if not (digit in haga) and digit != -1:
+        haga.append(digit)
+    digit = s.find('FINDESDE', y)
+    if not (digit in findesde) and digit != -1:
+        findesde.append(digit)
+    y += 1
+print(haga)
+print(findesde)  
+if len(haga) != len(findesde):
+    print ("Wrong balance between REPITA's and MIENTRAS's")
+o = 0
+p = len(haga)
+while o < p:
+    if haga[o] > findesde[o]:
+        print ("Wrong distribution of REPITA's and MIENTRAS's")
+    o += 1
+l = 0
+inside_do = False
+
+
 x = 0
 for i in s:
     if w < n:
@@ -39,11 +65,17 @@ for i in s:
         if x > mientras[w]:
             inside_while = False
             w += 1
+    if l < p:
+        if x > haga[l]:
+            inside_do = True
+        if x > findesde[l]:
+            inside_do = False
+            l += 1
     if i == '{':
         openbrace += 1
     elif i == '}':
         openbrace -= 1
-    elif i == ';' and openbrace == 0 and inside_while == False:
+    elif i == ';' and openbrace == 0 and inside_while == False and inside_do == False:
         pos.append(x)
     x += 1
 

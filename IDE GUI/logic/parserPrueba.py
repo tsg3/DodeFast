@@ -1,5 +1,6 @@
 import lib.ply.lex as lex
 import lib.ply.yacc as yacc
+import random
 
 variables = {}
 
@@ -9,7 +10,13 @@ error = False
 
 line = 0
 
-tokens = ['INT','IDEN','EQUALS','PLUS','MINUS','MULTIPLY','DIVIDE','DCL','ASSIGN','SAME','LESS','MORE','NON_EQUAL','LESS_EQUAL','MORE_EQUAL','ENCASO','CUANDO','ENTONS','SINO','FINCASO','SEPARATOR','LBRACE','RBRACE','REPITA','MIENTRAS','FINDESDE','DESDE','HASTA','HAGA']
+valid_movements = {'AF': 1, 'F': 2, 'DFA': 3, 'IFA': 4,
+                   'DFB': 5, 'IFB': 6, 'A': 7, 'DAA': 8,
+                   'IAA': 9, 'DAB': 10, 'IAB': 11, 'AA': 12}
+
+tokens = ['INT','IDEN','EQUALS','PLUS','MINUS','MULTIPLY','DIVIDE','DCL','ASSIGN','SAME','LESS','MORE','NON_EQUAL','LESS_EQUAL','MORE_EQUAL','ENCASO',
+          'CUANDO','ENTONS','SINO','FINCASO','SEPARATOR','LBRACE','RBRACE','REPITA','MIENTRAS','FINDESDE','DESDE','HASTA','HAGA','INC','DEC','INI','COMMA','LPAR','RPAR',
+          'MOVER','ALEATORIO']
 
 #reserved_words = ['DCL','DEFAULT','ENCASO','FINCASO','SINO','ENTONS','CUANDO','REPITA','HASTAENCONTRAR']
 
@@ -29,6 +36,10 @@ t_DIVIDE = r'[\s]*\/[\s]*'
 t_SEPARATOR = r'[\s]*\;[\s]*'
 t_LBRACE = r'[\s]*\{[\s]*'
 t_RBRACE = r'[\s]*\}[\s]*'
+
+t_COMMA = r'[\s]*\,[\s]*'
+t_LPAR = r'[\s]*\([\s]*'
+t_RPAR = r'[\s]*\)[\s]*'
 
 def t_INT(t):
     r'\d+'
@@ -102,6 +113,32 @@ def t_HAGA(t):
     t.type = 'HAGA'
     return t
 
+def t_INC(t):
+    r'[\s]*Inc'
+    t.type = 'INC'
+    return t
+
+def t_DEC(t):
+    r'[\s]*Dec'
+    t.type = 'DEC'
+    return t
+
+def t_INI(t):
+    r'[\s]*Ini'
+    t.type = 'INI'
+    return t
+
+
+def t_MOVER(t):
+    r'[\s]*Mover'
+    t.type = 'MOVER'
+    return t
+
+def t_ALEATORIO(t):
+    r'[\s]*Aleatorio'
+    t.type = 'ALEATORIO'
+    return t
+
 def t_IDEN(t):
     r'[a-zA-Z_][a-zA-Z_0-9@#]*'
     '''global reserved_words
@@ -143,15 +180,50 @@ def p_parse(p):
           | empty
           | repeat
           | do
+          | function
     '''
     print(p[1])
     run(p[1])
 
+def p_function(p):
+    '''
+    function : moves
+             | random
+             | changes
+    '''
+    p[0] = ('function',) + p[1]
+
+def p_changes(p):
+    '''
+    changes : MOVER LPAR IDEN RPAR
+    '''
+    p[0] = (p[1].strip(),p[3])
+
+def p_random(p):
+    '''
+    random : ALEATORIO LPAR RPAR
+    '''
+    p[0] = (p[1].strip(),)
+
+def p_moves(p):
+    '''
+    moves : moves_aux LPAR IDEN COMMA INT RPAR
+    '''
+    p[0] = (p[1],p[3],p[5])
+
+def p_moves_aux(p):
+    '''
+    moves_aux : INC
+              | DEC
+              | INI
+    '''
+    p[0] = p[1].strip()
+
 def p_do(p):
     '''
-    do : DESDE IDEN EQUALS expression HASTA expression HAGA FINDESDE
+    do : DESDE IDEN EQUALS expression HASTA expression HAGA actions FINDESDE
     '''
-    p[0] = ('haga','esto')
+    p[0] = ('haga',p[2],p[4],p[6],p[8])
 
 def p_repeat(p):
     '''
@@ -216,13 +288,23 @@ def p_actions(p):
 
 def p_more_actions(p):
     '''
-    more_actions : SEPARATOR actions
+    more_actions : SEPARATOR more_actions_aux
                  | empty
     '''
     if p[1] == 0:
         p[0] = ()
     else:
-        p[0] = p[2]
+        if p[2] == 0:
+            p[0] = ()
+        else:
+            p[0] = p[2]
+
+def p_more_actions_aux(p):
+    '''
+    more_actions_aux : actions
+                     | empty
+    '''
+    p[0] = p[1]
 
 def p_sentence(p):
     '''
@@ -521,7 +603,56 @@ def run(p):
             st += " --> Repeticion finalizada!"
 
         elif p[0] == 'haga':
-            st += "--> Haga esto!"
+            if p[1] not in variables:
+                st += "--> The variable " + p[1] + " hasn't been declared!"
+                error = True
+                return
+            else:
+                st += "--> Haga esto! "
+                minor = p[2]
+                major = p[3]
+                if minor > major:
+                    temp = major
+                    major = minor
+                    minor = temp
+                if minor == major:
+                    return
+                variables[p[1]] = minor
+                while variables[p[1]] <= major:
+                    for i in p[4]:
+                        run(i)
+                        st += " "
+                    variables[p[1]] += 1
+                st += " --> Terminado"
+
+
+        elif p[0] == 'function':
+            if p[1] == 'Aleatorio':
+                i = 1
+                while i < 11:
+                    move = random.choice(list(valid_movements.items()))
+                    st += "--> Movimiento aleatorio " + str(i) + ": Mover hacia " + move[0] + " = " + str(move[1]) + "!\n"
+                    i += 1
+            elif p[1] == 'Mover':
+                if p[2] in valid_movements:
+                    st += "--> Mover hacia " + p[2] + " = " + str(valid_movements[p[2]]) + "!"
+                else:
+                    error = True
+                    st += "--> Movimiento " + p[2] + " no válido!"
+            else:
+                if p[2] in variables:
+                    if p[1] == 'Inc':
+                        variables[p[2]] += p[3]
+                        st += "--> Valor de " + p[2] + " incrementado en " + str(p[3]) + "!"
+                    elif p[1] == 'Dec':
+                        variables[p[2]] -= p[3]
+                        st += "--> Valor de " + p[2] + " decrementado en " + str(p[3]) + "!"
+                    else:
+                        variables[p[2]] = p[3]
+                        st += "--> Valor de " + p[2] + " cambiado por " + str(p[3]) + "!"
+                else:
+                    error = True
+                    st += "--> " + p[2] + " no ha sido declarado!"
 
     else:
         return p

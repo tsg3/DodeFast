@@ -1,9 +1,14 @@
 DCL a DEFAULT 8;
-a = 8+4;
-a==12;
-DCL final_a DEFAULT a;
+a = 12;
+Mover(AAO);
+a = a + a
 
-a < 14;
-a == 3+4;
-a == final_a
+
+
+
+
+
+
+
+
 

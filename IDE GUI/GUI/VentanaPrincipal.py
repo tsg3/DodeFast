@@ -37,6 +37,30 @@ def separate_code(code):
         i += 1
     w = 0
     inside_while = False
+
+    haga = []
+    findesde = []
+    y = 0
+    u = len(code)
+    while y < u:
+        digit = code.find('HAGA', y)
+        if not (digit in haga) and digit != -1:
+            haga.append(digit)
+        digit = code.find('FINDESDE', y)
+        if not (digit in findesde) and digit != -1:
+            findesde.append(digit)
+        y += 1
+    if len(haga) != len(findesde):
+        return "Wrong balance between HAGA's and FINDESDE's"
+    o = 0
+    p = len(haga)
+    while o < p:
+        if haga[o] > findesde[o]:
+            return "Wrong distribution of HAGA's and FINDESDE's"
+        o += 1
+    l = 0
+    inside_do = False
+
     x = 0
     for i in code:
         if w < n:
@@ -45,11 +69,17 @@ def separate_code(code):
             if x > mientras[w]:
                 inside_while = False
                 w += 1
+        if l < p:
+            if x > haga[l]:
+                inside_do = True
+            if x > findesde[l]:
+                inside_do = False
+                l += 1
         if i == '{':
             openbrace += 1
         elif i == '}':
             openbrace -= 1
-        elif i == ';' and openbrace == 0 and inside_while == False:
+        elif i == ';' and openbrace == 0 and inside_while == False and inside_do == False:
             pos.append(x)
         x += 1
     lista = []

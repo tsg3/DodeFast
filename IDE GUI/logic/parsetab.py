@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftPLUSMINUSleftMULTIPLYDIVIDEASSIGN CUANDO DCL DESDE DIVIDE ENCASO ENTONS EQUALS FINCASO FINDESDE HAGA HASTA IDEN INT LBRACE LESS LESS_EQUAL MIENTRAS MINUS MORE MORE_EQUAL MULTIPLY NON_EQUAL PLUS RBRACE REPITA SAME SEPARATOR SINO\n    parse : comparative\n          | sentence\n          | cases\n          | empty\n          | repeat\n          | do\n    \n    do : DESDE IDEN EQUALS expression HASTA expression HAGA FINDESDE\n    \n    repeat : REPITA actions MIENTRAS comparative\n    \n    cases : syntax1\n          | syntax2\n    \n    syntax2 : ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO\n    \n    options2 : CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2\n    \n    more_options2 : options2\n                 | empty\n    \n    syntax1 : ENCASO options1 SINO LBRACE actions RBRACE FINCASO\n    \n    options1 : CUANDO comparative ENTONS LBRACE actions RBRACE more_options1\n    \n    more_options1 : options1\n                 | empty\n    \n    actions : var_assign more_actions\n    \n    more_actions : SEPARATOR actions\n                 | empty\n    \n    sentence : var_declare\n             | var_assign\n    \n    var_declare : DCL IDEN value\n    \n    value : initialize\n          | empty\n    \n    initialize : ASSIGN expression\n    \n    comparative : IDEN condition expression\n    \n    var_assign : IDEN EQUALS expression\n    \n    expression : expression operator expression\n    \n    expression : IDEN\n    \n    expression : INT\n    \n    operator : MULTIPLY\n             | DIVIDE\n             | PLUS\n             | MINUS\n    \n    condition : SAME\n              | LESS\n              | MORE\n              | NON_EQUAL\n              | LESS_EQUAL\n              | MORE_EQUAL\n    \n    empty :\n    '
+_lr_signature = 'leftPLUSMINUSleftMULTIPLYDIVIDEALEATORIO ASSIGN COMMA CUANDO DCL DEC DESDE DIVIDE ENCASO ENTONS EQUALS FINCASO FINDESDE HAGA HASTA IDEN INC INI INT LBRACE LESS LESS_EQUAL LPAR MIENTRAS MINUS MORE MORE_EQUAL MOVER MULTIPLY NON_EQUAL PLUS RBRACE REPITA RPAR SAME SEPARATOR SINO\n    parse : comparative\n          | sentence\n          | cases\n          | empty\n          | repeat\n          | do\n          | function\n    \n    function : moves\n             | random\n             | changes\n    \n    changes : MOVER LPAR IDEN RPAR\n    \n    random : ALEATORIO LPAR RPAR\n    \n    moves : moves_aux LPAR IDEN COMMA INT RPAR\n    \n    moves_aux : INC\n              | DEC\n              | INI\n    \n    do : DESDE IDEN EQUALS expression HASTA expression HAGA actions FINDESDE\n    \n    repeat : REPITA actions MIENTRAS comparative\n    \n    cases : syntax1\n          | syntax2\n    \n    syntax2 : ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO\n    \n    options2 : CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2\n    \n    more_options2 : options2\n                 | empty\n    \n    syntax1 : ENCASO options1 SINO LBRACE actions RBRACE FINCASO\n    \n    options1 : CUANDO comparative ENTONS LBRACE actions RBRACE more_options1\n    \n    more_options1 : options1\n                 | empty\n    \n    actions : var_assign more_actions\n    \n    more_actions : SEPARATOR more_actions_aux\n                 | empty\n    \n    more_actions_aux : actions\n                     | empty\n    \n    sentence : var_declare\n             | var_assign\n    \n    var_declare : DCL IDEN value\n    \n    value : initialize\n          | empty\n    \n    initialize : ASSIGN expression\n    \n    comparative : IDEN condition expression\n    \n    var_assign : IDEN EQUALS expression\n    \n    expression : expression operator expression\n    \n    expression : IDEN\n    \n    expression : INT\n    \n    operator : MULTIPLY\n             | DIVIDE\n             | PLUS\n             | MINUS\n    \n    condition : SAME\n              | LESS\n              | MORE\n              | NON_EQUAL\n              | LESS_EQUAL\n              | MORE_EQUAL\n    \n    empty :\n    '
     
-_lr_action_items = {'IDEN':([0,13,14,15,16,17,18,19,20,21,22,23,24,32,37,39,41,45,51,52,53,54,55,60,62,65,67,69,78,],[8,27,28,29,31,33,33,-37,-38,-39,-40,-41,-42,50,50,27,33,33,33,-33,-34,-35,-36,27,33,33,27,27,27,]),'$end':([0,1,2,3,4,5,6,7,9,10,11,12,29,33,34,35,36,42,43,44,56,59,64,76,80,81,],[-43,0,-1,-2,-3,-4,-5,-6,-22,-23,-9,-10,-43,-31,-28,-32,-29,-24,-25,-26,-8,-27,-30,-15,-7,-11,]),'REPITA':([0,],[13,]),'DESDE':([0,],[14,]),'DCL':([0,],[15,]),'ENCASO':([0,],[16,]),'EQUALS':([8,27,28,],[18,18,41,]),'SAME':([8,48,50,],[19,19,19,]),'LESS':([8,48,50,],[20,20,20,]),'MORE':([8,48,50,],[21,21,21,]),'NON_EQUAL':([8,48,50,],[22,22,22,]),'LESS_EQUAL':([8,48,50,],[23,23,23,]),'MORE_EQUAL':([8,48,50,],[24,24,24,]),'CUANDO':([16,31,79,86,],[32,48,32,48,]),'INT':([17,18,19,20,21,22,23,24,41,45,51,52,53,54,55,62,65,],[35,35,-37,-38,-39,-40,-41,-42,35,35,35,-33,-34,-35,-36,35,35,]),'MIENTRAS':([25,26,33,35,36,38,40,57,64,],[37,-43,-31,-32,-29,-19,-21,-20,-30,]),'SEPARATOR':([26,33,35,36,64,],[39,-31,-32,-29,-30,]),'RBRACE':([26,33,35,36,38,40,57,64,66,72,74,82,],[-43,-31,-32,-29,-19,-21,-20,-30,71,77,79,86,]),'ASSIGN':([29,],[45,]),'SINO':([30,47,79,83,84,85,86,87,88,89,],[46,61,-43,-16,-17,-18,-43,-12,-13,-14,]),'MULTIPLY':([33,34,35,36,58,59,64,68,70,],[-31,52,-32,52,52,52,52,52,52,]),'DIVIDE':([33,34,35,36,58,59,64,68,70,],[-31,53,-32,53,53,53,53,53,53,]),'PLUS':([33,34,35,36,58,59,64,68,70,],[-31,54,-32,54,54,54,54,54,54,]),'MINUS':([33,34,35,36,58,59,64,68,70,],[-31,55,-32,55,55,55,55,55,55,]),'ENTONS':([33,34,35,49,64,68,],[-31,-28,-32,63,-30,73,]),'HASTA':([33,35,58,64,],[-31,-32,65,-30,]),'HAGA':([33,35,64,70,],[-31,-32,-30,75,]),'LBRACE':([46,61,63,73,],[60,67,69,78,]),'FINCASO':([71,77,],[76,81,]),'FINDESDE':([75,],[80,]),}
+_lr_action_items = {'IDEN':([0,14,15,19,20,27,28,29,30,31,32,33,34,42,43,45,50,52,54,58,67,68,69,70,71,78,80,85,87,89,97,100,],[9,37,38,39,41,46,46,-49,-50,-51,-52,-53,-54,63,64,66,63,37,46,46,46,-45,-46,-47,-48,37,46,46,37,37,37,37,]),'$end':([0,1,2,3,4,5,6,7,8,10,11,12,13,16,17,18,39,46,47,48,49,55,56,57,65,72,77,83,84,96,98,103,108,],[-55,0,-1,-2,-3,-4,-5,-6,-7,-34,-35,-19,-20,-8,-9,-10,-55,-43,-40,-44,-41,-36,-37,-38,-12,-18,-39,-11,-42,-13,-25,-21,-17,]),'REPITA':([0,],[14,]),'DESDE':([0,],[15,]),'DCL':([0,],[19,]),'ENCASO':([0,],[20,]),'ALEATORIO':([0,],[22,]),'MOVER':([0,],[23,]),'INC':([0,],[24,]),'DEC':([0,],[25,]),'INI':([0,],[26,]),'EQUALS':([9,37,38,],[28,28,54,]),'SAME':([9,61,63,],[29,29,29,]),'LESS':([9,61,63,],[30,30,30,]),'MORE':([9,61,63,],[31,31,31,]),'NON_EQUAL':([9,61,63,],[32,32,32,]),'LESS_EQUAL':([9,61,63,],[33,33,33,]),'MORE_EQUAL':([9,61,63,],[34,34,34,]),'CUANDO':([20,41,101,109,],[42,61,42,61,]),'LPAR':([21,22,23,24,25,26,],[43,44,45,-14,-15,-16,]),'INT':([27,28,29,30,31,32,33,34,54,58,67,68,69,70,71,80,82,85,],[48,48,-49,-50,-51,-52,-53,-54,48,48,48,-45,-46,-47,-48,48,90,48,]),'MIENTRAS':([35,36,46,48,49,51,52,53,73,74,75,84,],[50,-55,-43,-44,-41,-29,-55,-31,-30,-32,-33,-42,]),'SEPARATOR':([36,46,48,49,84,],[52,-43,-44,-41,-42,]),'RBRACE':([36,46,48,49,51,52,53,73,74,75,84,86,93,95,104,],[-55,-43,-44,-41,-29,-55,-31,-30,-32,-33,-42,92,99,101,109,]),'FINDESDE':([36,46,48,49,51,52,53,73,74,75,84,102,],[-55,-43,-44,-41,-29,-55,-31,-30,-32,-33,-42,108,]),'ASSIGN':([39,],[58,]),'SINO':([40,60,101,105,106,107,109,110,111,112,],[59,79,-55,-26,-27,-28,-55,-22,-23,-24,]),'RPAR':([44,66,90,],[65,83,96,]),'MULTIPLY':([46,47,48,49,76,77,84,88,91,],[-43,68,-44,68,68,68,68,68,68,]),'DIVIDE':([46,47,48,49,76,77,84,88,91,],[-43,69,-44,69,69,69,69,69,69,]),'PLUS':([46,47,48,49,76,77,84,88,91,],[-43,70,-44,70,70,70,70,70,70,]),'MINUS':([46,47,48,49,76,77,84,88,91,],[-43,71,-44,71,71,71,71,71,71,]),'ENTONS':([46,47,48,62,84,88,],[-43,-40,-44,81,-42,94,]),'HASTA':([46,48,76,84,],[-43,-44,85,-42,]),'HAGA':([46,48,84,91,],[-43,-44,-42,97,]),'LBRACE':([59,79,81,94,],[78,87,89,100,]),'COMMA':([64,],[82,]),'FINCASO':([92,99,],[98,103,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'parse':([0,],[1,]),'comparative':([0,32,37,],[2,49,56,]),'sentence':([0,],[3,]),'cases':([0,],[4,]),'empty':([0,26,29,79,86,],[5,40,44,85,89,]),'repeat':([0,],[6,]),'do':([0,],[7,]),'var_declare':([0,],[9,]),'var_assign':([0,13,39,60,67,69,78,],[10,26,26,26,26,26,26,]),'syntax1':([0,],[11,]),'syntax2':([0,],[12,]),'condition':([8,48,50,],[17,62,17,]),'actions':([13,39,60,67,69,78,],[25,57,66,72,74,82,]),'options1':([16,79,],[30,84,]),'expression':([17,18,41,45,51,62,65,],[34,36,58,59,64,68,70,]),'more_actions':([26,],[38,]),'value':([29,],[42,]),'initialize':([29,],[43,]),'options2':([31,86,],[47,88,]),'operator':([34,36,58,59,64,68,70,],[51,51,51,51,51,51,51,]),'more_options1':([79,],[83,]),'more_options2':([86,],[87,]),}
+_lr_goto_items = {'parse':([0,],[1,]),'comparative':([0,42,50,],[2,62,72,]),'sentence':([0,],[3,]),'cases':([0,],[4,]),'empty':([0,36,39,52,101,109,],[5,53,57,75,107,112,]),'repeat':([0,],[6,]),'do':([0,],[7,]),'function':([0,],[8,]),'var_declare':([0,],[10,]),'var_assign':([0,14,52,78,87,89,97,100,],[11,36,36,36,36,36,36,36,]),'syntax1':([0,],[12,]),'syntax2':([0,],[13,]),'moves':([0,],[16,]),'random':([0,],[17,]),'changes':([0,],[18,]),'moves_aux':([0,],[21,]),'condition':([9,61,63,],[27,80,27,]),'actions':([14,52,78,87,89,97,100,],[35,74,86,93,95,102,104,]),'options1':([20,101,],[40,106,]),'expression':([27,28,54,58,67,80,85,],[47,49,76,77,84,88,91,]),'more_actions':([36,],[51,]),'value':([39,],[55,]),'initialize':([39,],[56,]),'options2':([41,109,],[60,111,]),'operator':([47,49,76,77,84,88,91,],[67,67,67,67,67,67,67,]),'more_actions_aux':([52,],[73,]),'more_options1':([101,],[105,]),'more_options2':([109,],[110,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,47 +27,59 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> parse","S'",1,None,None,None),
-  ('parse -> comparative','parse',1,'p_parse','parserPrueba.py',140),
-  ('parse -> sentence','parse',1,'p_parse','parserPrueba.py',141),
-  ('parse -> cases','parse',1,'p_parse','parserPrueba.py',142),
-  ('parse -> empty','parse',1,'p_parse','parserPrueba.py',143),
-  ('parse -> repeat','parse',1,'p_parse','parserPrueba.py',144),
-  ('parse -> do','parse',1,'p_parse','parserPrueba.py',145),
-  ('do -> DESDE IDEN EQUALS expression HASTA expression HAGA FINDESDE','do',8,'p_do','parserPrueba.py',152),
-  ('repeat -> REPITA actions MIENTRAS comparative','repeat',4,'p_repeat','parserPrueba.py',158),
-  ('cases -> syntax1','cases',1,'p_cases','parserPrueba.py',164),
-  ('cases -> syntax2','cases',1,'p_cases','parserPrueba.py',165),
-  ('syntax2 -> ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO','syntax2',8,'p_syntax2','parserPrueba.py',171),
-  ('options2 -> CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2','options2',8,'p_options2','parserPrueba.py',177),
-  ('more_options2 -> options2','more_options2',1,'p_more_options2','parserPrueba.py',183),
-  ('more_options2 -> empty','more_options2',1,'p_more_options2','parserPrueba.py',184),
-  ('syntax1 -> ENCASO options1 SINO LBRACE actions RBRACE FINCASO','syntax1',7,'p_syntax1','parserPrueba.py',192),
-  ('options1 -> CUANDO comparative ENTONS LBRACE actions RBRACE more_options1','options1',7,'p_options1','parserPrueba.py',198),
-  ('more_options1 -> options1','more_options1',1,'p_more_options1','parserPrueba.py',204),
-  ('more_options1 -> empty','more_options1',1,'p_more_options1','parserPrueba.py',205),
-  ('actions -> var_assign more_actions','actions',2,'p_actions','parserPrueba.py',213),
-  ('more_actions -> SEPARATOR actions','more_actions',2,'p_more_actions','parserPrueba.py',219),
-  ('more_actions -> empty','more_actions',1,'p_more_actions','parserPrueba.py',220),
-  ('sentence -> var_declare','sentence',1,'p_sentence','parserPrueba.py',229),
-  ('sentence -> var_assign','sentence',1,'p_sentence','parserPrueba.py',230),
-  ('var_declare -> DCL IDEN value','var_declare',3,'p_var_declare','parserPrueba.py',236),
-  ('value -> initialize','value',1,'p_value','parserPrueba.py',243),
-  ('value -> empty','value',1,'p_value','parserPrueba.py',244),
-  ('initialize -> ASSIGN expression','initialize',2,'p_initialize','parserPrueba.py',251),
-  ('comparative -> IDEN condition expression','comparative',3,'p_comparative','parserPrueba.py',258),
-  ('var_assign -> IDEN EQUALS expression','var_assign',3,'p_var_assign','parserPrueba.py',265),
-  ('expression -> expression operator expression','expression',3,'p_expression','parserPrueba.py',271),
-  ('expression -> IDEN','expression',1,'p_expression_var','parserPrueba.py',278),
-  ('expression -> INT','expression',1,'p_expression_int','parserPrueba.py',285),
-  ('operator -> MULTIPLY','operator',1,'p_operator','parserPrueba.py',291),
-  ('operator -> DIVIDE','operator',1,'p_operator','parserPrueba.py',292),
-  ('operator -> PLUS','operator',1,'p_operator','parserPrueba.py',293),
-  ('operator -> MINUS','operator',1,'p_operator','parserPrueba.py',294),
-  ('condition -> SAME','condition',1,'p_condition','parserPrueba.py',300),
-  ('condition -> LESS','condition',1,'p_condition','parserPrueba.py',301),
-  ('condition -> MORE','condition',1,'p_condition','parserPrueba.py',302),
-  ('condition -> NON_EQUAL','condition',1,'p_condition','parserPrueba.py',303),
-  ('condition -> LESS_EQUAL','condition',1,'p_condition','parserPrueba.py',304),
-  ('condition -> MORE_EQUAL','condition',1,'p_condition','parserPrueba.py',305),
-  ('empty -> <empty>','empty',0,'p_empty','parserPrueba.py',320),
+  ('parse -> comparative','parse',1,'p_parse','parserPrueba.py',176),
+  ('parse -> sentence','parse',1,'p_parse','parserPrueba.py',177),
+  ('parse -> cases','parse',1,'p_parse','parserPrueba.py',178),
+  ('parse -> empty','parse',1,'p_parse','parserPrueba.py',179),
+  ('parse -> repeat','parse',1,'p_parse','parserPrueba.py',180),
+  ('parse -> do','parse',1,'p_parse','parserPrueba.py',181),
+  ('parse -> function','parse',1,'p_parse','parserPrueba.py',182),
+  ('function -> moves','function',1,'p_function','parserPrueba.py',189),
+  ('function -> random','function',1,'p_function','parserPrueba.py',190),
+  ('function -> changes','function',1,'p_function','parserPrueba.py',191),
+  ('changes -> MOVER LPAR IDEN RPAR','changes',4,'p_changes','parserPrueba.py',197),
+  ('random -> ALEATORIO LPAR RPAR','random',3,'p_random','parserPrueba.py',203),
+  ('moves -> moves_aux LPAR IDEN COMMA INT RPAR','moves',6,'p_moves','parserPrueba.py',209),
+  ('moves_aux -> INC','moves_aux',1,'p_moves_aux','parserPrueba.py',215),
+  ('moves_aux -> DEC','moves_aux',1,'p_moves_aux','parserPrueba.py',216),
+  ('moves_aux -> INI','moves_aux',1,'p_moves_aux','parserPrueba.py',217),
+  ('do -> DESDE IDEN EQUALS expression HASTA expression HAGA actions FINDESDE','do',9,'p_do','parserPrueba.py',223),
+  ('repeat -> REPITA actions MIENTRAS comparative','repeat',4,'p_repeat','parserPrueba.py',229),
+  ('cases -> syntax1','cases',1,'p_cases','parserPrueba.py',235),
+  ('cases -> syntax2','cases',1,'p_cases','parserPrueba.py',236),
+  ('syntax2 -> ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO','syntax2',8,'p_syntax2','parserPrueba.py',242),
+  ('options2 -> CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2','options2',8,'p_options2','parserPrueba.py',248),
+  ('more_options2 -> options2','more_options2',1,'p_more_options2','parserPrueba.py',254),
+  ('more_options2 -> empty','more_options2',1,'p_more_options2','parserPrueba.py',255),
+  ('syntax1 -> ENCASO options1 SINO LBRACE actions RBRACE FINCASO','syntax1',7,'p_syntax1','parserPrueba.py',263),
+  ('options1 -> CUANDO comparative ENTONS LBRACE actions RBRACE more_options1','options1',7,'p_options1','parserPrueba.py',269),
+  ('more_options1 -> options1','more_options1',1,'p_more_options1','parserPrueba.py',275),
+  ('more_options1 -> empty','more_options1',1,'p_more_options1','parserPrueba.py',276),
+  ('actions -> var_assign more_actions','actions',2,'p_actions','parserPrueba.py',284),
+  ('more_actions -> SEPARATOR more_actions_aux','more_actions',2,'p_more_actions','parserPrueba.py',290),
+  ('more_actions -> empty','more_actions',1,'p_more_actions','parserPrueba.py',291),
+  ('more_actions_aux -> actions','more_actions_aux',1,'p_more_actions_aux','parserPrueba.py',303),
+  ('more_actions_aux -> empty','more_actions_aux',1,'p_more_actions_aux','parserPrueba.py',304),
+  ('sentence -> var_declare','sentence',1,'p_sentence','parserPrueba.py',310),
+  ('sentence -> var_assign','sentence',1,'p_sentence','parserPrueba.py',311),
+  ('var_declare -> DCL IDEN value','var_declare',3,'p_var_declare','parserPrueba.py',317),
+  ('value -> initialize','value',1,'p_value','parserPrueba.py',324),
+  ('value -> empty','value',1,'p_value','parserPrueba.py',325),
+  ('initialize -> ASSIGN expression','initialize',2,'p_initialize','parserPrueba.py',332),
+  ('comparative -> IDEN condition expression','comparative',3,'p_comparative','parserPrueba.py',339),
+  ('var_assign -> IDEN EQUALS expression','var_assign',3,'p_var_assign','parserPrueba.py',346),
+  ('expression -> expression operator expression','expression',3,'p_expression','parserPrueba.py',352),
+  ('expression -> IDEN','expression',1,'p_expression_var','parserPrueba.py',359),
+  ('expression -> INT','expression',1,'p_expression_int','parserPrueba.py',366),
+  ('operator -> MULTIPLY','operator',1,'p_operator','parserPrueba.py',372),
+  ('operator -> DIVIDE','operator',1,'p_operator','parserPrueba.py',373),
+  ('operator -> PLUS','operator',1,'p_operator','parserPrueba.py',374),
+  ('operator -> MINUS','operator',1,'p_operator','parserPrueba.py',375),
+  ('condition -> SAME','condition',1,'p_condition','parserPrueba.py',381),
+  ('condition -> LESS','condition',1,'p_condition','parserPrueba.py',382),
+  ('condition -> MORE','condition',1,'p_condition','parserPrueba.py',383),
+  ('condition -> NON_EQUAL','condition',1,'p_condition','parserPrueba.py',384),
+  ('condition -> LESS_EQUAL','condition',1,'p_condition','parserPrueba.py',385),
+  ('condition -> MORE_EQUAL','condition',1,'p_condition','parserPrueba.py',386),
+  ('empty -> <empty>','empty',0,'p_empty','parserPrueba.py',401),
 ]
