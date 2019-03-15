@@ -1,7 +1,9 @@
 DCL a DEFAULT 100;
 a = 7 + 4;
-REPITA a = a+2; a = a-1 MIENTRAS a > 1;
+REPITA a = a+2; a = a-1 MIENTRAS a > 0;
 a = a * a
+
+
 
 
 
