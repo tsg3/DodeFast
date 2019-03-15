@@ -101,17 +101,16 @@ def separate_code(code):
     else:
         return "--> Bad distribution of brackets!"
 
+
 def get_code(code):
     if code.count("INICIO") == 1 and code.count("FINAL") == 1:
         if code.index('INICIO:') < code.index('FINAL;'):
             count1 = code.index("INICIO")
-            for i in range(count1):
-                if code[i] != " " or code[i] != "\n":
-                    print(code[i])
-                    print(code[i+1])
-                    return "error"
+            blanco = code[:count1].split()
+            if len(blanco) != 0:
+                return "error"
             count2 = code.index("FINAL;")
-            tr = code[(count1+7):count2]
+            tr = code[(count1 + 7):count2]
             return tr
         else:
             return "error"
