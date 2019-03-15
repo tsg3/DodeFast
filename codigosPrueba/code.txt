@@ -2,6 +2,7 @@ DCL a DEFAULT 1;
 ENCASO
    CUANDO a > 1 ENTONS
 	{
+	a = 2 ;
 	a = 1
 	}
    SINO
@@ -10,5 +11,6 @@ ENCASO
 	}
 FINCASO;
 DCL c DEFAULT a;
+
 
 

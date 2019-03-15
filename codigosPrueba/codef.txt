@@ -1,0 +1,40 @@
+DCL a DEFAULT 100;
+DCL b;
+DCL i_t;
+ENCASO
+   CUANDO a > 50 ENTONS
+    {
+    	ENCASO
+   	CUANDO a == 50 ENTONS
+    	{
+    	b = 0
+    	}
+   	CUANDO a <> 100 ENTONS
+    	{
+    	Ini(b,200)
+    	}
+   	SINO
+    	{
+    	Ini(b,10000)
+    	}
+	FINCASO
+    }
+   CUANDO a < 50 ENTONS
+    {
+    Ini(b,200)
+    }
+   SINO
+    {
+    Ini(b,100)
+    }
+FINCASO;
+DCL c;
+REPITA c = c + a + 33 MIENTRAS c < b;
+DCL itr;
+DESDE itr = 1 HASTA 3 HAGA a = a + b + c FINDESDE;
+Inc(a,100);
+Dec(b,100);
+Ini(c,100);
+Mover(AF);
+Aleatorio()
+

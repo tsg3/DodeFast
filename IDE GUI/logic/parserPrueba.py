@@ -179,14 +179,21 @@ def p_parse(p):
     '''
     parse : comparative
           | sentence
-          | cases
+          | var_declare
           | empty
-          | repeat
-          | do
-          | function
     '''
     print(p[1])
     run(p[1])
+
+def p_sentence(p):
+    '''
+    sentence : var_assign
+             | cases
+             | repeat
+             | do
+             | function
+    '''
+    p[0] = p[1]
 
 def p_function(p):
     '''
@@ -277,7 +284,7 @@ def p_options1(p):
 def p_more_options1(p):
     '''
     more_options1 : options1
-                 | empty
+                  | empty
     '''
     p[0] = p[1]
     if p[0] == 0:
@@ -285,7 +292,7 @@ def p_more_options1(p):
 
 def p_actions(p):
     '''
-    actions : var_assign more_actions
+    actions : sentence more_actions
     '''
     p[0] = (p[1],) + p[2]
 
@@ -306,13 +313,6 @@ def p_more_actions_aux(p):
     '''
     more_actions_aux : actions
                      | empty
-    '''
-    p[0] = p[1]
-
-def p_sentence(p):
-    '''
-    sentence : var_declare
-             | var_assign
     '''
     p[0] = p[1]
 
@@ -610,7 +610,7 @@ def run(p):
                     error = True
                     st += "\n--> La ejecución fue detenida forzosamente!\n"
                     break
-                time.sleep(0.1)
+                time.sleep(0.01)
 
         elif p[0] == 'haga':
             if p[1] not in variables:
