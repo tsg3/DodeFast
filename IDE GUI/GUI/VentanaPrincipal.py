@@ -3,6 +3,7 @@ import logic.parserPrueba
 import os.path
 import threading
 import time
+import re
 
 
 def obtener_codigo():
@@ -13,6 +14,7 @@ def obtener_codigo():
         archivoCodigo.close()
     else:
         printTerminal("Before saving, upload or create a program!", True)
+
 
 def separate_code(code):
     openbrace = 0
@@ -99,18 +101,36 @@ def separate_code(code):
     else:
         return "--> Bad distribution of brackets!"
 
-# codeurl = C:\Users\este0\Desktop\TEC\2019 - I Semestre\Compiladores, Intérpretes y Lenguajes\DodeFast\codigosPrueba\codigo.txt
+def get_code(code):
+    if code.count("INICIO") == 1 and code.count("FINAL") == 1:
+        if code.index('INICIO:') < code.index('FINAL;'):
+            count1 = code.index("INICIO")
+            for i in range(count1):
+                if code[i] != " " or code[i] != "\n":
+                    print(code[i])
+                    print(code[i+1])
+                    return "error"
+            count2 = code.index("FINAL;")
+            tr = code[(count1+7):count2]
+            return tr
+        else:
+            return "error"
+    else:
+        return "error"
+
 
 def correr_codigo():
     if len(current_URL) != 0:
         logic.parserPrueba.line = 0
         archivoCodigo = open(current_URL, "r")
-        codigo = archivoCodigo.read()
+        prevCode = archivoCodigo.read()
         archivoCodigo.close()
-        #codigo = codigo.strip().replace('\n', '')
-        #codigo = codigo.split(';')
+        codigo = get_code(prevCode)
+        if codigo == "error":
+            printTerminal("Error INICIO-FINAL", True)
+            return
         printTerminal("", True)
-        codigo = codigo.strip().replace('\n','').replace('\t','')
+        codigo = codigo.strip().replace('\n', '').replace('\t', '')
         codigo = separate_code(codigo)
         if type(codigo) == str:
             printTerminal(codigo, False)
@@ -215,7 +235,7 @@ def fill_info():
     global file_name
     cont = 1
     lista = current_URL.split("\\")
-    file_name.set(lista[len(lista)-1])
+    file_name.set(lista[len(lista) - 1])
     lista = lista[0:(len(lista) - 1)]
     url = ""
     textInfo.config(state=NORMAL)
@@ -235,12 +255,15 @@ def fill_info():
         cont += 1
     textInfo.config(state=DISABLED)
 
+
 def run_thread():
     thread = threading.Thread(target=correr_codigo)
     thread.start()
 
+
 def stop():
     logic.parserPrueba.flag_stop = True
+
 
 # Ventana principal
 
