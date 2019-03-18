@@ -19,6 +19,7 @@ def obtener_codigo():
 def separate_code(code):
     openbrace = 0
     pos = []
+
     repita = []
     mientras = []
     i = 0
@@ -31,14 +32,7 @@ def separate_code(code):
         if not (digit in mientras) and digit != -1:
             mientras.append(digit)
         i += 1
-    if len(repita) != len(mientras):
-        return "Wrong balance between REPITA's and MIENTRAS's"
-    i = 0
     n = len(repita)
-    while i < n:
-        if repita[i] > mientras[i]:
-            return "Wrong distribution of REPITA's and MIENTRAS's"
-        i += 1
     w = 0
     inside_while = False
 
@@ -54,14 +48,7 @@ def separate_code(code):
         if not (digit in findesde) and digit != -1:
             findesde.append(digit)
         y += 1
-    if len(haga) != len(findesde):
-        return "Wrong balance between HAGA's and FINDESDE's"
-    o = 0
     p = len(haga)
-    while o < p:
-        if haga[o] > findesde[o]:
-            return "Wrong distribution of HAGA's and FINDESDE's"
-        o += 1
     l = 0
     inside_do = False
 
@@ -96,10 +83,7 @@ def separate_code(code):
             lista.append(code[pos[y - 1] + 1:pos[y]])
         y += 1
     lista.append(code[pos[-1] + 1:])
-    if openbrace == 0:
-        return lista
-    else:
-        return "--> Bad distribution of brackets!"
+    return lista
 
 
 def get_code(code):
@@ -131,18 +115,15 @@ def correr_codigo():
         printTerminal("", True)
         codigo = codigo.strip().replace('\n', '').replace('\t', '')
         codigo = separate_code(codigo)
-        if type(codigo) == str:
-            printTerminal(codigo, False)
-        else:
-            for i in codigo:
-                time.sleep(0.05)
-                print(i)
-                result = logic.parserPrueba.Parse_Code(i)
-                if len(result[0]) > 0:
-                    printTerminal(result[0], False)
-                if result[1]:
-                    break
-            logic.parserPrueba.variables.clear()
+        for i in codigo:
+            time.sleep(0.05)
+            print(i)
+            result = logic.parserPrueba.Parse_Code(i)
+            if len(result[0]) > 0:
+                printTerminal(result[0], False)
+            if result[1]:
+                break
+        logic.parserPrueba.variables.clear()
 
     else:
         printTerminal("Before running, load a program!", True)

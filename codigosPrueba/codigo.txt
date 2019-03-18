@@ -1,3 +1,4 @@
+
 INICIO:
 DCL a DEFAULT 8;
 a = 12;
@@ -5,6 +6,10 @@ Mover(AA);
 Aleatorio();
 a = a * a;
 FINAL;
+
+
+
+
 
 
 

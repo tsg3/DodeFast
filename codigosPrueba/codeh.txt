@@ -1,9 +1,14 @@
+INICIO:
 DCL a DEFAULT 100;
 a = 7 + 4;
 DCL fact_ DEFAULT 1;
 DCL itr;
 DESDE itr = 1 HASTA 9 HAGA fact_ = fact_ * itr; FINDESDE;
 a = a + itr
+
+FINAL;
+
+
 
 
 

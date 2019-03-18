@@ -1,10 +1,10 @@
+INICIO:
 DCL a DEFAULT 1;
 ENCASO
    CUANDO a > 1 ENTONS
 	{
-	a = 2 ;
-	a = 1
-	}
+	a = 2
+	}}
    SINO
 	{
 	a = 7
@@ -13,4 +13,5 @@ FINCASO;
 DCL c DEFAULT a;
 
 
+FINAL;
 

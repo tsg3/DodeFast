@@ -3,6 +3,8 @@ import lib.ply.yacc as yacc
 import random
 import time
 
+procedimientos = {}
+
 variables = {}
 
 flag_stop = False

@@ -1,3 +1,4 @@
+INICIO:
 DCL a DEFAULT 100;
 DCL b;
 DCL i_t;
@@ -37,4 +38,4 @@ Dec(b,100);
 Ini(c,100);
 Mover(AF);
 Aleatorio()
-
+FINAL;
