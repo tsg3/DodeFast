@@ -14,98 +14,6 @@ def obtener_codigo():
     else:
         printTerminal("Before saving, upload or create a program!", True)
 
-
-def separate_code(code):
-    openbrace = 0
-    pos = []
-
-    repita = []
-    mientras = []
-    i = 0
-    n = len(code)
-    while i < n:
-        digit = code.find('REPITA', i)
-        if not (digit in repita) and digit != -1:
-            repita.append(digit)
-        digit = code.find('MIENTRAS', i)
-        if not (digit in mientras) and digit != -1:
-            mientras.append(digit)
-        i += 1
-    n = len(repita)
-    w = 0
-    inside_while = False
-
-    haga = []
-    findesde = []
-    y = 0
-    u = len(code)
-    while y < u:
-        digit = code.find('HAGA', y)
-        if not (digit in haga) and digit != -1:
-            haga.append(digit)
-        digit = code.find('FINDESDE', y)
-        if not (digit in findesde) and digit != -1:
-            findesde.append(digit)
-        y += 1
-    p = len(haga)
-    l = 0
-    inside_do = False
-
-    x = 0
-    for i in code:
-        if w < n:
-            if x > repita[w]:
-                inside_while = True
-            if x > mientras[w]:
-                inside_while = False
-                w += 1
-        if l < p:
-            if x > haga[l]:
-                inside_do = True
-            if x > findesde[l]:
-                inside_do = False
-                l += 1
-        if i == '{':
-            openbrace += 1
-        elif i == '}':
-            openbrace -= 1
-        elif i == ';' and openbrace == 0 and inside_while == False and inside_do == False:
-            pos.append(x)
-        x += 1
-    lista = []
-    n = len(pos)
-    y = 0
-    if len(pos) == 0:
-        return code
-    else:
-        while y < n:
-            if y == 0:
-                lista.append(code[:pos[y]])
-            else:
-                lista.append(code[pos[y - 1] + 1:pos[y]])
-            y += 1
-        lista.append(code[pos[-1] + 1:])
-        if lista[-1] == "":
-            lista = lista[:-1]
-        return lista
-
-
-def get_code(code):
-    if code.count("INICIO") == code.count("FINAL"):
-        if code.index('INICIO:') < code.index('FINAL;'):
-            count1 = code.index("INICIO")
-            blanco = code[:count1].split()
-            if len(blanco) != 0:
-                return "error"
-            count2 = code.index("FINAL;")
-            tr = code[(count1 + 7):count2]
-            return tr
-        else:
-            return "error"
-    else:
-        return "error"
-
-
 def correr_codigo():
     if len(current_URL) != 0:
         logic.parserPrueba.flag_stop = False
@@ -113,83 +21,14 @@ def correr_codigo():
         archivoCodigo = open(current_URL, "r")
         prevCode = archivoCodigo.read().strip().replace('\n', '').replace('\t', '')
         archivoCodigo.close()
-
-        codigo = get_code(prevCode)
-        if codigo == "error":
-            printTerminal("Error INICIO-FINAL", True)
-            return
         printTerminal("", True)
-        procs = get_proc(prevCode)
-        if type(procs) == str:
-            printTerminal("Error PROCS", True)
-            return
 
-        logic.parserPrueba.procedimientos = procs
+        logic.parserPrueba.runParser(prevCode)
 
-        codigo = separate_code(codigo)
-        if type(codigo) == str:
-            codigo = [codigo,]
-        for i in codigo:
-            time.sleep(0.05)
-            print(i)
-            result = logic.parserPrueba.Parse_Code(i)
-            if len(result[0]) > 0:
-                printTerminal(result[0], False)
-            if result[1]:
-                break
-        logic.parserPrueba.gvariables.clear()
+        printTerminal(logic.parserPrueba.st, False)
 
     else:
         printTerminal("Before running, load a program!", True)
-
-
-def get_proc(code):
-    if len(code) == 0:
-        return {}
-    else:
-        if code.count("PROC") == 0:
-            return {}
-        else:
-            procs = {}
-            while len(code.strip()) != 0:
-                count1 = code.find("PROC")
-                count3 = code.find("FINPROC")
-                if count1 == -1 or count3 == -1:
-                    return {}
-                else:
-                    proc = code[count1:count3 + 7]
-                    count1 = proc.find("(")
-                    count2 = proc.find(")")
-                    if count1 != -1 and count2 != -1:
-                        proc_name = proc[4:count1].strip()
-                        print(proc_name)
-                        if len(proc_name) != 0:
-                            # try:
-                            #     list(procs.keys()).index(proc_name)
-                            #     return "error"
-                            # except Exception:
-                                params = proc[count1 + 1:count2].split(",")
-                                count1 = proc.find("INICIO")
-                                count2 = proc.find("FINAL")
-                                if count1 != -1 and count2 != -1:
-                                    proc_code = get_code(proc[count1:])
-
-                                    if proc_code != "error":
-                                        print(proc_code)
-                                        proc_code = separate_code(proc_code)
-                                        values = (tuple(params), proc_code)
-                                        procs[proc_name] = values
-                                        code = code[count3 + 7:]
-                                    else:
-                                        return "error"
-                                else:
-                                    return "error"
-                        else:
-                            return "error name"
-                    else:
-                        return "error"
-            return procs
-
 
 def open_file():
     ventana_secundaria = Toplevel(root)
