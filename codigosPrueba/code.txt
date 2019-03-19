@@ -4,7 +4,7 @@ ENCASO
    CUANDO a > 1 ENTONS
 	{
 	a = 2
-	}}
+	}
    SINO
 	{
 	a = 7
@@ -14,4 +14,5 @@ DCL c DEFAULT a;
 
 
 FINAL;
+
 

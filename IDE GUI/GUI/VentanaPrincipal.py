@@ -26,6 +26,7 @@ def correr_codigo():
         logic.parserPrueba.runParser(prevCode)
 
         printTerminal(logic.parserPrueba.st, False)
+        logic.parserPrueba.st = ""
 
     else:
         printTerminal("Before running, load a program!", True)

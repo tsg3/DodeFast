@@ -376,7 +376,7 @@ def p_comparative(p):
     '''
     comparative : IDEN condition expression
     '''
-    p[0] = (p[2].strip(), ('var',p[1]), p[3])
+    p[0] = ("comparacion",p[2].strip(), ('var',p[1]), p[3])
 
 
 def p_var_assign(p):
@@ -529,67 +529,23 @@ def run(p):
                         variables[p[1]] = assignment
                         st += '--> New variable: ' + p[1] + ' = ' + str(run(p[2]))
 
-        #   'IGUAL QUE'
-        elif p[0] == '==':
-            first_compared = run(p[1])
-            second_compared = run(p[2])
+        #   Comparaciones
+        elif p[0] == 'comparacion':
+            first_compared = run(p[2])
+            second_compared = run(p[3])
             if type(first_compared) == int and type(second_compared) == int:
-                return first_compared == second_compared
-            elif type(first_compared) == str and type(second_compared) == str:
-                return "Both expressions are undeclared!"
-            else:
-                return "One expression is undeclared!"
-
-        #   'MENOR QUE'
-        elif p[0] == '<':
-            first_compared = run(p[1])
-            second_compared = run(p[2])
-            if type(first_compared) == int and type(second_compared) == int:
-                return first_compared < second_compared
-            elif type(first_compared) == str and type(second_compared) == str:
-                return "Both expressions are undeclared!"
-            else:
-                return "One expression is undeclared!"
-
-        #   'MAYOR QUE'
-        elif p[0] == '>':
-            first_compared = run(p[1])
-            second_compared = run(p[2])
-            if type(first_compared) == int and type(second_compared) == int:
-                return first_compared > second_compared
-            elif type(first_compared) == str and type(second_compared) == str:
-                return "Both expressions are undeclared!"
-            else:
-                return "One expression is undeclared!"
-
-        #   'DIFERENTE QUE'
-        elif p[0] == '<>':
-            first_compared = run(p[1])
-            second_compared = run(p[2])
-            if type(first_compared) == int and type(second_compared) == int:
-                return first_compared != second_compared
-            elif type(first_compared) == str and type(second_compared) == str:
-                return "Both expressions are undeclared!"
-            else:
-                return "One expression is undeclared!"
-
-        #   'MENOR O IGUAL QUE'
-        elif p[0] == '<=':
-            first_compared = run(p[1])
-            second_compared = run(p[2])
-            if type(first_compared) == int and type(second_compared) == int:
-                return first_compared <= second_compared
-            elif type(first_compared) == str and type(second_compared) == str:
-                return "Both expressions are undeclared!"
-            else:
-                return "One expression is undeclared!"
-
-        #   'MAYOR O IGUAL QUE'
-        elif p[0] == '>=':
-            first_compared = run(p[1])
-            second_compared = run(p[2])
-            if type(first_compared) == int and type(second_compared) == int:
-                return first_compared >= second_compared
+                if p[1] == '==':
+                    return first_compared == second_compared
+                elif p[1] == '<':
+                    return first_compared < second_compared
+                elif p[1] == '>':
+                    return first_compared > second_compared
+                elif p[1] == '<=':
+                    return first_compared <= second_compared
+                elif p[1] == '>=':
+                    return first_compared >= second_compared
+                else:
+                    return first_compared != second_compared
             elif type(first_compared) == str and type(second_compared) == str:
                 return "Both expressions are undeclared!"
             else:
