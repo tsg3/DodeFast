@@ -37,7 +37,8 @@ Inc(a,100);
 Dec(b,100);
 Ini(c,100);
 Mover(AF);
-Aleatorio()
+Aleatorio();
+LLAMAR nombre1(1,2)
 FINAL;
 
 PROC nombre(r, t)
@@ -49,7 +50,9 @@ FINPROC
 PROC nombre1(r, t)
 INICIO:
 Aleatorio();
+Mover(A)
 FINAL;
 FINPROC
+
 
 

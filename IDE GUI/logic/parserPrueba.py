@@ -4,8 +4,10 @@ import random
 import time
 
 procedimientos = {}
+proc_called = False
 
-variables = {}
+gvariables = {}
+lvariables = {}
 
 flag_stop = False
 
@@ -21,7 +23,7 @@ valid_movements = {'AF': 1, 'F': 2, 'DFA': 3, 'IFA': 4,
 
 tokens = ['INT','IDEN','EQUALS','PLUS','MINUS','MULTIPLY','DIVIDE','DCL','ASSIGN','SAME','LESS','MORE','NON_EQUAL','LESS_EQUAL','MORE_EQUAL','ENCASO',
           'CUANDO','ENTONS','SINO','FINCASO','SEPARATOR','LBRACE','RBRACE','REPITA','MIENTRAS','FINDESDE','DESDE','HASTA','HAGA','INC','DEC','INI','COMMA','LPAR','RPAR',
-          'MOVER','ALEATORIO']
+          'MOVER','ALEATORIO','LLAMAR']
 
 #reserved_words = ['DCL','DEFAULT','ENCASO','FINCASO','SINO','ENTONS','CUANDO','REPITA','HASTAENCONTRAR']
 
@@ -144,6 +146,13 @@ def t_ALEATORIO(t):
     t.type = 'ALEATORIO'
     return t
 
+
+def t_LLAMAR(t):
+    r'[\s]*LLAMAR[\s]+'
+    t.type = 'LLAMAR'
+    return t
+
+
 def t_IDEN(t):
     r'[a-zA-Z_][a-zA-Z_0-9@#]*'
     '''global reserved_words
@@ -182,10 +191,33 @@ def p_parse(p):
     parse : comparative
           | sentence
           | var_declare
+          | proc
           | empty
     '''
     print(p[1])
     run(p[1])
+
+def p_proc(p):
+    '''
+    proc : LLAMAR IDEN LPAR params RPAR
+    '''
+    p[0] = ('llamar', p[2], p[4])
+
+def p_params(p):
+    '''
+    params : expression more_params
+    '''
+    p[0] = (p[1],) + p[2]
+
+def p_more_params(p):
+    '''
+    more_params : COMMA params
+                | empty
+    '''
+    if p[1] == 0:
+        p[0] = ()
+    else:
+        p[0] = p[2]
 
 def p_sentence(p):
     '''
@@ -415,6 +447,15 @@ parser = yacc.yacc()
 def run(p):
     global st
     global error
+    global proc_called
+    global gvariables
+    global lvariables
+
+    if proc_called == True:
+        variables = lvariables
+    else:
+        variables = gvariables
+
     if type(p) == tuple:
 
         #   SUMA
@@ -473,17 +514,20 @@ def run(p):
 
         #   DECLARACION
         elif p[0] == 'DCL':
-            if p[1] in variables:
-                error = True
-                st += "--> You've already declared the variable " + p[1] + " !"
+            if proc_called == True:
+                st += "--> No se pueden declara variables en un procedimiento"
             else:
-                assignment = run(p[2])
-                if type(assignment) == str:
+                if p[1] in variables:
                     error = True
-                    st += "--> You put a non-valid default value" + "!"
+                    st += "--> You've already declared the variable " + p[1] + " !"
                 else:
-                    variables[p[1]] = assignment
-                    st += '--> New variable: ' + p[1] + ' = ' + str(run(p[2]))
+                    assignment = run(p[2])
+                    if type(assignment) == str:
+                        error = True
+                        st += "--> You put a non-valid default value" + "!"
+                    else:
+                        variables[p[1]] = assignment
+                        st += '--> New variable: ' + p[1] + ' = ' + str(run(p[2]))
 
         #   'IGUAL QUE'
         elif p[0] == '==':
@@ -551,6 +595,7 @@ def run(p):
             else:
                 return "One expression is undeclared!"
 
+        #   'CASOS'
         elif p[0] == 'caso':
             if len(p) == 3:
                 st += "--> Syntax 1 "
@@ -596,7 +641,7 @@ def run(p):
                         run(k)
                     st += " --> Acciones del SINO bien hechas!"
 
-
+        #   'HACER'
         elif p[0] == 'repetir':
             global flag_stop
             st += "--> Repeticion"
@@ -614,6 +659,7 @@ def run(p):
                     break
                 time.sleep(0.01)
 
+        #   'HAGA'
         elif p[0] == 'haga':
             if p[1] not in variables:
                 st += "--> The variable " + p[1] + " hasn't been declared!"
@@ -637,7 +683,7 @@ def run(p):
                     variables[p[1]] += 1
                 st += " --> Terminado"
 
-
+        #   'FUNCIONES'
         elif p[0] == 'function':
             if p[1] == 'Aleatorio':
                 i = 1
@@ -665,6 +711,28 @@ def run(p):
                 else:
                     error = True
                     st += "--> " + p[2] + " no ha sido declarado!"
+
+        #   'LLAMAR'
+        elif p[0] == "llamar":
+            if p[1] not in procedimientos:
+                error = True
+                st += "--> Ese procedimiento no existe"
+            else:
+                proc_called = True
+                n = len(p[2])
+                if len(p[2]) != len(procedimientos[p[1]][0]):
+                    error = True
+                    st += "--> No se ingreso la cantidad requerida de parametros para el procedimiento."
+                else:
+                    i = 0
+                    while i < n:
+                        lvariables[procedimientos[p[1]][0][i]] = p[2][i]
+                        i += 1
+                    for i in procedimientos[p[1]][1]:
+                        parser.parse(i.strip())
+                    proc_called = False
+                    lvariables.clear()
+                    st += "--> Ejecucion de procedimiento finalizada"
 
     else:
         return p

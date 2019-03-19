@@ -75,14 +75,19 @@ def separate_code(code):
     lista = []
     n = len(pos)
     y = 0
-    while y < n:
-        if y == 0:
-            lista.append(code[:pos[y]])
-        else:
-            lista.append(code[pos[y - 1] + 1:pos[y]])
-        y += 1
-    lista.append(code[pos[-1] + 1:])
-    return lista
+    if len(pos) == 0:
+        return code
+    else:
+        while y < n:
+            if y == 0:
+                lista.append(code[:pos[y]])
+            else:
+                lista.append(code[pos[y - 1] + 1:pos[y]])
+            y += 1
+        lista.append(code[pos[-1] + 1:])
+        if lista[-1] == "":
+            lista = lista[:-1]
+        return lista
 
 
 def get_code(code):
@@ -117,7 +122,12 @@ def correr_codigo():
         if type(procs) == str:
             printTerminal("Error PROCS", True)
             return
+
+        logic.parserPrueba.procedimientos = procs
+
         codigo = separate_code(codigo)
+        if type(codigo) == str:
+            codigo = [codigo,]
         for i in codigo:
             time.sleep(0.05)
             print(i)
@@ -126,7 +136,7 @@ def correr_codigo():
                 printTerminal(result[0], False)
             if result[1]:
                 break
-        logic.parserPrueba.variables.clear()
+        logic.parserPrueba.gvariables.clear()
 
     else:
         printTerminal("Before running, load a program!", True)
