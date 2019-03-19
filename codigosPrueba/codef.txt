@@ -39,3 +39,17 @@ Ini(c,100);
 Mover(AF);
 Aleatorio()
 FINAL;
+
+PROC nombre(r, t)
+INICIO:
+Aleatorio();
+FINAL;
+FINPROC
+
+PROC nombre1(r, t)
+INICIO:
+Aleatorio();
+FINAL;
+FINPROC
+
+

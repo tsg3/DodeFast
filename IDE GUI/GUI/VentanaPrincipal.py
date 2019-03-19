@@ -3,7 +3,6 @@ import logic.parserPrueba
 import os.path
 import threading
 import time
-import re
 
 
 def obtener_codigo():
@@ -87,7 +86,7 @@ def separate_code(code):
 
 
 def get_code(code):
-    if code.count("INICIO") == 1 and code.count("FINAL") == 1:
+    if code.count("INICIO") == code.count("FINAL"):
         if code.index('INICIO:') < code.index('FINAL;'):
             count1 = code.index("INICIO")
             blanco = code[:count1].split()
@@ -106,14 +105,18 @@ def correr_codigo():
     if len(current_URL) != 0:
         logic.parserPrueba.line = 0
         archivoCodigo = open(current_URL, "r")
-        prevCode = archivoCodigo.read()
+        prevCode = archivoCodigo.read().strip().replace('\n', '').replace('\t', '')
         archivoCodigo.close()
+
         codigo = get_code(prevCode)
         if codigo == "error":
             printTerminal("Error INICIO-FINAL", True)
             return
         printTerminal("", True)
-        codigo = codigo.strip().replace('\n', '').replace('\t', '')
+        procs = get_proc(prevCode)
+        if type(procs) == str:
+            printTerminal("Error PROCS", True)
+            return
         codigo = separate_code(codigo)
         for i in codigo:
             time.sleep(0.05)
@@ -127,6 +130,54 @@ def correr_codigo():
 
     else:
         printTerminal("Before running, load a program!", True)
+
+
+def get_proc(code):
+    if len(code) == 0:
+        return {}
+    else:
+        if code.count("PROC") == 0:
+            return {}
+        else:
+            procs = {}
+            while len(code.strip()) != 0:
+                count1 = code.find("PROC")
+                count3 = code.find("FINPROC")
+                if count1 == -1 or count3 == -1:
+                    return {}
+                else:
+                    proc = code[count1:count3 + 7]
+                    count1 = proc.find("(")
+                    count2 = proc.find(")")
+                    if count1 != -1 and count2 != -1:
+                        proc_name = proc[4:count1].strip()
+                        print(proc_name)
+                        if len(proc_name) != 0:
+                            # try:
+                            #     list(procs.keys()).index(proc_name)
+                            #     return "error"
+                            # except Exception:
+                                params = proc[count1 + 1:count2].split(",")
+                                count1 = proc.find("INICIO")
+                                count2 = proc.find("FINAL")
+                                if count1 != -1 and count2 != -1:
+                                    proc_code = get_code(proc[count1:])
+
+                                    if proc_code != "error":
+                                        print(proc_code)
+                                        proc_code = separate_code(proc_code)
+                                        values = (tuple(params), proc_code)
+                                        procs[proc_name] = values
+                                        code = code[count3 + 7:]
+                                    else:
+                                        return "error"
+                                else:
+                                    return "error"
+                        else:
+                            return "error name"
+                    else:
+                        return "error"
+            return procs
 
 
 def open_file():
