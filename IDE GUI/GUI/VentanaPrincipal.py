@@ -108,6 +108,7 @@ def get_code(code):
 
 def correr_codigo():
     if len(current_URL) != 0:
+        logic.parserPrueba.flag_stop = False
         logic.parserPrueba.line = 0
         archivoCodigo = open(current_URL, "r")
         prevCode = archivoCodigo.read().strip().replace('\n', '').replace('\t', '')
