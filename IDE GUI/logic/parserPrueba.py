@@ -9,6 +9,8 @@ proc_called = False
 gvariables = {}
 lvariables = {}
 
+flag_runnig = False
+
 flag_stop = False
 
 st = ''
@@ -171,9 +173,9 @@ def t_error(t):
     global st
     error = True
     if ("DEFAULT" in t.value):
-        st += "Wrong declaration of variable!"
+        st += "\nWrong declaration of variable!"
     else:
-        st += " because there's a illegal input"
+        st += "\nbecause there's a illegal input"
     while t.lexer.lexpos < t.lexer.lexlen:
         t.lexer.skip(1)
     t.lexer.skip(1)
@@ -432,7 +434,7 @@ def p_error(p):
     global line
     error = True
     if not ("--> A syntax error was found" in st):
-        st = "--> A syntax error was found in line " + str(line) + "!"
+        st = "\n--> A syntax error was found in line " + str(line) + "!"
 
 def p_empty(p):
     '''
@@ -494,15 +496,15 @@ def run(p):
         elif p[0] == '=':
             if p[1][1] not in variables:
                 error = True
-                st += "--> You tried to assign a value to an undeclared variable!"
+                st += "\n--> You tried to assign a value to an undeclared variable!"
             else:
                 x = run(p[2])
                 try:
                     variables[p[1][1]] = 0 + x
-                    st += '--> ' + p[1][1] + ' = ' + str(x)
+                    st += '\n--> ' + p[1][1] + ' = ' + str(x)
                 except TypeError:
                     error = True
-                    st += x
+                    st += "\n" + x
 
         #   VARIABLE
         elif p[0] == 'var':
@@ -515,19 +517,19 @@ def run(p):
         #   DECLARACION
         elif p[0] == 'DCL':
             if proc_called == True:
-                st += "--> No se pueden declara variables en un procedimiento"
+                st += "\n--> No se pueden declara variables en un procedimiento"
             else:
                 if p[1] in variables:
                     error = True
-                    st += "--> You've already declared the variable " + p[1] + " !"
+                    st += "\n--> You've already declared the variable " + p[1] + " !"
                 else:
                     assignment = run(p[2])
                     if type(assignment) == str:
                         error = True
-                        st += "--> You put a non-valid default value" + "!"
+                        st += "\n--> You put a non-valid default value" + "!"
                     else:
                         variables[p[1]] = assignment
-                        st += '--> New variable: ' + p[1] + ' = ' + str(run(p[2]))
+                        st += '\n--> New variable: ' + p[1] + ' = ' + str(run(p[2]))
 
         #   Comparaciones
         elif p[0] == 'comparacion':
@@ -554,7 +556,7 @@ def run(p):
         #   'CASOS'
         elif p[0] == 'caso':
             if len(p) == 3:
-                st += "--> Syntax 1 "
+                st += "\n--> Syntax 1 "
                 exit = False
                 case = 1
                 for i in p[1]:
@@ -566,14 +568,14 @@ def run(p):
                         exit = True
                         for j in i[1]:
                             run(j)
-                        st += " --> Acciones del Caso " + str(case) + " bien hechas!"
+                        st += " \n--> Acciones del Caso " + str(case) + " bien hechas!"
                     case += 1
                 if exit == False:
                     for k in p[2]:
                         run(k)
-                    st += " --> Acciones del SINO bien hechas!"
+                    st += " \n--> Acciones del SINO bien hechas!"
             else:
-                st += "--> Syntax 2"
+                st += "\n--> Syntax 2"
                 exit = False
                 case = 1
                 for i in p[2]:
@@ -582,7 +584,7 @@ def run(p):
                     print(y)
                     print(x)
                     if type(x) == str:
-                        st += x
+                        st += "\n" + x
                         return
                     elif x == True:
                         exit = True
@@ -591,38 +593,40 @@ def run(p):
                         break
                     case += 1
                 if exit == True:
-                    st += " --> Acciones del Caso " + str(case) + " bien hechas!"
+                    st += "\n --> Acciones del Caso " + str(case) + " bien hechas!"
                 else:
                     for k in p[3]:
                         run(k)
-                    st += " --> Acciones del SINO bien hechas!"
+                    st += "\n --> Acciones del SINO bien hechas!"
 
         #   'HACER'
         elif p[0] == 'repetir':
             global flag_stop
-            st += "--> Repeticion"
+            st += "\n--> Repeticion"
             while True:
                 for i in p[1]:
                     st += " "
                     run(i)
+                    time.sleep(0.00001)
+                    st = ""
                 if (run(p[2]) == False):
-                    st += " --> Repeticion finalizada!"
+                    st += "\n --> Repeticion finalizada!"
                     break
                 if flag_stop == True:
                     flag_stop = False
                     error = True
-                    st += "\n--> La ejecución fue detenida forzosamente!\n"
+                    st += "\n--> La ejecución fue detenida forzosamente!%\n"
                     break
                 time.sleep(0.01)
 
         #   'HAGA'
         elif p[0] == 'haga':
             if p[1] not in variables:
-                st += "--> The variable " + p[1] + " hasn't been declared!"
+                st += "\n--> The variable " + p[1] + " hasn't been declared!"
                 error = True
                 return
             else:
-                st += "--> Haga esto! "
+                st += "\n--> Haga esto! "
                 minor = p[2]
                 major = p[3]
                 if minor > major:
@@ -637,7 +641,7 @@ def run(p):
                         run(i)
                         st += " "
                     variables[p[1]] += 1
-                st += " --> Terminado"
+                st += "\n --> Terminado"
 
         #   'FUNCIONES'
         elif p[0] == 'function':
@@ -645,40 +649,40 @@ def run(p):
                 i = 1
                 while i < 11:
                     move = random.choice(list(valid_movements.items()))
-                    st += "--> Movimiento aleatorio " + str(i) + ": Mover hacia " + move[0] + " = " + str(move[1]) + "!\n"
+                    st += "\n--> Movimiento aleatorio " + str(i) + ": Mover hacia " + move[0] + " = " + str(move[1]) + "!\n"
                     i += 1
             elif p[1] == 'Mover':
                 if p[2] in valid_movements:
-                    st += "--> Mover hacia " + p[2] + " = " + str(valid_movements[p[2]]) + "!"
+                    st += "\n--> Mover hacia " + p[2] + " = " + str(valid_movements[p[2]]) + "!"
                 else:
                     error = True
-                    st += "--> Movimiento " + p[2] + " no válido!"
+                    st += "\n--> Movimiento " + p[2] + " no válido!"
             else:
                 if p[2] in variables:
                     if p[1] == 'Inc':
                         variables[p[2]] += p[3]
-                        st += "--> Valor de " + p[2] + " incrementado en " + str(p[3]) + "!"
+                        st += "\n--> Valor de " + p[2] + " incrementado en " + str(p[3]) + "!"
                     elif p[1] == 'Dec':
                         variables[p[2]] -= p[3]
-                        st += "--> Valor de " + p[2] + " decrementado en " + str(p[3]) + "!"
+                        st += "\n--> Valor de " + p[2] + " decrementado en " + str(p[3]) + "!"
                     else:
                         variables[p[2]] = p[3]
-                        st += "--> Valor de " + p[2] + " cambiado por " + str(p[3]) + "!"
+                        st += "\n--> Valor de " + p[2] + " cambiado por " + str(p[3]) + "!"
                 else:
                     error = True
-                    st += "--> " + p[2] + " no ha sido declarado!"
+                    st += "\n--> " + p[2] + " no ha sido declarado!"
 
         #   'LLAMAR'
         elif p[0] == "llamar":
             if p[1] not in procedimientos:
                 error = True
-                st += "--> Ese procedimiento no existe"
+                st += "\n--> Ese procedimiento no existe"
             else:
                 proc_called = True
                 n = len(p[2])
                 if len(p[2]) != len(procedimientos[p[1]][0]):
                     error = True
-                    st += "--> No se ingreso la cantidad requerida de parametros para el procedimiento."
+                    st += "\n--> No se ingreso la cantidad requerida de parametros para el procedimiento."
                 else:
                     i = 0
                     while i < n:
@@ -688,7 +692,7 @@ def run(p):
                         parser.parse(i.strip())
                     proc_called = False
                     lvariables.clear()
-                    st += "--> Ejecucion de procedimiento finalizada"
+                    st += "\n--> Ejecucion de procedimiento finalizada"
 
     else:
         return p
@@ -847,16 +851,19 @@ def runParser(code):
     global st
     global error
     global gvariables
+    global flag_runnig
     codigo = get_code(code)
     error = False
     if codigo == "error":
         error = True
-        st += "Error INICIO-FINAL"
+        st += "\nError INICIO-FINAL"
+        flag_runnig = False
         return
     procs = get_proc(code)
     if type(procs) == str:
         error = True
         st += "Error PROCS"
+        flag_runnig = False
         return
     procedimientos = procs
     codigo = separate_code(codigo)
@@ -871,6 +878,12 @@ def runParser(code):
             st += result[0]
         if result[1]:
             break
+        time.sleep(0.00001)
+        st = ""
     gvariables.clear()
     if st == "":
-        st == "--> Ejecucion finalizada"
+        st = "\n--> Ejecucion finalizada%"
+    else:
+        st = "\n--> Ejecucion finalizada debido a:\n" + st + "&"
+    time.sleep(0.00001)
+    flag_runnig = False

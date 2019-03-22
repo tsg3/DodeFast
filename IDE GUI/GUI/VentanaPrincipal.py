@@ -2,7 +2,6 @@ from tkinter import *
 import logic.parserPrueba
 import os.path
 import threading
-import time
 
 
 def obtener_codigo():
@@ -14,7 +13,9 @@ def obtener_codigo():
     else:
         printTerminal("Before saving, upload or create a program!", True)
 
+
 def correr_codigo():
+    global debugger
     if len(current_URL) != 0:
         logic.parserPrueba.flag_stop = False
         logic.parserPrueba.line = 0
@@ -23,18 +24,32 @@ def correr_codigo():
         archivoCodigo.close()
         printTerminal("", True)
 
+        if debugger:
+            logic.parserPrueba.flag_runnig = True
+            threading.Thread(target=printingLoop).start()
+
         logic.parserPrueba.runParser(prevCode)
-
-        printTerminal(logic.parserPrueba.st, False)
+        if not debugger:
+            printTerminal(logic.parserPrueba.st, False)
         logic.parserPrueba.st = ""
-
     else:
         printTerminal("Before running, load a program!", True)
 
+
+def printingLoop():
+    actualstr = ""
+    while logic.parserPrueba.flag_runnig:
+        if logic.parserPrueba.st != "" and logic.parserPrueba.st != actualstr:
+            printTerminal(logic.parserPrueba.st.strip(), False)
+            actualstr = logic.parserPrueba.st
+
+
 def open_file():
     ventana_secundaria = Toplevel(root)
+    ventana_secundaria.transient(root)
     ventana_secundaria.title("Abrir documento existente")
     ventana_secundaria.geometry("300x100")
+    ventana_secundaria.resizable(width=False, height=False)
     Label(ventana_secundaria, text="Ingrese un URL con la ubicación del documento").place(x=20, y=10)
     url = Entry(ventana_secundaria, width=30)
     # url.insert("0","C:\Users\jorte\Documents\Compiladores e Intérpretes\DodeFast\codigosPrueba\codigo.txt")
@@ -70,17 +85,28 @@ def printTerminal(code, delete):
     textTerminal.config(state=NORMAL)
     if delete:
         textTerminal.delete('1.0', END)
-        textTerminal.insert(END, titleMessage + code + "\n")
+        textTerminal.insert(END, titleMessage + code.replace("%","").replace("&","") + "\n")
     else:
-        textTerminal.insert(END, code)
+        textTerminal.insert(END, code.replace("%","").replace("&",""))
         textTerminal.insert(END, "\n")
         textTerminal.config(state=DISABLED)
+    if code != "":
+        if code[-1] == "&":
+            textTerminal.tag_add("code", str(int(textTerminal.index("end").split(".")[0]) - 4) + ".0",
+                                 textTerminal.index("end"))
+            textTerminal.tag_config("code", foreground="RED")
+        elif "%" in code:
+            textTerminal.tag_add("code", str(int(textTerminal.index("end").split(".")[0]) - 2) + ".0",
+                                 textTerminal.index("end"))
+            textTerminal.tag_config("code", foreground="GREEN")
 
 
 def new_file():
     ventana_secundaria = Toplevel(root)
     ventana_secundaria.title("Nuevo archivo")
     ventana_secundaria.geometry("300x150")
+    ventana_secundaria.resizable(width=False, height=False)
+    ventana_secundaria.transient(root)
     Label(ventana_secundaria, text="Ingrese un URL de la carpeta").place(x=20, y=10)
     url = Entry(ventana_secundaria, width=30)
     url.place(x=60, y=30)
@@ -147,6 +173,17 @@ def stop():
     logic.parserPrueba.flag_stop = True
 
 
+def debug():
+    global debugger
+    global label_debug
+    if debugger:
+        debugger = False
+        botonDebug.config(text="Debugger: OFF", bg="YELLOW")
+    else:
+        debugger = True
+        botonDebug.config(text="Debugger: ON", bg="GREEN")
+
+
 # Ventana principal
 
 root = Tk()
@@ -155,6 +192,7 @@ root = Tk()
 current_URL = ""
 file_name = StringVar()
 file_name.set("")
+debugger = False
 
 # - Principal
 
@@ -195,11 +233,13 @@ scrollTerminal.place(in_=textTerminal, relx=1, relheight=1, bordermode="outside"
 # - Botones
 
 botonGuardar = Button(root, text="Guardar", command=lambda: obtener_codigo())
-botonCorrer = Button(root, text="Correr", command=lambda: run_thread())
+botonCorrer = Button(root, text="Correr", bg="#66FF00", command=lambda: run_thread())
 botonNuevo = Button(root, text="Nuevo", command=lambda: new_file())
 botonAbrir = Button(root, text="Abrir", command=lambda: open_file())
-botonDetener = Button(root, text="Detener", command=lambda: stop())
+botonDetener = Button(root, text="Detener", bg="RED", command=lambda: stop())
+botonDebug = Button(root, text="Debugger: OFF", bg="YELLOW", command=lambda: debug())
 
+botonDebug.place(x=50, y=422)
 botonDetener.place(x=200, y=422)
 botonGuardar.place(x=270, y=50)
 botonCorrer.place(x=270, y=422)
