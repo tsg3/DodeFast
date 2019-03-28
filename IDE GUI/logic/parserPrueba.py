@@ -509,6 +509,11 @@ def run(p):
 
     if type(p) == tuple:
 
+        if p[0] != 'DCL' and proc_declarations_called == True:
+            error = True
+            st += "\n--> No se pueden realizar instrucciones esa instruccion"
+            return
+
         #   SUMA
         if p[0] == '+':
             try:
@@ -566,6 +571,7 @@ def run(p):
         #   DECLARACION
         elif p[0] == 'DCL':
             if proc_called == True and proc_declarations_called == False:
+                error = True
                 st += "\n--> No se pueden declara variables en la ejecucion de un procedimiento"
             else:
                 if p[1] in variables:
@@ -575,6 +581,7 @@ def run(p):
                     assignment = run(p[2])
                     if type(assignment) == str:
                         error = True
+                        print(variables)
                         st += "\n--> You put a non-valid default value" + "!"
                     else:
                         variables[p[1]] = assignment
@@ -876,7 +883,7 @@ def get_proc(code):
                                 if proc_code != "error":
                                     print(proc_code)
                                     proc_code = separate_code(proc_code)
-                                    values = (tuple(params), proc_code, list(filter(None,declarations)))
+                                    values = (tuple(map(str.strip,params)), proc_code, list(filter(None,declarations)))
                                     procs[proc_name] = values
                                     code = code[count3 + 7:]
                                 else:
