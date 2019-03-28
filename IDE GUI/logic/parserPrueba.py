@@ -876,14 +876,27 @@ def get_proc(code):
                         if len(proc_name) != 0:
                             count4 = count2
                             params = proc[count1 + 1:count2].split(",")
+                            strip = 0
+                            while strip < len(params):
+                                params[strip] = params[strip].strip()
+                                strip += 1
+
                             repetidos = False
-                            for i in params:
-                                for j in params:
-                                    if i == j:
-                                        repetidos == True
+                            counter1 = 0
+                            while counter1 < len(params):
+                                counter2 = counter1 + 1
+                                while 0 < len(params[counter2:]):
+                                    if params[counter1] == params[counter2:][0]:
+                                        repetidos = True
+                                        print(params[counter1])
+                                        print(params[counter2:][0])
                                         break
+                                    counter2 += 1
+                                counter1 += 1
+                            print(repetidos)
                             if repetidos == True:
                                 return "error"
+
                             count1 = proc.find("INICIO")
                             count2 = proc.find("FINAL")
                             if count1 != -1 and count2 != -1:
@@ -892,7 +905,7 @@ def get_proc(code):
                                 if proc_code != "error":
                                     print(proc_code)
                                     proc_code = separate_code(proc_code)
-                                    values = (tuple(map(str.strip,params)), proc_code, list(filter(None,declarations)))
+                                    values = (tuple(params), proc_code, list(filter(None,declarations)))
                                     procs[proc_name] = values
                                     code = code[count3 + 7:]
                                 else:
