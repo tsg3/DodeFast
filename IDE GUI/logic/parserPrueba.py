@@ -23,11 +23,13 @@ valid_movements = {'AF': 1, 'F': 2, 'DFA': 3, 'IFA': 4,
                    'DFB': 5, 'IFB': 6, 'A': 7, 'DAA': 8,
                    'IAA': 9, 'DAB': 10, 'IAB': 11, 'AA': 12}
 
-tokens = ['INT','IDEN','EQUALS','PLUS','MINUS','MULTIPLY','DIVIDE','DCL','ASSIGN','SAME','LESS','MORE','NON_EQUAL','LESS_EQUAL','MORE_EQUAL','ENCASO',
-          'CUANDO','ENTONS','SINO','FINCASO','SEPARATOR','LBRACE','RBRACE','REPITA','MIENTRAS','FINDESDE','DESDE','HASTA','HAGA','INC','DEC','INI','COMMA','LPAR','RPAR',
-          'MOVER','ALEATORIO','LLAMAR']
+tokens = ['INT', 'IDEN', 'EQUALS', 'PLUS', 'MINUS', 'MULTIPLY', 'DIVIDE', 'DCL', 'ASSIGN', 'SAME', 'LESS', 'MORE',
+          'NON_EQUAL', 'LESS_EQUAL', 'MORE_EQUAL', 'ENCASO',
+          'CUANDO', 'ENTONS', 'SINO', 'FINCASO', 'SEPARATOR', 'LBRACE', 'RBRACE', 'REPITA', 'MIENTRAS', 'FINDESDE',
+          'DESDE', 'HASTA', 'HAGA', 'INC', 'DEC', 'INI', 'COMMA', 'LPAR', 'RPAR',
+          'MOVER', 'ALEATORIO', 'LLAMAR']
 
-#reserved_words = ['DCL','DEFAULT','ENCASO','FINCASO','SINO','ENTONS','CUANDO','REPITA','HASTAENCONTRAR']
+# reserved_words = ['DCL','DEFAULT','ENCASO','FINCASO','SINO','ENTONS','CUANDO','REPITA','HASTAENCONTRAR']
 
 t_SAME = r'[\s]*\=\=[\s]*'
 t_LESS = r'[\s]*\<[\s]*'
@@ -50,6 +52,7 @@ t_COMMA = r'[\s]*\,[\s]*'
 t_LPAR = r'[\s]*\([\s]*'
 t_RPAR = r'[\s]*\)[\s]*'
 
+
 def t_INT(t):
     r'\d+'
     t.value = int(t.value)
@@ -67,70 +70,84 @@ def t_ASSIGN(t):
     t.type = 'ASSIGN'
     return t
 
+
 def t_ENCASO(t):
     r'[\s]*ENCASO[\s]+'
     t.type = 'ENCASO'
     return t
+
 
 def t_CUANDO(t):
     r'[\s]*CUANDO[\s]+'
     t.type = 'CUANDO'
     return t
 
+
 def t_ENTONS(t):
     r'[\s]+ENTONS[\s]*'
     t.type = 'ENTONS'
     return t
+
 
 def t_SINO(t):
     r'[\s]*SINO[\s]*'
     t.type = 'SINO'
     return t
 
+
 def t_FINCASO(t):
     r'[\s]*FINCASO[\s]*'
     t.type = 'FINCASO'
     return t
+
 
 def t_REPITA(t):
     r'[\s]*REPITA[\s]+'
     t.type = 'REPITA'
     return t
 
+
 def t_MIENTRAS(t):
     r'[\s]+MIENTRAS[\s]+'
     t.type = 'MIENTRAS'
     return t
+
 
 def t_FINDESDE(t):
     r'[\s]*FINDESDE[\s]*'
     t.type = 'FINDESDE'
     return t
 
+
 def t_DESDE(t):
     r'[\s]*DESDE[\s]*'
     t.type = 'DESDE'
     return t
+
 
 def t_HASTA(t):
     r'[\s]*HASTA[\s]*'
     t.type = 'HASTA'
     return t
 
+
 def t_HAGA(t):
     r'[\s]*HAGA[\s]*'
     t.type = 'HAGA'
     return t
+
 
 def t_INC(t):
     r'[\s]*Inc'
     t.type = 'INC'
     return t
 
+
 def t_DEC(t):
     r'[\s]*Dec'
     t.type = 'DEC'
     return t
+
 
 def t_INI(t):
     r'[\s]*Ini'
@@ -142,6 +159,7 @@ def t_MOVER(t):
     r'[\s]*Mover'
     t.type = 'MOVER'
     return t
+
 
 def t_ALEATORIO(t):
     r'[\s]*Aleatorio'
@@ -168,6 +186,7 @@ def t_IDEN(t):
     t.type = 'IDEN'
     return t
 
+
 def t_error(t):
     global error
     global st
@@ -188,6 +207,7 @@ precedence = (
     ('left', 'MULTIPLY', 'DIVIDE')
 )
 
+
 def p_parse(p):
     '''
     parse : comparative
@@ -199,17 +219,20 @@ def p_parse(p):
     print(p[1])
     run(p[1])
 
+
 def p_proc(p):
     '''
     proc : LLAMAR IDEN LPAR params RPAR
     '''
     p[0] = ('llamar', p[2], p[4])
 
+
 def p_params(p):
     '''
     params : expression more_params
     '''
     p[0] = (p[1],) + p[2]
+
 
 def p_more_params(p):
     '''
@@ -221,6 +244,7 @@ def p_more_params(p):
     else:
         p[0] = p[2]
 
+
 def p_sentence(p):
     '''
     sentence : var_assign
@@ -231,6 +255,7 @@ def p_sentence(p):
     '''
     p[0] = p[1]
 
+
 def p_function(p):
     '''
     function : moves
@@ -239,11 +264,13 @@ def p_function(p):
     '''
     p[0] = ('function',) + p[1]
 
+
 def p_changes(p):
     '''
     changes : MOVER LPAR IDEN RPAR
     '''
-    p[0] = (p[1].strip(),p[3])
+    p[0] = (p[1].strip(), p[3])
+
 
 def p_random(p):
     '''
@@ -251,11 +278,13 @@ def p_random(p):
     '''
     p[0] = (p[1].strip(),)
 
+
 def p_moves(p):
     '''
     moves : moves_aux LPAR IDEN COMMA INT RPAR
     '''
-    p[0] = (p[1],p[3],p[5])
+    p[0] = (p[1], p[3], p[5])
+
 
 def p_moves_aux(p):
     '''
@@ -265,17 +294,20 @@ def p_moves_aux(p):
     '''
     p[0] = p[1].strip()
 
+
 def p_do(p):
     '''
     do : DESDE IDEN EQUALS expression HASTA expression HAGA actions FINDESDE
     '''
-    p[0] = ('haga',p[2],p[4],p[6],p[8])
+    p[0] = ('haga', p[2], p[4], p[6], p[8])
+
 
 def p_repeat(p):
     '''
     repeat : REPITA actions MIENTRAS comparative
     '''
-    p[0] = ('repetir',p[2],p[4])
+    p[0] = ('repetir', p[2], p[4])
+
 
 def p_cases(p):
     '''
@@ -284,17 +316,20 @@ def p_cases(p):
     '''
     p[0] = p[1]
 
+
 def p_syntax2(p):
     '''
     syntax2 : ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO
     '''
-    p[0] = ('caso',('var',p[2]),p[3],p[6])
+    p[0] = ('caso', ('var', p[2]), p[3], p[6])
+
 
 def p_options2(p):
     '''
     options2 : CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2
     '''
-    p[0] = () + ((p[2].strip(),p[3],p[6]),) + p[8]
+    p[0] = () + ((p[2].strip(), p[3], p[6]),) + p[8]
+
 
 def p_more_options2(p):
     '''
@@ -305,17 +340,20 @@ def p_more_options2(p):
     if p[0] == 0:
         p[0] = ()
 
+
 def p_syntax1(p):
     '''
     syntax1 : ENCASO options1 SINO LBRACE actions RBRACE FINCASO
     '''
-    p[0] = ('caso',p[2],p[5])
+    p[0] = ('caso', p[2], p[5])
+
 
 def p_options1(p):
     '''
     options1 : CUANDO comparative ENTONS LBRACE actions RBRACE more_options1
     '''
-    p[0] = () + ((p[2],p[5]),) + p[7]
+    p[0] = () + ((p[2], p[5]),) + p[7]
+
 
 def p_more_options1(p):
     '''
@@ -326,11 +364,13 @@ def p_more_options1(p):
     if p[0] == 0:
         p[0] = ()
 
+
 def p_actions(p):
     '''
     actions : sentence more_actions
     '''
     p[0] = (p[1],) + p[2]
+
 
 def p_more_actions(p):
     '''
@@ -345,12 +385,14 @@ def p_more_actions(p):
         else:
             p[0] = p[2]
 
+
 def p_more_actions_aux(p):
     '''
     more_actions_aux : actions
                      | empty
     '''
     p[0] = p[1]
+
 
 def p_var_declare(p):
     '''
@@ -378,14 +420,15 @@ def p_comparative(p):
     '''
     comparative : IDEN condition expression
     '''
-    p[0] = ("comparacion",p[2].strip(), ('var',p[1]), p[3])
+    p[0] = ("comparacion", p[2].strip(), ('var', p[1]), p[3])
 
 
 def p_var_assign(p):
     '''
     var_assign : IDEN EQUALS expression
     '''
-    p[0] = (p[2].strip(), ('var',p[1]), p[3])
+    p[0] = (p[2].strip(), ('var', p[1]), p[3])
+
 
 def p_expression(p):
     '''
@@ -407,6 +450,7 @@ def p_expression_int(p):
     '''
     p[0] = p[1]
 
+
 def p_operator(p):
     '''
     operator : MULTIPLY
@@ -415,6 +459,7 @@ def p_operator(p):
              | MINUS
     '''
     p[0] = p[1]
+
 
 def p_condition(p):
     '''
@@ -428,6 +473,7 @@ def p_condition(p):
 
     p[0] = p[1]
 
+
 def p_error(p):
     global st
     global error
@@ -435,6 +481,7 @@ def p_error(p):
     error = True
     if not ("--> A syntax error was found" in st):
         st = "\n--> A syntax error was found in line " + str(line) + "!"
+
 
 def p_empty(p):
     '''
@@ -579,7 +626,7 @@ def run(p):
                 exit = False
                 case = 1
                 for i in p[2]:
-                    y = (i[0],p[1],i[1])
+                    y = (i[0], p[1], i[1])
                     x = run(y)
                     print(y)
                     print(x)
@@ -649,7 +696,8 @@ def run(p):
                 i = 1
                 while i < 11:
                     move = random.choice(list(valid_movements.items()))
-                    st += "\n--> Movimiento aleatorio " + str(i) + ": Mover hacia " + move[0] + " = " + str(move[1]) + "!\n"
+                    st += "\n--> Movimiento aleatorio " + str(i) + ": Mover hacia " + move[0] + " = " + str(
+                        move[1]) + "!\n"
                     i += 1
             elif p[1] == 'Mover':
                 if p[2] in valid_movements:
@@ -697,6 +745,7 @@ def run(p):
     else:
         return p
 
+
 def Parse_Code(code):
     code = code.strip()
     parser.parse(code)
@@ -709,6 +758,7 @@ def Parse_Code(code):
     error = False
     line += 1
     return final_st, error_Found
+
 
 def separate_code(code):
     openbrace = 0
@@ -784,12 +834,17 @@ def separate_code(code):
             lista = lista[:-1]
         return lista
 
+
 def get_proc(code):
     if len(code) == 0:
         return {}
     else:
         if code.count("PROC") == 0:
             return {}
+        elif code.count("PROC") != 2*code.count("FINPROC"):
+            print("ENTRO 1")
+            print("Proc: " + str(code.count("PROC") )+ " Finproc " + str(code.count("FINPROC")))
+            return "error"
         else:
             procs = {}
             while len(code.strip()) != 0:
@@ -805,38 +860,45 @@ def get_proc(code):
                         proc_name = proc[4:count1].strip()
                         print(proc_name)
                         if len(proc_name) != 0:
-                            # try:
-                            #     list(procs.keys()).index(proc_name)
-                            #     return "error"
-                            # except Exception:
-                                params = proc[count1 + 1:count2].split(",")
-                                count1 = proc.find("INICIO")
-                                count2 = proc.find("FINAL")
-                                if count1 != -1 and count2 != -1:
-                                    proc_code = get_code(proc[count1:])
-
-                                    if proc_code != "error":
-                                        print(proc_code)
-                                        proc_code = separate_code(proc_code)
-                                        values = (tuple(params), proc_code)
-                                        procs[proc_name] = values
-                                        code = code[count3 + 7:]
-                                    else:
-                                        return "error"
+                            count4 = count2
+                            params = proc[count1 + 1:count2].split(",")
+                            count1 = proc.find("INICIO")
+                            count2 = proc.find("FINAL")
+                            if count1 != -1 and count2 != -1:
+                                declarations = proc[count4 + 1:count1].split(";")
+                                proc_code = get_code(proc[count1:], True)
+                                if proc_code != "error":
+                                    print(proc_code)
+                                    proc_code = separate_code(proc_code)
+                                    values = (tuple(params), proc_code, declarations)
+                                    procs[proc_name] = values
+                                    code = code[count3 + 7:]
                                 else:
+                                    print("ENTRO 2")
+
                                     return "error"
+                            else:
+                                print("ENTRO 3")
+
+                                return "error"
                         else:
+                            print("ENTRO 4")
+
                             return "error name"
                     else:
+                        print("ENTRO 5")
+
                         return "error"
+            print(procs)
             return procs
 
-def get_code(code):
+
+def get_code(code, is_proc):
     if code.count("INICIO") == code.count("FINAL"):
         if code.index('INICIO:') < code.index('FINAL;'):
             count1 = code.index("INICIO")
             blanco = code[:count1].split()
-            if len(blanco) != 0:
+            if len(blanco) != 0 and not is_proc:
                 return "error"
             count2 = code.index("FINAL;")
             tr = code[(count1 + 7):count2]
@@ -846,13 +908,14 @@ def get_code(code):
     else:
         return "error"
 
+
 def runParser(code):
     global procedimientos
     global st
     global error
     global gvariables
     global flag_runnig
-    codigo = get_code(code)
+    codigo = get_code(code, False)
     error = False
     if codigo == "error":
         error = True

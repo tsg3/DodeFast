@@ -29,8 +29,7 @@ ENCASO
     Ini(b,100)
     }
 FINCASO;
-DCL c;
-REPITA c = c + a + 33 MIENTRAS c < b;
+DCL c DEFAULT 67;
 DCL itr;
 DESDE itr = 1 HASTA 3 HAGA a = a + b + c FINDESDE;
 Inc(a,100);
@@ -48,11 +47,15 @@ FINAL;
 FINPROC
 
 PROC nombre1(r, t)
+DCL r DEFAULT 4
 INICIO:
 Aleatorio();
 Mover(A)
 FINAL;
 FINPROC
+
+
+
 
 
 
