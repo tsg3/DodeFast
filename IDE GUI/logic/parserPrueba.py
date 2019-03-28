@@ -509,13 +509,14 @@ def run(p):
 
     if type(p) == tuple:
 
-        if p[0] != 'DCL' and proc_declarations_called == True:
+        if p[0] != 'DCL' and p[0] != 'var' and proc_declarations_called == True:
+            print (p[0])
             error = True
             st += "\n--> No se pueden realizar instrucciones esa instruccion"
             return
 
         #   SUMA
-        if p[0] == '+':
+        elif p[0] == '+':
             try:
                 return run(p[1]) + run(p[2])
             except TypeError:
@@ -875,6 +876,14 @@ def get_proc(code):
                         if len(proc_name) != 0:
                             count4 = count2
                             params = proc[count1 + 1:count2].split(",")
+                            repetidos = False
+                            for i in params:
+                                for j in params:
+                                    if i == j:
+                                        repetidos == True
+                                        break
+                            if repetidos == True:
+                                return "error"
                             count1 = proc.find("INICIO")
                             count2 = proc.find("FINAL")
                             if count1 != -1 and count2 != -1:

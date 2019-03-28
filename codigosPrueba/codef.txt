@@ -47,27 +47,10 @@ FINAL;
 FINPROC
 
 PROC nombre1(r, t)
-DCL y DEFAULT t;
-y = y+1
+DCL y DEFAULT t
 INICIO:
 Aleatorio();
 Mover(A)
 FINAL;
 FINPROC
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
