@@ -47,12 +47,15 @@ FINAL;
 FINPROC
 
 PROC nombre1(r, t)
-DCL r DEFAULT 4
 INICIO:
 Aleatorio();
 Mover(A)
 FINAL;
 FINPROC
+
+
+
+
 
 
 

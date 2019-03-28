@@ -5,6 +5,7 @@ import time
 
 procedimientos = {}
 proc_called = False
+proc_declarations_called = False
 
 gvariables = {}
 lvariables = {}
@@ -499,6 +500,7 @@ def run(p):
     global proc_called
     global gvariables
     global lvariables
+    global proc_declarations_called
 
     if proc_called == True:
         variables = lvariables
@@ -563,8 +565,8 @@ def run(p):
 
         #   DECLARACION
         elif p[0] == 'DCL':
-            if proc_called == True:
-                st += "\n--> No se pueden declara variables en un procedimiento"
+            if proc_called == True and proc_declarations_called == False:
+                st += "\n--> No se pueden declara variables en la ejecucion de un procedimiento"
             else:
                 if p[1] in variables:
                     error = True
@@ -726,16 +728,20 @@ def run(p):
                 error = True
                 st += "\n--> Ese procedimiento no existe"
             else:
-                proc_called = True
                 n = len(p[2])
                 if len(p[2]) != len(procedimientos[p[1]][0]):
                     error = True
                     st += "\n--> No se ingreso la cantidad requerida de parametros para el procedimiento."
                 else:
+                    proc_called = True
                     i = 0
                     while i < n:
                         lvariables[procedimientos[p[1]][0][i]] = p[2][i]
                         i += 1
+                    proc_declarations_called = True
+                    for i in procedimientos[p[1]][2]:
+                        parser.parse(i.strip())
+                    proc_declarations_called = False
                     for i in procedimientos[p[1]][1]:
                         parser.parse(i.strip())
                     proc_called = False
@@ -870,7 +876,7 @@ def get_proc(code):
                                 if proc_code != "error":
                                     print(proc_code)
                                     proc_code = separate_code(proc_code)
-                                    values = (tuple(params), proc_code, declarations)
+                                    values = (tuple(params), proc_code, list(filter(None,declarations)))
                                     procs[proc_name] = values
                                     code = code[count3 + 7:]
                                 else:
