@@ -1,0 +1,6 @@
+
+INICIO:
+
+DCL a;
+
+FINAL;

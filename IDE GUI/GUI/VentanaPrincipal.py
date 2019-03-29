@@ -76,6 +76,7 @@ def add_code(url):
         textCommand.config(state=NORMAL)
         textCommand.delete('1.0', END)
         textCommand.insert(END, code)
+        textCommand.delete(textCommand.index("end"))
         current_URL = url
     except Exception:
         printTerminal("File doesn't exist!", True)
