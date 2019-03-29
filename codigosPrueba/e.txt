@@ -1,7 +1,14 @@
 
 INICIO:
 
-DCL b DEFAULT 5
+DCL b DEFAULT 6;
+b = b +- 5
 
 FINAL;
+
+
+
+
+
+
 

@@ -485,8 +485,10 @@ def p_error(p):
     global line
     error = True
 
+    error_message = error_cases(parser.symstack[1].type)
+
     if not ("sintaxis" in st) and "expresion" not in st:
-        st = "\n--> ERROR SINTÁCTICO ~~~ Un error de sintaxis fue encontrado en la línea " + str(line) + "!"
+        st = "\n--> ERROR SINTÁCTICO ~~~ La expresion " + str(p.value) + " causa un error de sintaxis en la linea " + str(line) + ":" + error_message
         return
     return
 
@@ -502,6 +504,12 @@ def p_empty(p):
     empty :
     '''
     p[0] = 0
+
+
+def error_cases(instruccion):
+    cases = {'DCL':"\n--> Estructura para una Declaración: 'DCL <variable>' o 'DCL <variable> DEFAULT <variable|numero>'"}
+    func = cases.get(instruccion, "\n--> Nada")
+    return func
 
 
 parser = yacc.yacc()
