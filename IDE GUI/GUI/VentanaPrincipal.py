@@ -77,6 +77,15 @@ def add_code(url):
         textCommand.delete('1.0', END)
         textCommand.insert(END, code)
         textCommand.delete(textCommand.index("end"))
+
+        '''  Ejemplo para cambiar de color secciones de texto  '''
+        '''
+        countVar = StringVar()
+        pos = textCommand.search("DCL", "1.0", stopindex="end", count=countVar)
+        textCommand.tag_add("dcl", pos, '{}+{}c'.format(pos,countVar.get()))
+        textCommand.tag_config("dcl", foreground="#ff9900")
+        '''
+
         current_URL = url
     except Exception:
         printTerminal("File doesn't exist!", True)

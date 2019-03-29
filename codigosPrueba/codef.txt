@@ -40,7 +40,7 @@ Aleatorio();
 LLAMAR nombre1(1,2)
 FINAL;
 
-PROC nombre(r, r)
+PROC nombre(r, i)
 INICIO:
 Aleatorio();
 FINAL;
@@ -53,6 +53,7 @@ Aleatorio();
 Mover(A)
 FINAL;
 FINPROC
+
 
 
 

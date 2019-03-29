@@ -55,7 +55,7 @@ t_RPAR = r'[\s]*\)[\s]*'
 
 
 def t_INT(t):
-    r'\d+'
+    r'[\s]*\d+'
     t.value = int(t.value)
     return t
 
@@ -175,7 +175,7 @@ def t_LLAMAR(t):
 
 
 def t_IDEN(t):
-    r'[a-zA-Z_][a-zA-Z_0-9@#]*'
+    r'[\s]*[a-zA-Z_][a-zA-Z_0-9@#]*'
     '''global reserved_words
     if t.value in reserved_words:
         if reserved_words.index(t.value) == 'DEFAULT':
@@ -192,13 +192,9 @@ def t_error(t):
     global error
     global st
     error = True
-    if ("DEFAULT" in t.value):
-        st += "\nWrong declaration of variable!"
-    else:
-        st += "\nbecause there's a illegal input"
+    st = "\n--> ERROR LÉXICO ~~~ Se encontraron una expresion no válida: " + t.value + " , en la linea " + str(line) + "!"
     while t.lexer.lexpos < t.lexer.lexlen:
         t.lexer.skip(1)
-    t.lexer.skip(1)
 
 
 lexer = lex.lex()
@@ -215,9 +211,17 @@ def p_parse(p):
           | sentence
           | var_declare
           | proc
+          | IDEN
           | empty
     '''
     print(p[1])
+    global error
+    global st
+    if error or type(p[1]) == str:
+        if type(p[1]) == str:
+            st = "\n--> ERROR SINTÁCTICO ~~~ '{}' no es una sentencia válida!".format(p[1])
+        error = True
+        return
     run(p[1])
 
 
@@ -480,9 +484,18 @@ def p_error(p):
     global error
     global line
     error = True
-    if not ("--> A syntax error was found" in st):
-        st = "\n--> A syntax error was found in line " + str(line) + "!"
 
+    if not ("sintaxis" in st) and "expresion" not in st:
+        st = "\n--> ERROR SINTÁCTICO ~~~ Un error de sintaxis fue encontrado en la línea " + str(line) + "!"
+        return
+    return
+
+'''def p_error(p):
+
+    # get formatted representation of stack
+    stack_state_str = ' '.join([symbol.type for symbol in parser.symstack][1:])
+
+    print('Syntax error in input! Parser State:{} {} . {}'.format(parser.state,stack_state_str,p))'''
 
 def p_empty(p):
     '''
@@ -975,13 +988,15 @@ def runParser(code):
         if len(result[0]) > 0:
             st += result[0]
         if result[1]:
+            st = "\n--> Ejecucion finalizada debido a:" + st + "&"
             break
         time.sleep(0.00001)
         st = ""
     gvariables.clear()
+    time.sleep(0.05)
     if st == "":
         st = "\n--> Ejecucion finalizada%"
-    else:
-        st = "\n--> Ejecucion finalizada debido a:\n" + st + "&"
+    #else:
+    #    st = "\n--> Ejecucion finalizada debido a:" + st + "&"
     time.sleep(0.00001)
     flag_runnig = False

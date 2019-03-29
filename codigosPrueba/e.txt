@@ -1,6 +1,7 @@
 
 INICIO:
 
-DCL a;
+DCL b DEFAULT 5
 
 FINAL;
+
