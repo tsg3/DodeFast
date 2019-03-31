@@ -1,9 +1,10 @@
 INICIO:
 DCL a DEFAULT 100;
 DCL b;
-DCL i_t;
+DCL i_t ;
+
 ENCASO
-   CUANDO a > 50 ENTONS
+   CUANDO a == 50 ENTONS
     {
     	ENCASO
    	CUANDO a == 50 ENTONS
@@ -47,15 +48,29 @@ FINAL;
 FINPROC
 
 PROC nombre1(r, x)
-DCL y DEFAULT x
+DCL y DEFAULT x;
+DCL a DEFAULT x;
+DCL b
 INICIO:
+
+
+ENCASO
+   	CUANDO a == 50 ENTONS
+    	{
+    	b = 0
+    	}
+   	CUANDO a <> 100 ENTONS
+    	{
+    	Ini(b,200)
+    	}
+   	SINO
+    	{
+    	Ini(b,10000)
+    	}
+FINCASO;
 Aleatorio();
 Mover(A)
 FINAL;
 FINPROC
-
-
-
-
 
 

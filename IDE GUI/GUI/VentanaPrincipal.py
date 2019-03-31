@@ -20,7 +20,8 @@ def correr_codigo():
         logic.parserPrueba.flag_stop = False
         logic.parserPrueba.line = 0
         archivoCodigo = open(current_URL, "r")
-        prevCode = archivoCodigo.read().strip().replace('\n', '').replace('\t', '')
+        # prevCode = archivoCodigo.read().strip().replace('\n', '♥♦').replace('\t', '')
+        prevCode = archivoCodigo.read().replace('\t', '')
         archivoCodigo.close()
         printTerminal("", True)
 
@@ -82,10 +83,9 @@ def add_code(url):
         '''
         countVar = StringVar()
         pos = textCommand.search("DCL", "1.0", stopindex="end", count=countVar)
-        textCommand.tag_add("dcl", pos, '{}+{}c'.format(pos,countVar.get()))
+        textCommand.tag_add("dcl", pos, '{}+{}c'.format(pos, countVar.get()))
         textCommand.tag_config("dcl", foreground="#ff9900")
         '''
-
         current_URL = url
     except Exception:
         printTerminal("File doesn't exist!", True)
@@ -95,17 +95,17 @@ def printTerminal(code, delete):
     textTerminal.config(state=NORMAL)
     if delete:
         textTerminal.delete('1.0', END)
-        textTerminal.insert(END, titleMessage + code.replace("%","").replace("&","") + "\n")
+        textTerminal.insert(END, titleMessage + code.replace("☺", "").replace("☻", "") + "\n")
     else:
-        textTerminal.insert(END, code.replace("%","").replace("&",""))
+        textTerminal.insert(END, code.replace("☺", "").replace("☻", ""))
         textTerminal.insert(END, "\n")
         textTerminal.config(state=DISABLED)
     if code != "":
-        if code[-1] == "&":
+        if code[-1] == "☻":
             textTerminal.tag_add("code", str(int(textTerminal.index("end").split(".")[0]) - 4) + ".0",
                                  textTerminal.index("end"))
             textTerminal.tag_config("code", foreground="RED")
-        elif "%" in code:
+        elif "☺" in code:
             textTerminal.tag_add("code", str(int(textTerminal.index("end").split(".")[0]) - 2) + ".0",
                                  textTerminal.index("end"))
             textTerminal.tag_config("code", foreground="GREEN")
