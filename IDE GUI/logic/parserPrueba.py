@@ -489,7 +489,14 @@ def p_error(p):
     global line
     error = True
 
-    error_message = error_cases(parser.symstack[1].type)
+    #TESTEO
+    error_type = parser.symstack[1].type
+
+    if parser.symstack[1].type == 'ENCASO' and len(parser.symstack) > 2:
+        if parser.symstack[2].type == 'IDEN' or parser.symstack[2].type == 'CUANDO':
+            error_type += parser.symstack[2].type
+
+    error_message = error_cases(error_type)
 
     if not ("sintaxis" in st) and "expresion" not in st:
         st = "\n--> ERROR SINTÁCTICO ~~~ La expresion " + str(
@@ -515,7 +522,14 @@ def p_empty(p):
 
 def error_cases(instruccion):
     cases = {
-        'DCL': "\n--> Estructura para una Declaración: 'DCL <variable>' o 'DCL <variable> DEFAULT <variable|numero>'"}
+        'DCL': "\n--> Sintaxis para una Declaración: 'DCL <variable>' o 'DCL <variable> DEFAULT <variable|numero>'",
+        'IDEN': "\n--> Sintaxis para una Asignación: 'IDEN = <expresión>'. <expresión> puede ser una variable, un número o operaciones entre éstos.",
+        'ENCASO': "\n--> Sintaxis para Casos:"
+                  "\n--> Sintaxis 1 para Casos: 'ENCASO <casos1> SINO { <acciones> } FINCASO'. Los <casos1> son: 'CUANDO <comparativo> ENTONS { <acciones> }'."
+                  "\n--> Sintaxis 2 para Casos: 'ENCASO <variable> <casos2> SINO { <acciones> } FINCASO'. Los <casos2> son: 'CUANDO <condición> <expresión> ENTONS { <acciones> }'.",
+        'ENCASOCUANDO': "\n--> Sintaxis 1 para Casos: 'ENCASO <casos1> SINO { <acciones> } FINCASO'. Los <casos1> son: 'CUANDO <comparativo> ENTONS { <acciones> }'.",
+        'ENCASOIDEN': "\n--> Sintaxis 2 para Casos: 'ENCASO <variable> <casos2> SINO { <acciones> } FINCASO'. Los <casos2> son: 'CUANDO <condición> <expresión> ENTONS { <acciones> }'."
+    }
     func = cases.get(instruccion, "\n--> Nada")
     return func
 
@@ -779,11 +793,11 @@ def run(p):
                     proc_declarations_called = True
                     for i in procedimientos[p[1]][2]:
                         lineError = i
-                        parser.parse(i.replace("\n", "").strip())
+                        parser.parse(i.replace("\n", " ").strip())
                     proc_declarations_called = False
                     for i in procedimientos[p[1]][1]:
                         lineError = i
-                        parser.parse(i.replace("\n", "").strip())
+                        parser.parse(i.replace("\n", " ").strip())
                     proc_called = False
                     lvariables.clear()
                     st += "\n--> Ejecucion de procedimiento finalizada"
@@ -892,7 +906,7 @@ def get_proc(code):
             return "error"
         else:
             procs = {}
-            while len(code.replace("\n", "").strip()) != 0:
+            while len(code.replace("\n", " ").strip()) != 0:
                 count1 = code.find("PROC")
                 count3 = code.find("FINPROC")
                 if count1 == -1 or count3 == -1:
@@ -902,14 +916,14 @@ def get_proc(code):
                     count1 = proc.find("(")
                     count2 = proc.find(")")
                     if count1 != -1 and count2 != -1:
-                        proc_name = proc[4:count1].strip().replace("\n", "")
+                        proc_name = proc[4:count1].strip().replace("\n", " ")
                         print(proc_name)
                         if len(proc_name) != 0:
                             count4 = count2
                             params = proc[count1 + 1:count2].split(",")
                             strip = 0
                             while strip < len(params):
-                                params[strip] = params[strip].replace("\n", "").strip()
+                                params[strip] = params[strip].replace("\n", " ").strip()
                                 strip += 1
 
                             repetidos = False
@@ -960,10 +974,10 @@ def get_proc(code):
 
 
 def get_code(code, is_proc):
-    if code.replace("\n", "").count("INICIO") == code.count("FINAL"):
+    if code.replace("\n", " ").count("INICIO") == code.count("FINAL"):
         if code.index('INICIO:') < code.index('FINAL;'):
             count1 = code.index("INICIO")
-            blanco = code[:count1].replace("\n", "").split()
+            blanco = code[:count1].replace("\n", " ").split()
             if len(blanco) != 0 and not is_proc:
                 return "error"
             count2 = code.index("FINAL;")
@@ -1056,7 +1070,7 @@ def runParser(code):
         time.sleep(0.05)
         print(i)
         lineError = i
-        result = parse_code(i.replace("\n", ""))
+        result = parse_code(i.replace("\n", " "))
         if len(result[0]) > 0:
             st += result[0]
         if result[1]:

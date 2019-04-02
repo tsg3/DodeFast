@@ -21,7 +21,7 @@ def correr_codigo():
         logic.parserPrueba.line = 0
         archivoCodigo = open(current_URL, "r")
         # prevCode = archivoCodigo.read().strip().replace('\n', '♥♦').replace('\t', '')
-        prevCode = archivoCodigo.read().replace('\t', '')
+        prevCode = archivoCodigo.read().replace('\t', ' ')
         archivoCodigo.close()
         printTerminal("", True)
 
