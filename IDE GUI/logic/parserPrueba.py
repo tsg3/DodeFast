@@ -525,8 +525,13 @@ def p_empty(p):
 
 def error_cases(instruccion):
     cases = {
-        'DCL': "\n--> Sintaxis para una Declaración: 'DCL <variable>' o 'DCL <variable> DEFAULT <variable|numero>'",
+        'DCL': "\n--> Sintaxis para una Declaración: 'DCL <variable>' o 'DCL <variable> DEFAULT <variable|número>'",
         'IDEN': "\n--> Sintaxis para una Asignación: 'IDEN = <expresión>'. <expresión> puede ser una variable, un número o operaciones entre éstos.",
+        'REPITA': "\n--> Sintaxis para un Repita: 'REPITA <acciones> MIENTRAS <comparativo>'.",
+        'DESDE': "\n--> Sintaxis para un Desde: 'DESDE <variable> = <expresión> HASTA <expresión> HAGA <acciones> FINDESDE'.",
+        'moves_aux': "\n--> Sintaxis para funciones básicas: '<Inc|Dec|Ini> ( <variable> , <número> )'.",
+        'MOVER': "\n--> Sintaxis para la función Mover: 'Mover ( <variable> )'. La variable solo puede ser: AF, F, DFA, IFA, DFB, IFB, A, DAA, IAA, DAB, IAB y AA.",
+        'ALEATORIO': "\n--> Sintaxis para la función Aleatorio: 'Aleatorio ( )'.",
         'ENCASO': "\n--> Sintaxis para Casos:"
                   "\n--> Sintaxis 1 para Casos: 'ENCASO <casos1> SINO { <acciones> } FINCASO'. Los <casos1> son: 'CUANDO <comparativo> ENTONS { <acciones> }'."
                   "\n--> Sintaxis 2 para Casos: 'ENCASO <variable> <casos2> SINO { <acciones> } FINCASO'. Los <casos2> son: 'CUANDO <condición> <expresión> ENTONS { <acciones> }'.",
