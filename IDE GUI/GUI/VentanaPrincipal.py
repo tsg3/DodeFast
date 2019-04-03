@@ -3,6 +3,7 @@ import logic.parserPrueba
 import os.path
 import threading
 
+symbols = [' ','(',')','{','}',':',';','','\n','\t',]
 
 def obtener_codigo():
     if len(current_URL) != 0:
@@ -86,9 +87,7 @@ def add_code(url):
         printTerminal("File doesn't exist!", True)
 
 def color_words():
-
-    textCommand.tag_config("reser1", foreground="#003a63", font='Courier 9 bold')
-    textCommand.tag_config("reser2", foreground="#1a8c5c", font='Courier 9')
+    global symbols
     count = 1
     for i in logic.parserPrueba.color_words:
         start_pos = '1.0'
@@ -96,17 +95,31 @@ def color_words():
             start_pos = textCommand.search(i, start_pos, END)
             if start_pos:
                 end_pos = textCommand.index('{}+{}c'.format(start_pos, (len(i))))
-                if count < 12:
-                    textCommand.tag_add("reser1", start_pos, end_pos)
-                else:
-                    textCommand.tag_add("reser2", start_pos, end_pos)
+                if (textCommand.get(start_pos+'-1c') in symbols and textCommand.get(end_pos) in symbols) or start_pos == '1.0':
+                    if count < 12:
+                        textCommand.tag_add("reser1", start_pos, end_pos)
+                    else:
+                        textCommand.tag_add("reser2", start_pos, end_pos)
                 start_pos = end_pos
             else:
                 break
         count += 1
 
 def enter(event):
+    textCommand.tag_remove('reser1', '1.0', END)
+    textCommand.tag_remove('reser2', '1.0', END)
     color_words()
+
+'''def black(event):
+    try:
+        sel = "%s-%s" % (textCommand.index("insert wordstart"), textCommand.index("insert wordend"))
+    except Exception:
+        sel = "<none>"
+    if sel != "<none>":
+        sel_list = sel.split('-')
+        textCommand.tag_remove('reser1', sel_list[0], sel_list[1])
+        textCommand.tag_remove('reser2', sel_list[0], sel_list[1])
+        textCommand.tag_add("black", sel_list[0], sel_list[1])'''
 
 def printTerminal(code, delete):
     textTerminal.config(state=NORMAL)
@@ -273,6 +286,12 @@ botonCorrer.place(x=270, y=422)
 botonAbrir.place(x=26, y=50)
 botonNuevo.place(x=80, y=50)
 
-root.bind("<KeyPress>", enter)
+root.bind("<Key>", enter)
+root.bind("<BackSpace>", enter)
+root.bind("<space>", enter)
+root.bind("<Return>", enter)
+
+textCommand.tag_config("reser1", foreground="#003a63", font='Courier 9 bold')
+textCommand.tag_config("reser2", foreground="#1a8c5c", font='Courier 9')
 
 mainloop()
