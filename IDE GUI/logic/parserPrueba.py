@@ -32,6 +32,9 @@ tokens = ['INT', 'IDEN', 'EQUALS', 'PLUS', 'MINUS', 'MULTIPLY', 'DIVIDE', 'DCL',
           'DESDE', 'HASTA', 'HAGA', 'INC', 'DEC', 'INI', 'COMMA', 'LPAR', 'RPAR',
           'MOVER', 'ALEATORIO', 'LLAMAR']
 
+color_words = ['PROC', 'INICIO', 'FINAL', 'FINPROC', 'DCL', 'ENCASO', 'FINCASO', 'REPITA', 'MIENTRAS', 'FINDESDE',
+          'DESDE', 'DEFAULT', 'CUANDO', 'ENTONS', 'SINO', 'HASTA', 'HAGA', 'Inc', 'Dec', 'Ini', 'Mover', 'Aleatorio', 'LLAMAR']
+
 # reserved_words = ['DCL','DEFAULT','ENCASO','FINCASO','SINO','ENTONS','CUANDO','REPITA','HASTAENCONTRAR']
 
 t_SAME = r'[\s]*\=\=[\s]*'

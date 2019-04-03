@@ -79,17 +79,34 @@ def add_code(url):
         textCommand.insert(END, code)
         textCommand.delete(textCommand.index("end"))
 
-        '''  Ejemplo para cambiar de color secciones de texto  '''
-        '''
-        countVar = StringVar()
-        pos = textCommand.search("DCL", "1.0", stopindex="end", count=countVar)
-        textCommand.tag_add("dcl", pos, '{}+{}c'.format(pos, countVar.get()))
-        textCommand.tag_config("dcl", foreground="#ff9900")
-        '''
+        color_words()
+
         current_URL = url
     except Exception:
         printTerminal("File doesn't exist!", True)
 
+def color_words():
+
+    textCommand.tag_config("reser1", foreground="#003a63", font='Courier 9 bold')
+    textCommand.tag_config("reser2", foreground="#1a8c5c", font='Courier 9')
+    count = 1
+    for i in logic.parserPrueba.color_words:
+        start_pos = '1.0'
+        while True:
+            start_pos = textCommand.search(i, start_pos, END)
+            if start_pos:
+                end_pos = textCommand.index('{}+{}c'.format(start_pos, (len(i))))
+                if count < 12:
+                    textCommand.tag_add("reser1", start_pos, end_pos)
+                else:
+                    textCommand.tag_add("reser2", start_pos, end_pos)
+                start_pos = end_pos
+            else:
+                break
+        count += 1
+
+def enter(event):
+    color_words()
 
 def printTerminal(code, delete):
     textTerminal.config(state=NORMAL)
@@ -255,5 +272,7 @@ botonGuardar.place(x=270, y=50)
 botonCorrer.place(x=270, y=422)
 botonAbrir.place(x=26, y=50)
 botonNuevo.place(x=80, y=50)
+
+root.bind("<KeyPress>", enter)
 
 mainloop()

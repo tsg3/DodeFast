@@ -4,7 +4,7 @@ DCL b;
 DCL i_t ;
 
 ENCASO
-   CUANDO a == 50 ENTONS
+CUANDO a == 50 ENTONS
     {
     	ENCASO
    	CUANDO a == 50 ENTONS
@@ -72,5 +72,7 @@ Aleatorio();
 Mover(A)
 FINAL;
 FINPROC
+
+
 
 
