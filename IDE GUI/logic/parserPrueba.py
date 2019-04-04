@@ -185,6 +185,15 @@ def t_IDEN(t):
     global reserved_words
     global error
     global st
+    is_in = False
+    value_found = ''
+    for i in reserved_words:
+        if i in t.value and i != t.value and not is_in:
+            is_in = True
+            value_found = i
+        elif i in t.value and i != t.value and is_in:
+            value_found += '.' + i
+            break
     if t.value in reserved_words:
         if t.value == 'DEFAULT':
             t.type = 'ASSIGN'
@@ -196,13 +205,23 @@ def t_IDEN(t):
             t.type = 'DEC'
         elif t.value == 'Ini':
             t.type = 'INI'
-        elif t.value == 'INICIO' or t.value == 'FINAL' or t.value == 'PROC' or t.value == 'FINPROC':
-            error = True
-            st = "\n--> ERROR LÉXICO ~~~ La siguiente expresion no está siendo usada correctamente: " + t.value + " , en la linea " + str(get_line_error()) + "!"
-            while t.lexer.lexpos < t.lexer.lexlen:
-                t.lexer.skip(1)
-                return
+        else:
+            t.type = t.value
         return t
+    elif is_in:
+        error = True
+        if '.' in value_found:
+            values = ''
+            for j in value_found.split('.'):
+                values += ', ' + j
+            values = values[2:]
+            st = "\n--> ERROR LÉXICO ~~~ Se encontraron las palabras reservadas " + values
+        else:
+            st = "\n--> ERROR LÉXICO ~~~ Se encontró la palabra reservada " + value_found
+        st += " en la expresion: " + t.value + " , en la linea " + str(get_line_error()) + "!"
+        while t.lexer.lexpos < t.lexer.lexlen:
+            t.lexer.skip(1)
+        return
     else:
         t.type = 'IDEN'
         return t
