@@ -35,7 +35,8 @@ tokens = ['INT', 'IDEN', 'EQUALS', 'PLUS', 'MINUS', 'MULTIPLY', 'DIVIDE', 'DCL',
 color_words = ['PROC', 'INICIO', 'FINAL', 'FINPROC', 'DCL', 'ENCASO', 'FINCASO', 'REPITA', 'MIENTRAS', 'FINDESDE',
           'DESDE', 'DEFAULT', 'CUANDO', 'ENTONS', 'SINO', 'HASTA', 'HAGA', 'Inc', 'Dec', 'Ini', 'Mover', 'Aleatorio', 'LLAMAR']
 
-# reserved_words = ['DCL','DEFAULT','ENCASO','FINCASO','SINO','ENTONS','CUANDO','REPITA','HASTAENCONTRAR']
+reserved_words = ['DCL','DEFAULT','ENCASO','FINCASO','SINO','ENTONS','CUANDO','REPITA','HASTAENCONTRAR','FINDESDE','DESDE','HASTA','HAGA','Ini','Dec','Inc','Mover','Aleatorio',
+                  'LLAMAR','PROC','FINPROC','INICIO','FINAL']
 
 t_SAME = r'[\s]*\=\=[\s]*'
 t_LESS = r'[\s]*\<[\s]*'
@@ -181,24 +182,37 @@ def t_LLAMAR(t):
 
 def t_IDEN(t):
     r'[\s]*[a-zA-Z_][a-zA-Z_0-9@#]*'
-    '''global reserved_words
+    global reserved_words
+    global error
+    global st
     if t.value in reserved_words:
-        if reserved_words.index(t.value) == 'DEFAULT':
-            t.type = reserved_words(reserved_words.index(t.value))
-        else:
-            t.type = t.value
-
-    else:'''
-    t.type = 'IDEN'
-    return t
+        if t.value == 'DEFAULT':
+            t.type = 'ASSIGN'
+        elif t.value == 'HASTAENCONTRAR':
+            t.type = 'MIENTRAS'
+        elif t.value == 'Inc':
+            t.type = 'INC'
+        elif t.value == 'Dec':
+            t.type = 'DEC'
+        elif t.value == 'Ini':
+            t.type = 'INI'
+        elif t.value == 'INICIO' or t.value == 'FINAL' or t.value == 'PROC' or t.value == 'FINPROC':
+            error = True
+            st = "\n--> ERROR LÉXICO ~~~ La siguiente expresion no está siendo usada correctamente: " + t.value + " , en la linea " + str(get_line_error()) + "!"
+            while t.lexer.lexpos < t.lexer.lexlen:
+                t.lexer.skip(1)
+                return
+        return t
+    else:
+        t.type = 'IDEN'
+        return t
 
 
 def t_error(t):
     global error
     global st
     error = True
-    st = "\n--> ERROR LÉXICO ~~~ Se encontraron una expresion no válida: " + t.value + " , en la linea " + str(
-        line) + "!"
+    st = "\n--> ERROR LÉXICO ~~~ Se encontraron una expresion no válida: " + t.value + " , en la linea " + str(get_line_error()) + "!"
     while t.lexer.lexpos < t.lexer.lexlen:
         t.lexer.skip(1)
 
@@ -493,18 +507,29 @@ def p_error(p):
     error = True
 
     #TESTEO
-    error_type = parser.symstack[1].type
+    try:
+        error_type = parser.symstack[1].type
 
-    if parser.symstack[1].type == 'ENCASO' and len(parser.symstack) > 2:
-        if parser.symstack[2].type == 'IDEN' or parser.symstack[2].type == 'CUANDO':
-            error_type += parser.symstack[2].type
+        if parser.symstack[1].type == 'ENCASO' and len(parser.symstack) > 2:
+            if parser.symstack[2].type == 'IDEN' or parser.symstack[2].type == 'CUANDO':
+                error_type += parser.symstack[2].type
 
-    error_message = error_cases(error_type)
+        stack_state_str = ' '.join([symbol.type for symbol in parser.symstack][1:])
 
-    if not ("sintaxis" in st) and "expresion" not in st:
-        st = "\n--> ERROR SINTÁCTICO ~~~ La expresion " + str(
-            p.value) + " causa un error de sintaxis en la linea " + str(get_line_error()) + ":" + error_message
-        return
+        print('Syntax error in input! Parser State:{} {} . {}'.format(parser.state, stack_state_str, p))
+        print(parser.symstack[1])
+
+        error_message = error_cases(error_type)
+
+        if not ("sintaxis" in st) and "expresion" not in st:
+            st = "\n--> ERROR SINTÁCTICO ~~~ La expresion " + str(
+                p.value) + " causa un error de sintaxis en la linea " + str(get_line_error()) + ":" + error_message
+            return
+    except IndexError:
+        if not ("sintaxis" in st) and "expresion" not in st:
+            st = "\n--> ERROR SINTÁCTICO ~~~ La expresion " + str(p.value)\
+                 + " en la linea " + str(get_line_error()) + " no se encuentra al inicio de ninguna estructura válida!\n--> " \
+                                                             "Estructuras válidas que incluyen " + str(p.value) + ":" + error_cases(p.type.strip())
     return
 
 
@@ -536,7 +561,9 @@ def error_cases(instruccion):
                   "\n--> Sintaxis 1 para Casos: 'ENCASO <casos1> SINO { <acciones> } FINCASO'. Los <casos1> son: 'CUANDO <comparativo> ENTONS { <acciones> }'."
                   "\n--> Sintaxis 2 para Casos: 'ENCASO <variable> <casos2> SINO { <acciones> } FINCASO'. Los <casos2> son: 'CUANDO <condición> <expresión> ENTONS { <acciones> }'.",
         'ENCASOCUANDO': "\n--> Sintaxis 1 para Casos: 'ENCASO <casos1> SINO { <acciones> } FINCASO'. Los <casos1> son: 'CUANDO <comparativo> ENTONS { <acciones> }'.",
-        'ENCASOIDEN': "\n--> Sintaxis 2 para Casos: 'ENCASO <variable> <casos2> SINO { <acciones> } FINCASO'. Los <casos2> son: 'CUANDO <condición> <expresión> ENTONS { <acciones> }'."
+        'ENCASOIDEN': "\n--> Sintaxis 2 para Casos: 'ENCASO <variable> <casos2> SINO { <acciones> } FINCASO'. Los <casos2> son: 'CUANDO <condición> <expresión> ENTONS { <acciones> }'.",
+
+        'ASSIGN': "\n--> Declaraciones: 'DCL <variable> DEFAULT <variable|número>'."
     }
     func = cases.get(instruccion, "\n--> Nada")
     return func
