@@ -3,7 +3,7 @@ import logic.parserPrueba
 import os.path
 import threading
 
-symbols = [' ','(',')','{','}',':',';','','\n','\t',]
+#symbols = [' ','(',')','{','}',':',';','','\n','\t',]
 
 def obtener_codigo():
     if len(current_URL) != 0:
@@ -96,11 +96,11 @@ def color_words():
             start_pos = textCommand.search(i, start_pos, END)
             if start_pos:
                 end_pos = textCommand.index('{}+{}c'.format(start_pos, (len(i))))
-                if (textCommand.get(start_pos+'-1c') in symbols and textCommand.get(end_pos) in symbols) or start_pos == '1.0':
-                    if count < 12:
-                        textCommand.tag_add("reser1", start_pos, end_pos)
-                    else:
-                        textCommand.tag_add("reser2", start_pos, end_pos)
+                #if (textCommand.get(start_pos+'-1c') in symbols and textCommand.get(end_pos) in symbols) or start_pos == '1.0':
+                if count < 12:
+                    textCommand.tag_add("reser1", start_pos, end_pos)
+                else:
+                    textCommand.tag_add("reser2", start_pos, end_pos)
                 start_pos = end_pos
             else:
                 break
