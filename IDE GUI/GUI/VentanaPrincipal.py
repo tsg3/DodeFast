@@ -18,6 +18,7 @@ def obtener_codigo():
 def correr_codigo():
     global debugger
     if len(current_URL) != 0:
+        textCommand.tag_remove('line_error', '1.0', END)
         logic.parserPrueba.flag_stop = False
         logic.parserPrueba.line = 0
         archivoCodigo = open(current_URL, "r")
@@ -108,6 +109,7 @@ def color_words():
 def enter(event):
     textCommand.tag_remove('reser1', '1.0', END)
     textCommand.tag_remove('reser2', '1.0', END)
+    textCommand.tag_remove('line_error', '1.0', END)
     color_words()
 
 '''def black(event):
@@ -123,6 +125,9 @@ def enter(event):
 
 def printTerminal(code, delete):
     textTerminal.config(state=NORMAL)
+    error_line = code.find("en la linea")
+    if error_line != -1:
+        textCommand.tag_add("line_error",code[error_line+12]+'.0',code[error_line+12]+'.end')
     if delete:
         textTerminal.delete('1.0', END)
         textTerminal.insert(END, titleMessage + code.replace("☺", "").replace("☻", "") + "\n")
@@ -293,5 +298,6 @@ root.bind("<Return>", enter)
 
 textCommand.tag_config("reser1", foreground="#003a63", font='Courier 9 bold')
 textCommand.tag_config("reser2", foreground="#1a8c5c", font='Courier 9')
+textCommand.tag_config("line_error", background="#f74b45")
 
 mainloop()

@@ -6,3 +6,6 @@ DCL a; DCL b; DCL c;
  CUANDO a > b ENTONS { Ini(b,100) } SINO { Ini(a,50); Ini(b,50) } FINCASO
 
 FINAL;
+
+
+
