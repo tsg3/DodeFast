@@ -1,0 +1,31 @@
+parse -> comparative | sentence | var_declare | proc | IDEN | empty
+proc -> LLAMAR IDEN LPAR params RPAR
+params -> expression more_params
+more_params -> COMMA params | empty
+sentence -> var_assign | cases | repeat | do | function
+function -> moves | random | changes
+moves -> MOVER LPAR IDEN RPAR
+random -> ALEATORIO LPAR RPAR
+changes -> changes_aux LPAR IDEN COMMA INT RPAR
+changes_aux -> INC | DEC | INI
+do -> DESDE IDEN EQUALS expression HASTA expression HAGA actions FINDESDE
+repeat -> REPITA actions MIENTRAS comparative
+cases -> syntax1 | syntax2
+syntax2 -> ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO
+options2 -> CUANDO condition expression ENTONS LBRACE actions RBRACE more_options2
+more_options2 -> options2 | empty
+syntax1 -> ENCASO options1 SINO LBRACE actions RBRACE FINCASO
+options1 -> CUANDO comparative ENTONS LBRACE actions RBRACE more_options1
+more_options1 -> options1 | empty
+actions -> sentence more_actions
+more_actions -> SEPARATOR more_actions_aux | empty
+more_actions_aux -> actions | empty
+var_declare -> DCL IDEN value
+value -> initialize | empty
+initialize -> ASSIGN expression
+comparative -> IDEN condition expression
+var_assign -> IDEN EQUALS expression
+expression -> expression operator expression | IDEN | INT
+operator -> MULTIPLY | DIVIDE | PLUS | MINUS
+condition -> SAME | LESS | MORE | NON_EQUAL | LESS_EQUAL | MORE_EQUAL
+empty -> ε
