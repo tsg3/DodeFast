@@ -21,12 +21,12 @@ Rule 15    sentence -> function
 Rule 16    function -> moves
 Rule 17    function -> random
 Rule 18    function -> changes
-Rule 19    changes -> MOVER LPAR IDEN RPAR
+Rule 19    moves -> MOVER LPAR IDEN RPAR
 Rule 20    random -> ALEATORIO LPAR RPAR
-Rule 21    moves -> moves_aux LPAR IDEN COMMA INT RPAR
-Rule 22    moves_aux -> INC
-Rule 23    moves_aux -> DEC
-Rule 24    moves_aux -> INI
+Rule 21    changes -> changes_aux LPAR IDEN COMMA INT RPAR
+Rule 22    changes_aux -> INC
+Rule 23    changes_aux -> DEC
+Rule 24    changes_aux -> INI
 Rule 25    do -> DESDE IDEN EQUALS expression HASTA expression HAGA actions FINDESDE
 Rule 26    repeat -> REPITA actions MIENTRAS comparative
 Rule 27    cases -> syntax1
@@ -112,6 +112,7 @@ Nonterminals, with rules where they appear
 actions              : 25 26 29 30 33 34 40
 cases                : 12
 changes              : 18
+changes_aux          : 21
 comparative          : 1 26 34
 condition            : 30 46
 do                   : 14
@@ -125,7 +126,6 @@ more_options1        : 34
 more_options2        : 30
 more_params          : 8
 moves                : 16
-moves_aux            : 21
 operator             : 48
 options1             : 33 35
 options2             : 29 31
@@ -171,12 +171,12 @@ state 0
     (18) function -> . changes
     (33) syntax1 -> . ENCASO options1 SINO LBRACE actions RBRACE FINCASO
     (29) syntax2 -> . ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO
-    (21) moves -> . moves_aux LPAR IDEN COMMA INT RPAR
+    (19) moves -> . MOVER LPAR IDEN RPAR
     (20) random -> . ALEATORIO LPAR RPAR
-    (19) changes -> . MOVER LPAR IDEN RPAR
-    (22) moves_aux -> . INC
-    (23) moves_aux -> . DEC
-    (24) moves_aux -> . INI
+    (21) changes -> . changes_aux LPAR IDEN COMMA INT RPAR
+    (22) changes_aux -> . INC
+    (23) changes_aux -> . DEC
+    (24) changes_aux -> . INI
 
     IDEN            shift and go to state 6
     DCL             shift and go to state 13
@@ -185,8 +185,8 @@ state 0
     REPITA          shift and go to state 17
     DESDE           shift and go to state 18
     ENCASO          shift and go to state 22
+    MOVER           shift and go to state 23
     ALEATORIO       shift and go to state 24
-    MOVER           shift and go to state 25
     INC             shift and go to state 26
     DEC             shift and go to state 27
     INI             shift and go to state 28
@@ -207,7 +207,7 @@ state 0
     moves                          shift and go to state 19
     random                         shift and go to state 20
     changes                        shift and go to state 21
-    moves_aux                      shift and go to state 23
+    changes_aux                    shift and go to state 25
 
 state 1
 
@@ -383,19 +383,19 @@ state 17
     (18) function -> . changes
     (33) syntax1 -> . ENCASO options1 SINO LBRACE actions RBRACE FINCASO
     (29) syntax2 -> . ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO
-    (21) moves -> . moves_aux LPAR IDEN COMMA INT RPAR
+    (19) moves -> . MOVER LPAR IDEN RPAR
     (20) random -> . ALEATORIO LPAR RPAR
-    (19) changes -> . MOVER LPAR IDEN RPAR
-    (22) moves_aux -> . INC
-    (23) moves_aux -> . DEC
-    (24) moves_aux -> . INI
+    (21) changes -> . changes_aux LPAR IDEN COMMA INT RPAR
+    (22) changes_aux -> . INC
+    (23) changes_aux -> . DEC
+    (24) changes_aux -> . INI
 
     IDEN            shift and go to state 41
     REPITA          shift and go to state 17
     DESDE           shift and go to state 18
     ENCASO          shift and go to state 22
+    MOVER           shift and go to state 23
     ALEATORIO       shift and go to state 24
-    MOVER           shift and go to state 25
     INC             shift and go to state 26
     DEC             shift and go to state 27
     INI             shift and go to state 28
@@ -412,7 +412,7 @@ state 17
     moves                          shift and go to state 19
     random                         shift and go to state 20
     changes                        shift and go to state 21
-    moves_aux                      shift and go to state 23
+    changes_aux                    shift and go to state 25
 
 state 18
 
@@ -467,7 +467,7 @@ state 22
 
 state 23
 
-    (21) moves -> moves_aux . LPAR IDEN COMMA INT RPAR
+    (19) moves -> MOVER . LPAR IDEN RPAR
 
     LPAR            shift and go to state 46
 
@@ -481,30 +481,30 @@ state 24
 
 state 25
 
-    (19) changes -> MOVER . LPAR IDEN RPAR
+    (21) changes -> changes_aux . LPAR IDEN COMMA INT RPAR
 
     LPAR            shift and go to state 48
 
 
 state 26
 
-    (22) moves_aux -> INC .
+    (22) changes_aux -> INC .
 
-    LPAR            reduce using rule 22 (moves_aux -> INC .)
+    LPAR            reduce using rule 22 (changes_aux -> INC .)
 
 
 state 27
 
-    (23) moves_aux -> DEC .
+    (23) changes_aux -> DEC .
 
-    LPAR            reduce using rule 23 (moves_aux -> DEC .)
+    LPAR            reduce using rule 23 (changes_aux -> DEC .)
 
 
 state 28
 
-    (24) moves_aux -> INI .
+    (24) changes_aux -> INI .
 
-    LPAR            reduce using rule 24 (moves_aux -> INI .)
+    LPAR            reduce using rule 24 (changes_aux -> INI .)
 
 
 state 29
@@ -664,7 +664,7 @@ state 45
 
 state 46
 
-    (21) moves -> moves_aux LPAR . IDEN COMMA INT RPAR
+    (19) moves -> MOVER LPAR . IDEN RPAR
 
     IDEN            shift and go to state 68
 
@@ -678,7 +678,7 @@ state 47
 
 state 48
 
-    (19) changes -> MOVER LPAR . IDEN RPAR
+    (21) changes -> changes_aux LPAR . IDEN COMMA INT RPAR
 
     IDEN            shift and go to state 70
 
@@ -853,12 +853,12 @@ state 60
     (18) function -> . changes
     (33) syntax1 -> . ENCASO options1 SINO LBRACE actions RBRACE FINCASO
     (29) syntax2 -> . ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO
-    (21) moves -> . moves_aux LPAR IDEN COMMA INT RPAR
+    (19) moves -> . MOVER LPAR IDEN RPAR
     (20) random -> . ALEATORIO LPAR RPAR
-    (19) changes -> . MOVER LPAR IDEN RPAR
-    (22) moves_aux -> . INC
-    (23) moves_aux -> . DEC
-    (24) moves_aux -> . INI
+    (21) changes -> . changes_aux LPAR IDEN COMMA INT RPAR
+    (22) changes_aux -> . INC
+    (23) changes_aux -> . DEC
+    (24) changes_aux -> . INI
 
     MIENTRAS        reduce using rule 61 (empty -> .)
     RBRACE          reduce using rule 61 (empty -> .)
@@ -867,8 +867,8 @@ state 60
     REPITA          shift and go to state 17
     DESDE           shift and go to state 18
     ENCASO          shift and go to state 22
+    MOVER           shift and go to state 23
     ALEATORIO       shift and go to state 24
-    MOVER           shift and go to state 25
     INC             shift and go to state 26
     DEC             shift and go to state 27
     INI             shift and go to state 28
@@ -887,7 +887,7 @@ state 60
     moves                          shift and go to state 19
     random                         shift and go to state 20
     changes                        shift and go to state 21
-    moves_aux                      shift and go to state 23
+    changes_aux                    shift and go to state 25
 
 state 61
 
@@ -971,9 +971,9 @@ state 67
 
 state 68
 
-    (21) moves -> moves_aux LPAR IDEN . COMMA INT RPAR
+    (19) moves -> MOVER LPAR IDEN . RPAR
 
-    COMMA           shift and go to state 88
+    RPAR            shift and go to state 88
 
 
 state 69
@@ -989,9 +989,9 @@ state 69
 
 state 70
 
-    (19) changes -> MOVER LPAR IDEN . RPAR
+    (21) changes -> changes_aux LPAR IDEN . COMMA INT RPAR
 
-    RPAR            shift and go to state 89
+    COMMA           shift and go to state 89
 
 
 state 71
@@ -1159,19 +1159,19 @@ state 84
     (18) function -> . changes
     (33) syntax1 -> . ENCASO options1 SINO LBRACE actions RBRACE FINCASO
     (29) syntax2 -> . ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO
-    (21) moves -> . moves_aux LPAR IDEN COMMA INT RPAR
+    (19) moves -> . MOVER LPAR IDEN RPAR
     (20) random -> . ALEATORIO LPAR RPAR
-    (19) changes -> . MOVER LPAR IDEN RPAR
-    (22) moves_aux -> . INC
-    (23) moves_aux -> . DEC
-    (24) moves_aux -> . INI
+    (21) changes -> . changes_aux LPAR IDEN COMMA INT RPAR
+    (22) changes_aux -> . INC
+    (23) changes_aux -> . DEC
+    (24) changes_aux -> . INI
 
     IDEN            shift and go to state 41
     REPITA          shift and go to state 17
     DESDE           shift and go to state 18
     ENCASO          shift and go to state 22
+    MOVER           shift and go to state 23
     ALEATORIO       shift and go to state 24
-    MOVER           shift and go to state 25
     INC             shift and go to state 26
     DEC             shift and go to state 27
     INI             shift and go to state 28
@@ -1188,7 +1188,7 @@ state 84
     moves                          shift and go to state 19
     random                         shift and go to state 20
     changes                        shift and go to state 21
-    moves_aux                      shift and go to state 23
+    changes_aux                    shift and go to state 25
 
 state 85
 
@@ -1218,20 +1218,20 @@ state 87
 
 state 88
 
-    (21) moves -> moves_aux LPAR IDEN COMMA . INT RPAR
+    (19) moves -> MOVER LPAR IDEN RPAR .
 
-    INT             shift and go to state 100
+    $end            reduce using rule 19 (moves -> MOVER LPAR IDEN RPAR .)
+    SEPARATOR       reduce using rule 19 (moves -> MOVER LPAR IDEN RPAR .)
+    MIENTRAS        reduce using rule 19 (moves -> MOVER LPAR IDEN RPAR .)
+    RBRACE          reduce using rule 19 (moves -> MOVER LPAR IDEN RPAR .)
+    FINDESDE        reduce using rule 19 (moves -> MOVER LPAR IDEN RPAR .)
 
 
 state 89
 
-    (19) changes -> MOVER LPAR IDEN RPAR .
+    (21) changes -> changes_aux LPAR IDEN COMMA . INT RPAR
 
-    $end            reduce using rule 19 (changes -> MOVER LPAR IDEN RPAR .)
-    SEPARATOR       reduce using rule 19 (changes -> MOVER LPAR IDEN RPAR .)
-    MIENTRAS        reduce using rule 19 (changes -> MOVER LPAR IDEN RPAR .)
-    RBRACE          reduce using rule 19 (changes -> MOVER LPAR IDEN RPAR .)
-    FINDESDE        reduce using rule 19 (changes -> MOVER LPAR IDEN RPAR .)
+    INT             shift and go to state 100
 
 
 state 90
@@ -1342,19 +1342,19 @@ state 97
     (18) function -> . changes
     (33) syntax1 -> . ENCASO options1 SINO LBRACE actions RBRACE FINCASO
     (29) syntax2 -> . ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO
-    (21) moves -> . moves_aux LPAR IDEN COMMA INT RPAR
+    (19) moves -> . MOVER LPAR IDEN RPAR
     (20) random -> . ALEATORIO LPAR RPAR
-    (19) changes -> . MOVER LPAR IDEN RPAR
-    (22) moves_aux -> . INC
-    (23) moves_aux -> . DEC
-    (24) moves_aux -> . INI
+    (21) changes -> . changes_aux LPAR IDEN COMMA INT RPAR
+    (22) changes_aux -> . INC
+    (23) changes_aux -> . DEC
+    (24) changes_aux -> . INI
 
     IDEN            shift and go to state 41
     REPITA          shift and go to state 17
     DESDE           shift and go to state 18
     ENCASO          shift and go to state 22
+    MOVER           shift and go to state 23
     ALEATORIO       shift and go to state 24
-    MOVER           shift and go to state 25
     INC             shift and go to state 26
     DEC             shift and go to state 27
     INI             shift and go to state 28
@@ -1371,7 +1371,7 @@ state 97
     moves                          shift and go to state 19
     random                         shift and go to state 20
     changes                        shift and go to state 21
-    moves_aux                      shift and go to state 23
+    changes_aux                    shift and go to state 25
 
 state 98
 
@@ -1409,19 +1409,19 @@ state 99
     (18) function -> . changes
     (33) syntax1 -> . ENCASO options1 SINO LBRACE actions RBRACE FINCASO
     (29) syntax2 -> . ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO
-    (21) moves -> . moves_aux LPAR IDEN COMMA INT RPAR
+    (19) moves -> . MOVER LPAR IDEN RPAR
     (20) random -> . ALEATORIO LPAR RPAR
-    (19) changes -> . MOVER LPAR IDEN RPAR
-    (22) moves_aux -> . INC
-    (23) moves_aux -> . DEC
-    (24) moves_aux -> . INI
+    (21) changes -> . changes_aux LPAR IDEN COMMA INT RPAR
+    (22) changes_aux -> . INC
+    (23) changes_aux -> . DEC
+    (24) changes_aux -> . INI
 
     IDEN            shift and go to state 41
     REPITA          shift and go to state 17
     DESDE           shift and go to state 18
     ENCASO          shift and go to state 22
+    MOVER           shift and go to state 23
     ALEATORIO       shift and go to state 24
-    MOVER           shift and go to state 25
     INC             shift and go to state 26
     DEC             shift and go to state 27
     INI             shift and go to state 28
@@ -1438,11 +1438,11 @@ state 99
     moves                          shift and go to state 19
     random                         shift and go to state 20
     changes                        shift and go to state 21
-    moves_aux                      shift and go to state 23
+    changes_aux                    shift and go to state 25
 
 state 100
 
-    (21) moves -> moves_aux LPAR IDEN COMMA INT . RPAR
+    (21) changes -> changes_aux LPAR IDEN COMMA INT . RPAR
 
     RPAR            shift and go to state 107
 
@@ -1501,13 +1501,13 @@ state 106
 
 state 107
 
-    (21) moves -> moves_aux LPAR IDEN COMMA INT RPAR .
+    (21) changes -> changes_aux LPAR IDEN COMMA INT RPAR .
 
-    $end            reduce using rule 21 (moves -> moves_aux LPAR IDEN COMMA INT RPAR .)
-    SEPARATOR       reduce using rule 21 (moves -> moves_aux LPAR IDEN COMMA INT RPAR .)
-    MIENTRAS        reduce using rule 21 (moves -> moves_aux LPAR IDEN COMMA INT RPAR .)
-    RBRACE          reduce using rule 21 (moves -> moves_aux LPAR IDEN COMMA INT RPAR .)
-    FINDESDE        reduce using rule 21 (moves -> moves_aux LPAR IDEN COMMA INT RPAR .)
+    $end            reduce using rule 21 (changes -> changes_aux LPAR IDEN COMMA INT RPAR .)
+    SEPARATOR       reduce using rule 21 (changes -> changes_aux LPAR IDEN COMMA INT RPAR .)
+    MIENTRAS        reduce using rule 21 (changes -> changes_aux LPAR IDEN COMMA INT RPAR .)
+    RBRACE          reduce using rule 21 (changes -> changes_aux LPAR IDEN COMMA INT RPAR .)
+    FINDESDE        reduce using rule 21 (changes -> changes_aux LPAR IDEN COMMA INT RPAR .)
 
 
 state 108
@@ -1529,19 +1529,19 @@ state 108
     (18) function -> . changes
     (33) syntax1 -> . ENCASO options1 SINO LBRACE actions RBRACE FINCASO
     (29) syntax2 -> . ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO
-    (21) moves -> . moves_aux LPAR IDEN COMMA INT RPAR
+    (19) moves -> . MOVER LPAR IDEN RPAR
     (20) random -> . ALEATORIO LPAR RPAR
-    (19) changes -> . MOVER LPAR IDEN RPAR
-    (22) moves_aux -> . INC
-    (23) moves_aux -> . DEC
-    (24) moves_aux -> . INI
+    (21) changes -> . changes_aux LPAR IDEN COMMA INT RPAR
+    (22) changes_aux -> . INC
+    (23) changes_aux -> . DEC
+    (24) changes_aux -> . INI
 
     IDEN            shift and go to state 41
     REPITA          shift and go to state 17
     DESDE           shift and go to state 18
     ENCASO          shift and go to state 22
+    MOVER           shift and go to state 23
     ALEATORIO       shift and go to state 24
-    MOVER           shift and go to state 25
     INC             shift and go to state 26
     DEC             shift and go to state 27
     INI             shift and go to state 28
@@ -1558,7 +1558,7 @@ state 108
     moves                          shift and go to state 19
     random                         shift and go to state 20
     changes                        shift and go to state 21
-    moves_aux                      shift and go to state 23
+    changes_aux                    shift and go to state 25
 
 state 109
 
@@ -1597,19 +1597,19 @@ state 111
     (18) function -> . changes
     (33) syntax1 -> . ENCASO options1 SINO LBRACE actions RBRACE FINCASO
     (29) syntax2 -> . ENCASO IDEN options2 SINO LBRACE actions RBRACE FINCASO
-    (21) moves -> . moves_aux LPAR IDEN COMMA INT RPAR
+    (19) moves -> . MOVER LPAR IDEN RPAR
     (20) random -> . ALEATORIO LPAR RPAR
-    (19) changes -> . MOVER LPAR IDEN RPAR
-    (22) moves_aux -> . INC
-    (23) moves_aux -> . DEC
-    (24) moves_aux -> . INI
+    (21) changes -> . changes_aux LPAR IDEN COMMA INT RPAR
+    (22) changes_aux -> . INC
+    (23) changes_aux -> . DEC
+    (24) changes_aux -> . INI
 
     IDEN            shift and go to state 41
     REPITA          shift and go to state 17
     DESDE           shift and go to state 18
     ENCASO          shift and go to state 22
+    MOVER           shift and go to state 23
     ALEATORIO       shift and go to state 24
-    MOVER           shift and go to state 25
     INC             shift and go to state 26
     DEC             shift and go to state 27
     INI             shift and go to state 28
@@ -1626,7 +1626,7 @@ state 111
     moves                          shift and go to state 19
     random                         shift and go to state 20
     changes                        shift and go to state 21
-    moves_aux                      shift and go to state 23
+    changes_aux                    shift and go to state 25
 
 state 112
 

@@ -313,9 +313,9 @@ def p_function(p):
     p[0] = ('function',) + p[1]
 
 
-def p_changes(p):
+def p_moves(p):
     '''
-    changes : MOVER LPAR IDEN RPAR
+    moves : MOVER LPAR IDEN RPAR
     '''
     p[0] = (p[1].strip(), p[3])
 
@@ -327,18 +327,18 @@ def p_random(p):
     p[0] = (p[1].strip(),)
 
 
-def p_moves(p):
+def p_changes(p):
     '''
-    moves : moves_aux LPAR IDEN COMMA INT RPAR
+    changes : changes_aux LPAR IDEN COMMA INT RPAR
     '''
     p[0] = (p[1], p[3], p[5])
 
 
-def p_moves_aux(p):
+def p_changes_aux(p):
     '''
-    moves_aux : INC
-              | DEC
-              | INI
+    changes_aux : INC
+                | DEC
+                | INI
     '''
     p[0] = p[1].strip()
 
@@ -538,9 +538,9 @@ def p_error(p):
 
         stack_state_str = ' '.join([symbol.type for symbol in parser.symstack][1:])
 
-        print('Syntax error in input! Parser State:{} {} . {}'.format(parser.state, stack_state_str, p))
+        #print('Syntax error in input! Parser State:{} {} . {}'.format(parser.state, stack_state_str, p))
 
-        print(error_type)
+        #print(error_type)
         error_message = error_cases(error_type.strip())
 
         if not ("sintaxis" in st) and "expresion" not in st:
@@ -580,7 +580,7 @@ def error_cases(instruccion):
         'IDEN': "\n--> Sintaxis para una Asignación: 'IDEN = <expresión>'. <expresión> puede ser una variable, un número o operaciones entre éstos.",
         'REPITA': "\n--> Sintaxis para un Repeticiones: 'REPITA <acciones> MIENTRAS <comparativo>'.",
         'DESDE': "\n--> Sintaxis para un Desde: 'DESDE <variable> = <expresión> HASTA <expresión> HAGA <acciones> FINDESDE'.",
-        'moves_aux': "\n--> Sintaxis para funciones básicas: '<Inc|Dec|Ini> ( <variable> , <número> )'.",
+        'changes_aux': "\n--> Sintaxis para funciones básicas: '<Inc|Dec|Ini> ( <variable> , <número> )'.",
         'MOVER': "\n--> Sintaxis para la función Mover: 'Mover ( <variable> )'. La variable solo puede ser: AF, F, DFA, IFA, DFB, IFB, A, DAA, IAA, DAB, IAB y AA.",
         'ALEATORIO': "\n--> Sintaxis para la función Aleatorio: 'Aleatorio ( )'.",
         'LLAMAR': "\n--> Sintaxis para la llamar procedimientos: 'LLAMAR <procedimiento> ( <parametros>* )'.",
