@@ -720,9 +720,10 @@ def run(p):
                 else:
                     return first_compared != second_compared
             elif type(first_compared) == str and type(second_compared) == str:
-                return "Both expressions are undeclared!"
+                return "error"
+
             else:
-                return "One expression is undeclared!"
+                return "error"
 
         #   'CASOS'
         elif p[0] == 'caso':
@@ -733,71 +734,79 @@ def run(p):
                 for i in p[1]:
                     x = run(i[0])
                     if type(x) == str:
-                        st += x
                         return
                     elif x == True:
                         exit = True
                         for j in i[1]:
                             run(j)
+                            if error:
+                                break
                         st += " \n--> Acciones del Caso " + str(case) + " bien hechas!"
                     case += 1
-                if exit == False:
+                if exit == False and not error:
                     for k in p[2]:
                         run(k)
-                    st += " \n--> Acciones del SINO bien hechas!"
+                        if error:
+                            break
+                    if not error:
+                        st += " \n--> Acciones del SINO bien hechas!"
             else:
                 st += "\n--> Syntax 2"
                 exit = False
                 case = 1
                 for i in p[2]:
-                    y = (i[0], p[1], i[1])
+                    y = ('comparacion',i[0], p[1], i[1])
                     x = run(y)
-                    #print(y)
-                    #print(x)
                     if type(x) == str:
-                        st += "\n" + x
                         return
                     elif x == True:
                         exit = True
                         for j in i[2]:
                             run(j)
+                            if error:
+                                break
                         break
                     case += 1
-                if exit == True:
+                if exit == True and not error:
                     st += "\n --> Acciones del Caso " + str(case) + " bien hechas!"
                 else:
                     for k in p[3]:
                         run(k)
-                    st += "\n --> Acciones del SINO bien hechas!"
+                        if error:
+                            break
+                    if not error:
+                        st += "\n --> Acciones del SINO bien hechas!"
 
         #   'HACER'
         elif p[0] == 'repetir':
             global flag_stop
-            st += "\n--> Repeticion"
             while True:
                 for i in p[1]:
                     st += " "
                     run(i)
+                    if error:
+                        break
                     time.sleep(0.00001)
                     st = ""
+                if error:
+                    break
                 if (run(p[2]) == False):
-                    st += "\n --> Repeticion finalizada!"
                     break
                 if flag_stop == True:
                     flag_stop = False
                     error = True
-                    st += "\n--> La ejecución fue detenida forzosamente!%\n"
+                    st += "\n--> La ejecución fue detenida forzosamente!\n"
                     break
                 time.sleep(0.01)
 
         #   'HAGA'
         elif p[0] == 'haga':
             if p[1] not in variables:
-                st += "\n--> The variable " + p[1] + " hasn't been declared!"
+                st += "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                      "!\n--> La variable " + p[1] + " no ha sido declarada."
                 error = True
                 return
             else:
-                st += "\n--> Haga esto! "
                 minor = p[2]
                 major = p[3]
                 if minor > major:
@@ -810,9 +819,12 @@ def run(p):
                 while variables[p[1]] <= major:
                     for i in p[4]:
                         run(i)
+                        if error:
+                            break
                         st += " "
+                    if error:
+                        break
                     variables[p[1]] += 1
-                st += "\n --> Terminado"
 
         #   'FUNCIONES'
         elif p[0] == 'function':
@@ -828,7 +840,8 @@ def run(p):
                     st += "\n--> Mover hacia " + p[2] + " = " + str(valid_movements[p[2]]) + "!"
                 else:
                     error = True
-                    st += "\n--> Movimiento " + p[2] + " no válido!"
+                    st += "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                          "!\n--> El movimiento " + p[2] + " no es un movimiento valido.\n--> Movimientos validos: AF, F, DFA, IFA, DFB, IFB, A, DAA, IAA, DAB, IAB y AA."
             else:
                 if p[2] in variables:
                     if p[1] == 'Inc':
@@ -842,18 +855,21 @@ def run(p):
                         st += "\n--> Valor de " + p[2] + " cambiado por " + str(p[3]) + "!"
                 else:
                     error = True
-                    st += "\n--> " + p[2] + " no ha sido declarado!"
+                    st += "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                          "!\n--> La variable " + p[2] + " no ha sido declarada."
 
         #   'LLAMAR'
         elif p[0] == "llamar":
             if p[1] not in procedimientos:
                 error = True
-                st += "\n--> Ese procedimiento no existe"
+                st += "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                      "!\n--> El procedimiento " + p[1] + " no ha sido definido."
             else:
                 n = len(p[2])
                 if len(p[2]) != len(procedimientos[p[1]][0]):
                     error = True
-                    st += "\n--> No se ingreso la cantidad requerida de parametros para el procedimiento."
+                    st += "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                          "!\n--> No se ingreso la cantidad correcta de parametros para ejecutar este procedimiento."
                 else:
                     proc_called = True
                     i = 0
@@ -867,13 +883,18 @@ def run(p):
                     for i in procedimientos[p[1]][2]:
                         lineError = i
                         parser.parse(i.replace("\n", " ").strip())
+                        if error:
+                            break
                     proc_declarations_called = False
                     for i in procedimientos[p[1]][1]:
                         lineError = i
                         parser.parse(i.replace("\n", " ").strip())
+                        if error:
+                            break
                     proc_called = False
                     lvariables.clear()
-                    st += "\n--> Ejecucion de procedimiento finalizada"
+                    if error:
+                        st += "\n--> Ejecucion de procedimiento finalizada"
     else:
         return p
 

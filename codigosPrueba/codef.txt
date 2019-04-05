@@ -1,35 +1,6 @@
 INICIO:
 DCL a DEFAULT 100;
 DCL b;
-DCL i_t ;
-
-ENCASO
-CUANDO a == 50 ENTONS
-    {
-    	ENCASO
-   	CUANDO a == 50 ENTONS
-    	{
-    	b = 0
-    	}
-   	CUANDO a <> 100 ENTONS
-    	{
-    	Ini(b,200)
-    	}
-   	SINO
-    	{
-    	Ini(b,10000)
-    	}
-	FINCASO
-    }
-   CUANDO a < 50 ENTONS
-    {
-    Ini(b,200)
-    }
-   SINO
-    {
-    Ini(b,100)
-    }
-FINCASO;
 DCL c DEFAULT 67;
 DCL itr;
 DESDE itr = 1 HASTA 3 HAGA a = a + b + c FINDESDE;
@@ -74,6 +45,8 @@ Aleatorio();
 Mover(A)
 FINAL;
 FINPROC
+
+
 
 
 

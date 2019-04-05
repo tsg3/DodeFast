@@ -1,34 +1,44 @@
 INICIO:
 
-DCL a DEFAULT ggg;
+DCL a DEFAULT 1;
 DCL b DEFAULT 2;
+
+DCL x DEFAULT 1+1;
+DCL v DEFAULT 2-1;
+DCL n DEFAULT 1*1;
+DCL m DEFAULT 2/1;
+
+m = n;
+
+ENCASO x
+CUANDO < 10 ENTONS
+{ x = 0 }
+SINO
+{ x = 0 }
+FINCASO;
+
+DESDE b = 1 HASTA 5 HAGA x = x + 1 FINDESDE;
+
+REPITA x = x + 2 MIENTRAS x < 20;
+
 LLAMAR proc1(a,b);
-DCL c DEFAULT 3
+
+DCL c DEFAULT 3;
+
+Ini(c,5);
+Inc(c,9);
+Dec(c,3);
+Mover(AA)
 
 FINAL;
 
 PROC proc1(x,y)
-DCL z DEFAULT x;
+DCL z2 DEFAULT x;
+DCL z3 DEFAULT y
 INICIO:
 Aleatorio();
 FINAL;
 FINPROC
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

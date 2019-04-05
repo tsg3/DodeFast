@@ -99,7 +99,7 @@ def color_words():
                 #if (textCommand.get(start_pos+'-1c') in symbols and textCommand.get(end_pos) in symbols) or start_pos == '1.0':
                 if count < 8:
                     textCommand.tag_add("reser1", start_pos, end_pos)
-                elif count < 13:
+                elif count < 14:
                     textCommand.tag_add("reser2", start_pos, end_pos)
                 elif count < 20:
                     textCommand.tag_add("reser3", start_pos, end_pos)
