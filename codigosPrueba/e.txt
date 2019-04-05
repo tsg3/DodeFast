@@ -1,18 +1,12 @@
 INICIO:
 
-DCL a; DCL b; DCL c;
-ENCASOiDCL 67;
- ENCASO 
- CUANDO a < b ENTONS { Ini(a,100) } 
- CUANDO a > b ENTONS { Ini(b,100) } SINO { Ini(a,50); Ini(b,50) } FINCASO
+DCL a DEFAULT 1;
+DCL b DEFAULT 2;
+DCL c;
+
+
 
 FINAL;
-
-
-
-
-
-
 
 
 

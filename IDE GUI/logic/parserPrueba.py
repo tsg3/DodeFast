@@ -32,10 +32,10 @@ tokens = ['INT', 'IDEN', 'EQUALS', 'PLUS', 'MINUS', 'MULTIPLY', 'DIVIDE', 'DCL',
           'DESDE', 'HASTA', 'HAGA', 'INC', 'DEC', 'INI', 'COMMA', 'LPAR', 'RPAR',
           'MOVER', 'ALEATORIO', 'LLAMAR']
 
-color_words = ['PROC', 'INICIO', 'FINAL', 'FINPROC', 'DCL', 'ENCASO', 'FINCASO', 'REPITA', 'MIENTRAS', 'FINDESDE',
-          'DESDE', 'DEFAULT', 'CUANDO', 'ENTONS', 'SINO', 'HASTA', 'HAGA', 'Inc', 'Dec', 'Ini', 'Mover', 'Aleatorio', 'LLAMAR']
+color_words = ['DCL', 'ENCASO', 'FINCASO', 'REPITA', 'MIENTRAS', 'FINDESDE', 'DESDE', 'DEFAULT', 'CUANDO', 'ENTONS',
+               'SINO', 'HASTA', 'HAGA', 'Inc', 'Dec', 'Ini', 'Mover', 'Aleatorio', 'LLAMAR', 'INICIO', 'FINAL', 'PROC', 'FINPROC']
 
-reserved_words = ['DCL','DEFAULT','ENCASO','FINCASO','SINO','ENTONS','CUANDO','REPITA','HASTAENCONTRAR','FINDESDE','DESDE','HASTA','HAGA','Ini','Dec','Inc','Mover','Aleatorio',
+reserved_words = ['DCL','DEFAULT','ENCASO','FINCASO','SINO','ENTONS','CUANDO','REPITA','MIENTRAS','FINDESDE','DESDE','HASTA','HAGA','Ini','Dec','Inc','Mover','Aleatorio',
                   'LLAMAR','PROC','FINPROC','INICIO','FINAL']
 
 t_SAME = r'[\s]*\=\=[\s]*'
@@ -197,7 +197,7 @@ def t_IDEN(t):
     if t.value in reserved_words:
         if t.value == 'DEFAULT':
             t.type = 'ASSIGN'
-        elif t.value == 'HASTAENCONTRAR':
+        elif t.value == 'MIENTRAS':
             t.type = 'MIENTRAS'
         elif t.value == 'Inc':
             t.type = 'INC'
@@ -536,9 +536,9 @@ def p_error(p):
         stack_state_str = ' '.join([symbol.type for symbol in parser.symstack][1:])
 
         print('Syntax error in input! Parser State:{} {} . {}'.format(parser.state, stack_state_str, p))
-        print(parser.symstack[1])
 
-        error_message = error_cases(error_type)
+        print(error_type)
+        error_message = error_cases(error_type.strip())
 
         if not ("sintaxis" in st) and "expresion" not in st:
             st = "\n--> ERROR SINTÁCTICO ~~~ La expresion " + str(
@@ -568,21 +568,32 @@ def p_empty(p):
 
 
 def error_cases(instruccion):
+    if instruccion == 'ENTONS' or instruccion == 'SINO' or instruccion == 'FINCASO':
+        instruccion = 'CUANDO'
+    if instruccion == 'HAGA' or instruccion == 'FINDESDE':
+        instruccion = 'HASTA'
     cases = {
         'DCL': "\n--> Sintaxis para una Declaración: 'DCL <variable>' o 'DCL <variable> DEFAULT <variable|número>'",
         'IDEN': "\n--> Sintaxis para una Asignación: 'IDEN = <expresión>'. <expresión> puede ser una variable, un número o operaciones entre éstos.",
-        'REPITA': "\n--> Sintaxis para un Repita: 'REPITA <acciones> MIENTRAS <comparativo>'.",
+        'REPITA': "\n--> Sintaxis para un Repeticiones: 'REPITA <acciones> MIENTRAS <comparativo>'.",
         'DESDE': "\n--> Sintaxis para un Desde: 'DESDE <variable> = <expresión> HASTA <expresión> HAGA <acciones> FINDESDE'.",
         'moves_aux': "\n--> Sintaxis para funciones básicas: '<Inc|Dec|Ini> ( <variable> , <número> )'.",
         'MOVER': "\n--> Sintaxis para la función Mover: 'Mover ( <variable> )'. La variable solo puede ser: AF, F, DFA, IFA, DFB, IFB, A, DAA, IAA, DAB, IAB y AA.",
         'ALEATORIO': "\n--> Sintaxis para la función Aleatorio: 'Aleatorio ( )'.",
+        'LLAMAR': "\n--> Sintaxis para la llamar procedimientos: 'LLAMAR <procedimiento> ( <parametros>* )'.",
         'ENCASO': "\n--> Sintaxis para Casos:"
                   "\n--> Sintaxis 1 para Casos: 'ENCASO <casos1> SINO { <acciones> } FINCASO'. Los <casos1> son: 'CUANDO <comparativo> ENTONS { <acciones> }'."
                   "\n--> Sintaxis 2 para Casos: 'ENCASO <variable> <casos2> SINO { <acciones> } FINCASO'. Los <casos2> son: 'CUANDO <condición> <expresión> ENTONS { <acciones> }'.",
         'ENCASOCUANDO': "\n--> Sintaxis 1 para Casos: 'ENCASO <casos1> SINO { <acciones> } FINCASO'. Los <casos1> son: 'CUANDO <comparativo> ENTONS { <acciones> }'.",
         'ENCASOIDEN': "\n--> Sintaxis 2 para Casos: 'ENCASO <variable> <casos2> SINO { <acciones> } FINCASO'. Los <casos2> son: 'CUANDO <condición> <expresión> ENTONS { <acciones> }'.",
 
-        'ASSIGN': "\n--> Declaraciones: 'DCL <variable> DEFAULT <variable|número>'."
+        'ASSIGN': "\n--> Declaraciones: 'DCL <variable> DEFAULT <variable|número>'.",
+        'CUANDO': "\n--> Casos:"
+                  "\n--> Sintaxis 1 para Casos: 'ENCASO <casos1> SINO { <acciones> } FINCASO'. Los <casos1> son: 'CUANDO <comparativo> ENTONS { <acciones> }'."
+                  "\n--> Sintaxis 2 para Casos: 'ENCASO <variable> <casos2> SINO { <acciones> } FINCASO'. Los <casos2> son: 'CUANDO <condición> <expresión> ENTONS { <acciones> }'.",
+        'MIENTRAS': "\n--> Repeticiones: 'REPITA <acciones> MIENTRAS <comparativo>'.",
+        'HASTA': "\n--> Desde: 'DESDE <variable> = <expresión> HASTA <expresión> HAGA <acciones> FINDESDE'."
+
     }
     func = cases.get(instruccion, "\n--> Nada")
     return func
@@ -608,7 +619,7 @@ def run(p):
     if type(p) == tuple:
 
         if p[0] != 'DCL' and p[0] != 'var' and proc_declarations_called == True:
-            print(p[0])
+            #print(p[0])
             error = True
             st += "\n--> No se pueden realizar instrucciones esa instruccion"
             return
@@ -680,7 +691,7 @@ def run(p):
                     assignment = run(p[2])
                     if type(assignment) == str:
                         error = True
-                        print(variables)
+                        #print(variables)
                         st += "\n--> You put a non-valid default value" + "!"
                     else:
                         variables[p[1]] = assignment
@@ -736,8 +747,8 @@ def run(p):
                 for i in p[2]:
                     y = (i[0], p[1], i[1])
                     x = run(y)
-                    print(y)
-                    print(x)
+                    #print(y)
+                    #print(x)
                     if type(x) == str:
                         st += "\n" + x
                         return
@@ -955,8 +966,8 @@ def get_proc(code):
         if code.count("PROC") == 0:
             return {}
         elif code.count("PROC") != 2 * code.count("FINPROC"):
-            print("ENTRO 1")
-            print("Proc: " + str(code.count("PROC")) + " Finproc " + str(code.count("FINPROC")))
+            #print("ENTRO 1")
+            #print("Proc: " + str(code.count("PROC")) + " Finproc " + str(code.count("FINPROC")))
             return "error"
         else:
             procs = {}
@@ -971,7 +982,7 @@ def get_proc(code):
                     count2 = proc.find(")")
                     if count1 != -1 and count2 != -1:
                         proc_name = proc[4:count1].strip().replace("\n", " ")
-                        print(proc_name)
+                        #print(proc_name)
                         if len(proc_name) != 0:
                             count4 = count2
                             params = proc[count1 + 1:count2].split(",")
@@ -987,12 +998,12 @@ def get_proc(code):
                                 while 0 < len(params[counter2:]):
                                     if params[counter1] == params[counter2:][0]:
                                         repetidos = True
-                                        print(params[counter1])
-                                        print(params[counter2:][0])
+                                        #print(params[counter1])
+                                        #print(params[counter2:][0])
                                         break
                                     counter2 += 1
                                 counter1 += 1
-                            print(repetidos)
+                            #print(repetidos)
                             if repetidos == True:
                                 return "error"
 
@@ -1002,28 +1013,28 @@ def get_proc(code):
                                 declarations = proc[count4 + 1:count1].split(";")
                                 proc_code = get_code(proc[count1:], True)
                                 if proc_code != "error":
-                                    print(proc_code)
+                                    #print(proc_code)
                                     proc_code = separate_code(proc_code)
                                     values = (tuple(params), proc_code, list(filter(None, declarations)))
                                     procs[proc_name] = values
                                     code = code[count3 + 7:]
                                 else:
-                                    print("ENTRO 2")
+                                    #print("ENTRO 2")
 
                                     return "error"
                             else:
-                                print("ENTRO 3")
+                                #print("ENTRO 3")
 
                                 return "error"
                         else:
-                            print("ENTRO 4")
+                            #print("ENTRO 4")
 
                             return "error name"
                     else:
-                        print("ENTRO 5")
+                        #print("ENTRO 5")
 
                         return "error"
-            print(procs)
+            #print(procs)
             return procs
 
 
@@ -1050,7 +1061,7 @@ def get_line_error():
     global proc_called
     line_number = conteo_previo("INICIO")
     for i in codigo:
-        print("Se evalua: " + i + " con " + lineError)
+        #print("Se evalua: " + i + " con " + lineError)
         for j in range(len(i)):
             if lineError == i and not proc_called:
                 while i[j] == "\n":
@@ -1063,7 +1074,7 @@ def get_line_error():
     for i in procedimientos:
         line_number = conteo_previo("PROC " + i)
         for j in procedimientos[i][2]:
-            print("Se evalua: " + j + " con " + lineError)
+            #print("Se evalua: " + j + " con " + lineError)
             for k in range(len(j)):
                 if lineError == j:
                     while j[k] == "\n":
@@ -1073,7 +1084,7 @@ def get_line_error():
                 if j[k] == "\n":
                     line_number += 1
         for j in procedimientos[i][1]:
-            print("Se evalua: " + j + " con " + lineError)
+            #print("Se evalua: " + j + " con " + lineError)
             for k in range(len(j)):
                 if lineError == j:
                     while j[k] == "\n":
@@ -1102,7 +1113,7 @@ def runParser(code):
     global lineError
     prevCode = code
     codigo = get_code(code, False)
-    print("PRUEBA DE SALTOS " + str(codigo))
+    #print("PRUEBA DE SALTOS " + str(codigo))
     error = False
     if codigo == "error":
         error = True
@@ -1122,13 +1133,13 @@ def runParser(code):
 
     for i in codigo:
         time.sleep(0.05)
-        print(i)
+        #print(i)
         lineError = i
         result = parse_code(i.replace("\n", " "))
         if len(result[0]) > 0:
             st += result[0]
         if result[1]:
-            print("ANTES DEL ERROR " + st)
+            #print("ANTES DEL ERROR " + st)
             st = "\n--> Ejecucion finalizada debido a:" + st + "☻"
             break
         time.sleep(0.00001)

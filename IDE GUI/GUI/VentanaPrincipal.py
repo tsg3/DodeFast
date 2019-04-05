@@ -97,10 +97,16 @@ def color_words():
             if start_pos:
                 end_pos = textCommand.index('{}+{}c'.format(start_pos, (len(i))))
                 #if (textCommand.get(start_pos+'-1c') in symbols and textCommand.get(end_pos) in symbols) or start_pos == '1.0':
-                if count < 12:
+                if count < 8:
                     textCommand.tag_add("reser1", start_pos, end_pos)
-                else:
+                elif count < 13:
                     textCommand.tag_add("reser2", start_pos, end_pos)
+                elif count < 20:
+                    textCommand.tag_add("reser3", start_pos, end_pos)
+                elif count < 22:
+                    textCommand.tag_add("reser4", start_pos, end_pos)
+                else:
+                    textCommand.tag_add("reser5", start_pos, end_pos)
                 start_pos = end_pos
             else:
                 break
@@ -109,6 +115,9 @@ def color_words():
 def enter(event):
     textCommand.tag_remove('reser1', '1.0', END)
     textCommand.tag_remove('reser2', '1.0', END)
+    textCommand.tag_remove('reser3', '1.0', END)
+    textCommand.tag_remove('reser4', '1.0', END)
+    textCommand.tag_remove('reser5', '1.0', END)
     textCommand.tag_remove('line_error', '1.0', END)
     color_words()
 
@@ -298,6 +307,9 @@ root.bind("<Return>", enter)
 
 textCommand.tag_config("reser1", foreground="#003a63", font='Courier 9 bold')
 textCommand.tag_config("reser2", foreground="#1a8c5c", font='Courier 9')
+textCommand.tag_config("reser3", foreground="#e08dc4", font='Courier 9 bold')
+textCommand.tag_config("reser4", foreground="#990652", font='Courier 9 bold')
+textCommand.tag_config("reser5", foreground="#ef962f", font='Courier 9 bold')
 textCommand.tag_config("line_error", background="#f74b45")
 
 mainloop()
