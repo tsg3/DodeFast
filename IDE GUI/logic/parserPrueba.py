@@ -542,7 +542,6 @@ def p_error(p):
 
         #print(error_type)
         error_message = error_cases(error_type.strip())
-
         if not ("sintaxis" in st) and "expresion" not in st:
             st = "\n--> ERROR SINTÁCTICO ~~~ La expresion " + str(
                 p.value) + " causa un error de sintaxis en la linea " + str(get_line_error()) + ":" + error_message
@@ -601,7 +600,6 @@ def error_cases(instruccion):
     func = cases.get(instruccion, "\n--> Nada")
     return func
 
-
 parser = yacc.yacc()
 
 ''' ------------------------------ ANALISIS SEMANTICO ------------------------------ '''
@@ -624,7 +622,7 @@ def run(p):
 
         if p[0] != 'DCL' and p[0] != 'var' and proc_declarations_called == True:
             error = True
-            st = "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) +\
+            st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) +\
                   "!\n--> No se puede ejecutar sentencias que no sean declaraciones en esa sección de un procedimiento."
             return
 
@@ -664,7 +662,7 @@ def run(p):
         elif p[0] == '=':
             if p[1][1] not in variables:
                 error = True
-                st = "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
                       "!\n--> Se esta asignando un valor a la variable " + p[1][1] + " cuando esta no ha sido declarada."
             else:
                 x = run(p[2])
@@ -678,7 +676,7 @@ def run(p):
         elif p[0] == 'var':
             if p[1] not in variables:
                 error = True
-                st = "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) +\
+                st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) +\
                   "!\n--> La variable " + p[1] + " no ha sido declarada."
                 return ""
             else:
@@ -688,11 +686,12 @@ def run(p):
         elif p[0] == 'DCL':
             if proc_called == True and proc_declarations_called == False:
                 error = True
-                st = "\n--> No se pueden declarar variables en la ejecucion de un procedimiento"
+                st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                     "!\n--> No se puede declarar variables en la ejecucion de un procedimiento."
             else:
                 if p[1] in variables:
                     error = True
-                    st = "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                    st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
                           "!\n--> La variable " + p[1] + " ya ha sido declarada."
                 else:
                     assignment = run(p[2])
@@ -802,7 +801,7 @@ def run(p):
         #   'HAGA'
         elif p[0] == 'haga':
             if p[1] not in variables:
-                st = "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
                       "!\n--> La variable " + p[1] + " no ha sido declarada."
                 error = True
                 return
@@ -840,7 +839,7 @@ def run(p):
                     st += "\n--> Mover hacia " + p[2] + " = " + str(valid_movements[p[2]]) + "!"
                 else:
                     error = True
-                    st = "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                    st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
                           "!\n--> El movimiento " + p[2] + " no es un movimiento valido.\n--> Movimientos validos: AF, F, DFA, IFA, DFB, IFB, A, DAA, IAA, DAB, IAB y AA."
             else:
                 if p[2] in variables:
@@ -855,20 +854,20 @@ def run(p):
                         st += "\n--> Valor de " + p[2] + " cambiado por " + str(p[3]) + "!"
                 else:
                     error = True
-                    st = "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                    st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
                           "!\n--> La variable " + p[2] + " no ha sido declarada."
 
         #   'LLAMAR'
         elif p[0] == "llamar":
             if p[1] not in procedimientos:
                 error = True
-                st = "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
                       "!\n--> El procedimiento " + p[1] + " no ha sido definido."
             else:
                 n = len(p[2])
                 if len(p[2]) != len(procedimientos[p[1]][0]):
                     error = True
-                    st = "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                    st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
                           "!\n--> No se ingreso la cantidad correcta de parametros para ejecutar este procedimiento."
                 else:
                     proc_called = True
@@ -991,6 +990,7 @@ def separate_code(code):
 
 
 def get_proc(code):
+    global st
     if len(code) == 0:
         return {}
     else:
@@ -1059,7 +1059,6 @@ def get_proc(code):
                                 return "error"
                         else:
                             #print("ENTRO 4")
-
                             return "error name"
                     else:
                         #print("ENTRO 5")
@@ -1150,13 +1149,13 @@ def runParser(code):
     error = False
     if codigo == "error":
         error = True
-        st = "\n--> Ejecucion finalizada debido a:\n--> Error INICIO-FINAL☻"
+        st = "\n--> ERROR SINTÁCTICO ~~~ Error INICIO-FINAL☻"
         flag_runnig = False
         return
     procs = get_proc(code)
     if type(procs) == str:
         error = True
-        st = "\n--> Ejecucion finalizada debido a:\n--> Error PROCS☻"
+        st = "\n--> ERROR SINTÁCTICO ~~~ Error PROCS☻"
         flag_runnig = False
         return
     procedimientos = procs
