@@ -1,12 +1,30 @@
 INICIO:
 
-DCL a DEFAULT 1;
+DCL a DEFAULT ggg;
 DCL b DEFAULT 2;
-DCL c;
-
-
+LLAMAR proc1(a,b);
+DCL c DEFAULT 3
 
 FINAL;
+
+PROC proc1(x,y)
+DCL z DEFAULT x;
+INICIO:
+Aleatorio();
+FINAL;
+FINPROC
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

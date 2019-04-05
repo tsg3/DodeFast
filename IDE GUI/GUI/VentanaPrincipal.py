@@ -136,7 +136,12 @@ def printTerminal(code, delete):
     textTerminal.config(state=NORMAL)
     error_line = code.find("en la linea")
     if error_line != -1:
-        textCommand.tag_add("line_error",code[error_line+12]+'.0',code[error_line+12]+'.end')
+        count = error_line + 12
+        len_line = ''
+        while code[count].isdigit():
+            len_line += code[count]
+            count += 1
+        textCommand.tag_add("line_error",len_line+'.0',len_line+'.end')
     if delete:
         textTerminal.delete('1.0', END)
         textTerminal.insert(END, titleMessage + code.replace("☺", "").replace("☻", "") + "\n")

@@ -26,6 +26,8 @@ valid_movements = {'AF': 1, 'F': 2, 'DFA': 3, 'IFA': 4,
                    'DFB': 5, 'IFB': 6, 'A': 7, 'DAA': 8,
                    'IAA': 9, 'DAB': 10, 'IAB': 11, 'AA': 12}
 
+''' ------------------------------ ANALISIS LEXICO ------------------------------ '''
+
 tokens = ['INT', 'IDEN', 'EQUALS', 'PLUS', 'MINUS', 'MULTIPLY', 'DIVIDE', 'DCL', 'ASSIGN', 'SAME', 'LESS', 'MORE',
           'NON_EQUAL', 'LESS_EQUAL', 'MORE_EQUAL', 'ENCASO',
           'CUANDO', 'ENTONS', 'SINO', 'FINCASO', 'SEPARATOR', 'LBRACE', 'RBRACE', 'REPITA', 'MIENTRAS', 'FINDESDE',
@@ -243,6 +245,7 @@ precedence = (
     ('left', 'MULTIPLY', 'DIVIDE')
 )
 
+''' ------------------------------ ANALISIS SINTACTICO ------------------------------ '''
 
 def p_parse(p):
     '''
@@ -601,6 +604,7 @@ def error_cases(instruccion):
 
 parser = yacc.yacc()
 
+''' ------------------------------ ANALISIS SEMANTICO ------------------------------ '''
 
 def run(p):
     global st
@@ -619,9 +623,9 @@ def run(p):
     if type(p) == tuple:
 
         if p[0] != 'DCL' and p[0] != 'var' and proc_declarations_called == True:
-            #print(p[0])
             error = True
-            st += "\n--> No se pueden realizar instrucciones esa instruccion"
+            st += "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) +\
+                  "!\n--> No se puede ejecutar sentencias que no sean declaraciones en esa sección de un procedimiento."
             return
 
         #   SUMA
@@ -660,7 +664,8 @@ def run(p):
         elif p[0] == '=':
             if p[1][1] not in variables:
                 error = True
-                st += "\n--> You tried to assign a value to an undeclared variable!"
+                st += "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                      "!\n--> Se esta asignando un valor a la variable " + p[1][1] + " cuando esta no ha sido declarada."
             else:
                 x = run(p[2])
                 try:
@@ -668,13 +673,14 @@ def run(p):
                     st += '\n--> ' + p[1][1] + ' = ' + str(x)
                 except TypeError:
                     error = True
-                    st += "\n" + x
 
         #   VARIABLE
         elif p[0] == 'var':
             if p[1] not in variables:
                 error = True
-                return "--> Undeclared variable found!"
+                st += "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) +\
+                  "!\n--> La variable " + p[1] + " no ha sido declarada."
+                return ""
             else:
                 return variables[p[1]]
 
@@ -682,20 +688,19 @@ def run(p):
         elif p[0] == 'DCL':
             if proc_called == True and proc_declarations_called == False:
                 error = True
-                st += "\n--> No se pueden declara variables en la ejecucion de un procedimiento"
+                st += "\n--> No se pueden declarar variables en la ejecucion de un procedimiento"
             else:
                 if p[1] in variables:
                     error = True
-                    st += "\n--> You've already declared the variable " + p[1] + " !"
+                    st += "\n--> ERROR SEMANTICO: Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                          "!\n--> La variable " + p[1] + " ya ha sido declarada."
                 else:
                     assignment = run(p[2])
-                    if type(assignment) == str:
+                    if not assignment:
                         error = True
-                        #print(variables)
-                        st += "\n--> You put a non-valid default value" + "!"
                     else:
                         variables[p[1]] = assignment
-                        st += '\n--> New variable: ' + p[1] + ' = ' + str(run(p[2]))
+                        st += '\n--> Nueva variable: ' + p[1] + ' = ' + str(run(p[2]))
 
         #   Comparaciones
         elif p[0] == 'comparacion':
@@ -853,7 +858,10 @@ def run(p):
                     proc_called = True
                     i = 0
                     while i < n:
-                        lvariables[procedimientos[p[1]][0][i]] = p[2][i]
+                        value = p[2][i]
+                        if type(p[2][i]) == tuple:
+                            value = gvariables[p[2][i][1]]
+                        lvariables[procedimientos[p[1]][0][i]] = value
                         i += 1
                     proc_declarations_called = True
                     for i in procedimientos[p[1]][2]:
@@ -869,6 +877,7 @@ def run(p):
     else:
         return p
 
+''' ------------------------------ PARSEO ------------------------------ '''
 
 def parse_code(code):
     code = code.strip()
@@ -883,6 +892,7 @@ def parse_code(code):
     line += 1
     return final_st, error_Found
 
+''' ------------------------------ PARSEO DE ESTRUCTURAS EXTERNAS ------------------------------ '''
 
 def separate_code(code):
     openbrace = 0
@@ -1053,6 +1063,7 @@ def get_code(code, is_proc):
     else:
         return "error"
 
+''' ------------------------------ ERRORES ------------------------------ '''
 
 def get_line_error():
     global procedimientos
@@ -1101,6 +1112,7 @@ def conteo_previo(to_evaluate):
             line_number += 1
     return line_number
 
+''' ------------------------------ "CORRER" ------------------------------ '''
 
 def runParser(code):
     global procedimientos
