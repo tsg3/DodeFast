@@ -35,10 +35,12 @@ tokens = ['INT', 'IDEN', 'EQUALS', 'PLUS', 'MINUS', 'MULTIPLY', 'DIVIDE', 'DCL',
           'MOVER', 'ALEATORIO', 'LLAMAR']
 
 color_words = ['DCL', 'ENCASO', 'FINCASO', 'REPITA', 'MIENTRAS', 'FINDESDE', 'DESDE', 'DEFAULT', 'CUANDO', 'ENTONS',
-               'SINO', 'HASTA', 'HAGA', 'Inc', 'Dec', 'Ini', 'Mover', 'Aleatorio', 'LLAMAR', 'INICIO', 'FINAL', 'PROC', 'FINPROC']
+               'SINO', 'HASTA', 'HAGA', 'Inc', 'Dec', 'Ini', 'Mover', 'Aleatorio', 'LLAMAR', 'INICIO', 'FINAL', 'PROC',
+               'FINPROC']
 
-reserved_words = ['DCL','DEFAULT','ENCASO','FINCASO','SINO','ENTONS','CUANDO','REPITA','MIENTRAS','FINDESDE','DESDE','HASTA','HAGA','Ini','Dec','Inc','Mover','Aleatorio',
-                  'LLAMAR','PROC','FINPROC','INICIO','FINAL']
+reserved_words = ['DCL', 'DEFAULT', 'ENCASO', 'FINCASO', 'SINO', 'ENTONS', 'CUANDO', 'REPITA', 'MIENTRAS', 'FINDESDE',
+                  'DESDE', 'HASTA', 'HAGA', 'Ini', 'Dec', 'Inc', 'Mover', 'Aleatorio',
+                  'LLAMAR', 'PROC', 'FINPROC', 'INICIO', 'FINAL']
 
 t_SAME = r'[\s]*\=\=[\s]*'
 t_LESS = r'[\s]*\<[\s]*'
@@ -233,7 +235,8 @@ def t_error(t):
     global error
     global st
     error = True
-    st = "\n--> ERROR LÉXICO ~~~ Se encontraron una expresion no válida: " + t.value + " , en la linea " + str(get_line_error()) + "!"
+    st = "\n--> ERROR LÉXICO ~~~ Se encontraron una expresion no válida: " + t.value + " , en la linea " + str(
+        get_line_error()) + "!"
     while t.lexer.lexpos < t.lexer.lexlen:
         t.lexer.skip(1)
 
@@ -247,6 +250,7 @@ precedence = (
 
 ''' ------------------------------ ANALISIS SINTACTICO ------------------------------ '''
 
+
 def p_parse(p):
     '''
     parse : comparative
@@ -256,7 +260,7 @@ def p_parse(p):
           | IDEN
           | empty
     '''
-    #print(p[1])
+    # print(p[1])
     global error
     global st
     if error or type(p[1]) == str:
@@ -528,7 +532,7 @@ def p_error(p):
     global line
     error = True
 
-    #TESTEO
+    # TESTEO
     try:
         error_type = parser.symstack[1].type
 
@@ -538,9 +542,9 @@ def p_error(p):
 
         stack_state_str = ' '.join([symbol.type for symbol in parser.symstack][1:])
 
-        #print('Syntax error in input! Parser State:{} {} . {}'.format(parser.state, stack_state_str, p))
+        # print('Syntax error in input! Parser State:{} {} . {}'.format(parser.state, stack_state_str, p))
 
-        #print(error_type)
+        # print(error_type)
         error_message = error_cases(error_type.strip())
         if not ("sintaxis" in st) and "expresion" not in st:
             st = "\n--> ERROR SINTÁCTICO ~~~ La expresion " + str(
@@ -548,9 +552,11 @@ def p_error(p):
             return
     except IndexError:
         if not ("sintaxis" in st) and "expresion" not in st:
-            st = "\n--> ERROR SINTÁCTICO ~~~ La expresion " + str(p.value)\
-                 + " en la linea " + str(get_line_error()) + " no se encuentra al inicio de ninguna estructura válida!\n--> " \
-                                                             "Estructuras válidas que incluyen " + str(p.value) + ":" + error_cases(p.type.strip())
+            st = "\n--> ERROR SINTÁCTICO ~~~ La expresion " + str(p.value) \
+                 + " en la linea " + str(
+                get_line_error()) + " no se encuentra al inicio de ninguna estructura válida!\n--> " \
+                                    "Estructuras válidas que incluyen " + str(p.value) + ":" + error_cases(
+                p.type.strip())
     return
 
 
@@ -600,9 +606,11 @@ def error_cases(instruccion):
     func = cases.get(instruccion, "\n--> Nada")
     return func
 
+
 parser = yacc.yacc()
 
 ''' ------------------------------ ANALISIS SEMANTICO ------------------------------ '''
+
 
 def run(p):
     global st
@@ -622,8 +630,8 @@ def run(p):
 
         if p[0] != 'DCL' and p[0] != 'var' and proc_declarations_called == True:
             error = True
-            st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) +\
-                  "!\n--> No se puede ejecutar sentencias que no sean declaraciones en esa sección de un procedimiento."
+            st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                 "!\n--> No se puede ejecutar sentencias que no sean declaraciones en esa sección de un procedimiento."
             return
 
         #   SUMA
@@ -663,7 +671,7 @@ def run(p):
             if p[1][1] not in variables:
                 error = True
                 st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
-                      "!\n--> Se esta asignando un valor a la variable " + p[1][1] + " cuando esta no ha sido declarada."
+                     "!\n--> Se esta asignando un valor a la variable " + p[1][1] + " cuando esta no ha sido declarada."
             else:
                 x = run(p[2])
                 try:
@@ -676,8 +684,8 @@ def run(p):
         elif p[0] == 'var':
             if p[1] not in variables:
                 error = True
-                st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) +\
-                  "!\n--> La variable " + p[1] + " no ha sido declarada."
+                st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
+                     "!\n--> La variable " + p[1] + " no ha sido declarada."
                 return ""
             else:
                 return variables[p[1]]
@@ -692,7 +700,7 @@ def run(p):
                 if p[1] in variables:
                     error = True
                     st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
-                          "!\n--> La variable " + p[1] + " ya ha sido declarada."
+                         "!\n--> La variable " + p[1] + " ya ha sido declarada."
                 else:
                     assignment = run(p[2])
                     if not assignment:
@@ -753,7 +761,7 @@ def run(p):
                 exit = False
                 case = 1
                 for i in p[2]:
-                    y = ('comparacion',i[0], p[1], i[1])
+                    y = ('comparacion', i[0], p[1], i[1])
                     x = run(y)
                     if type(x) == str:
                         return
@@ -802,7 +810,7 @@ def run(p):
         elif p[0] == 'haga':
             if p[1] not in variables:
                 st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
-                      "!\n--> La variable " + p[1] + " no ha sido declarada."
+                     "!\n--> La variable " + p[1] + " no ha sido declarada."
                 error = True
                 return
             else:
@@ -840,7 +848,8 @@ def run(p):
                 else:
                     error = True
                     st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
-                          "!\n--> El movimiento " + p[2] + " no es un movimiento valido.\n--> Movimientos validos: AF, F, DFA, IFA, DFB, IFB, A, DAA, IAA, DAB, IAB y AA."
+                         "!\n--> El movimiento " + p[
+                             2] + " no es un movimiento valido.\n--> Movimientos validos: AF, F, DFA, IFA, DFB, IFB, A, DAA, IAA, DAB, IAB y AA."
             else:
                 if p[2] in variables:
                     if p[1] == 'Inc':
@@ -855,20 +864,20 @@ def run(p):
                 else:
                     error = True
                     st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
-                          "!\n--> La variable " + p[2] + " no ha sido declarada."
+                         "!\n--> La variable " + p[2] + " no ha sido declarada."
 
         #   'LLAMAR'
         elif p[0] == "llamar":
             if p[1] not in procedimientos:
                 error = True
                 st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
-                      "!\n--> El procedimiento " + p[1] + " no ha sido definido."
+                     "!\n--> El procedimiento " + p[1] + " no ha sido definido."
             else:
                 n = len(p[2])
                 if len(p[2]) != len(procedimientos[p[1]][0]):
                     error = True
                     st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
-                          "!\n--> No se ingreso la cantidad correcta de parametros para ejecutar este procedimiento."
+                         "!\n--> No se ingreso la cantidad correcta de parametros para ejecutar este procedimiento."
                 else:
                     proc_called = True
                     i = 0
@@ -897,7 +906,9 @@ def run(p):
     else:
         return p
 
+
 ''' ------------------------------ PARSEO ------------------------------ '''
+
 
 def parse_code(code):
     code = code.strip()
@@ -912,7 +923,9 @@ def parse_code(code):
     line += 1
     return final_st, error_Found
 
+
 ''' ------------------------------ PARSEO DE ESTRUCTURAS EXTERNAS ------------------------------ '''
+
 
 def separate_code(code):
     openbrace = 0
@@ -997,8 +1010,7 @@ def get_proc(code):
         if code.count("PROC") == 0:
             return {}
         elif code.count("PROC") != 2 * code.count("FINPROC"):
-            #print("ENTRO 1")
-            #print("Proc: " + str(code.count("PROC")) + " Finproc " + str(code.count("FINPROC")))
+            st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ Toda sentencia PROC debe ser encapsulado entre PROC - FINPROC☻"
             return "error"
         else:
             procs = {}
@@ -1013,7 +1025,6 @@ def get_proc(code):
                     count2 = proc.find(")")
                     if count1 != -1 and count2 != -1:
                         proc_name = proc[4:count1].strip().replace("\n", " ")
-                        #print(proc_name)
                         if len(proc_name) != 0:
                             count4 = count2
                             params = proc[count1 + 1:count2].split(",")
@@ -1021,7 +1032,6 @@ def get_proc(code):
                             while strip < len(params):
                                 params[strip] = params[strip].replace("\n", " ").strip()
                                 strip += 1
-
                             repetidos = False
                             counter1 = 0
                             while counter1 < len(params):
@@ -1029,13 +1039,11 @@ def get_proc(code):
                                 while 0 < len(params[counter2:]):
                                     if params[counter1] == params[counter2:][0]:
                                         repetidos = True
-                                        #print(params[counter1])
-                                        #print(params[counter2:][0])
                                         break
                                     counter2 += 1
                                 counter1 += 1
-                            #print(repetidos)
                             if repetidos == True:
+                                st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ Parámetros repetidos en PROC "+proc_name+"☻"
                                 return "error"
 
                             count1 = proc.find("INICIO")
@@ -1044,46 +1052,46 @@ def get_proc(code):
                                 declarations = proc[count4 + 1:count1].split(";")
                                 proc_code = get_code(proc[count1:], True)
                                 if proc_code != "error":
-                                    #print(proc_code)
                                     proc_code = separate_code(proc_code)
                                     values = (tuple(params), proc_code, list(filter(None, declarations)))
                                     procs[proc_name] = values
                                     code = code[count3 + 7:]
                                 else:
-                                    #print("ENTRO 2")
-
                                     return "error"
                             else:
-                                #print("ENTRO 3")
-
+                                st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ Error en PROC "+proc_name+" Estructura INICIO-FINAL incompleta☻"
                                 return "error"
                         else:
-                            #print("ENTRO 4")
+                            st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ Procedimiento sin nombre la estructura es: PROC <nombre>(<parametros>) FINPROC☻"
                             return "error name"
                     else:
-                        #print("ENTRO 5")
-
+                        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ Los parámetros del procedimiento deben encasillarse entre '( )'☻"
                         return "error"
-            #print(procs)
             return procs
 
 
 def get_code(code, is_proc):
+    global st
     if code.replace("\n", " ").count("INICIO") == code.count("FINAL"):
         if code.index('INICIO:') < code.index('FINAL;'):
             count1 = code.index("INICIO")
             blanco = code[:count1].replace("\n", " ").split()
             if len(blanco) != 0 and not is_proc:
+                st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ Previo a INICIO del programa no debe existir código☻"
                 return "error"
             count2 = code.index("FINAL;")
             tr = code[(count1 + 7):count2]
             return tr
         else:
+            st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ El programa debe encasillarse entre INICIO - FINAL en ese orden☻"
             return "error"
     else:
+        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ Sentencia INICIO - FINAL incompleta☻"
         return "error"
 
+
 ''' ------------------------------ ERRORES ------------------------------ '''
+
 
 def get_line_error():
     global procedimientos
@@ -1092,11 +1100,10 @@ def get_line_error():
     global proc_called
     line_number = conteo_previo("INICIO")
     for i in codigo:
-        #print("Se evalua: " + i + " con " + lineError)
+        # print("Se evalua: " + i + " con " + lineError)
         for j in range(len(i)):
             if lineError == i and not proc_called:
                 while i[j] == "\n":
-                    # if i[j] == "\n":
                     line_number += 1
                     j += 1
                 return line_number
@@ -1105,7 +1112,7 @@ def get_line_error():
     for i in procedimientos:
         line_number = conteo_previo("PROC " + i)
         for j in procedimientos[i][2]:
-            #print("Se evalua: " + j + " con " + lineError)
+            # print("Se evalua: " + j + " con " + lineError)
             for k in range(len(j)):
                 if lineError == j:
                     while j[k] == "\n":
@@ -1115,7 +1122,7 @@ def get_line_error():
                 if j[k] == "\n":
                     line_number += 1
         for j in procedimientos[i][1]:
-            #print("Se evalua: " + j + " con " + lineError)
+            # print("Se evalua: " + j + " con " + lineError)
             for k in range(len(j)):
                 if lineError == j:
                     while j[k] == "\n":
@@ -1125,6 +1132,7 @@ def get_line_error():
                 if j[k] == "\n":
                     line_number += 1
 
+
 def conteo_previo(to_evaluate):
     line_number = 1
     for i in range(len(prevCode[:prevCode.find(to_evaluate)])):
@@ -1132,7 +1140,9 @@ def conteo_previo(to_evaluate):
             line_number += 1
     return line_number
 
+
 ''' ------------------------------ "CORRER" ------------------------------ '''
+
 
 def runParser(code):
     global procedimientos
@@ -1145,17 +1155,14 @@ def runParser(code):
     global lineError
     prevCode = code
     codigo = get_code(code, False)
-    #print("PRUEBA DE SALTOS " + str(codigo))
     error = False
     if codigo == "error":
         error = True
-        st = "\n--> ERROR SINTÁCTICO ~~~ Error INICIO-FINAL☻"
         flag_runnig = False
         return
     procs = get_proc(code)
     if type(procs) == str:
         error = True
-        st = "\n--> ERROR SINTÁCTICO ~~~ Error PROCS☻"
         flag_runnig = False
         return
     procedimientos = procs
@@ -1165,13 +1172,11 @@ def runParser(code):
 
     for i in codigo:
         time.sleep(0.05)
-        #print(i)
         lineError = i
         result = parse_code(i.replace("\n", " "))
         if len(result[0]) > 0:
             st += result[0]
         if result[1]:
-            #print("ANTES DEL ERROR " + st)
             if 'ejecución' not in st:
                 st = "\n--> Ejecucion finalizada debido a:" + st + "☻"
             break
@@ -1181,7 +1186,5 @@ def runParser(code):
     time.sleep(0.05)
     if st == "":
         st = "\n--> Ejecucion finalizada☺"
-    # else:
-    #    st = "\n--> Ejecucion finalizada debido a:" + st + "&"
     time.sleep(0.00001)
     flag_runnig = False

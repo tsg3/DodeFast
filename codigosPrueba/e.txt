@@ -1,5 +1,5 @@
 INICIO:
-
+DCL t DEFAULT 4;
 DCL a DEFAULT 1;
 DCL b DEFAULT 2;
 
@@ -38,7 +38,7 @@ Mover(AA)
 
 FINAL;
 
-PROC proc1(x,y)
+PROC proc1 (x, y)
 DCL z2 DEFAULT x;
 DCL z3 DEFAULT y
 INICIO:
