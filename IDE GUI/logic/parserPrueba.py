@@ -1150,13 +1150,13 @@ def runParser(code):
     error = False
     if codigo == "error":
         error = True
-        st += "\nError INICIO-FINAL"
+        st = "\n--> Ejecucion finalizada debido a:\n--> Error INICIO-FINAL☻"
         flag_runnig = False
         return
     procs = get_proc(code)
     if type(procs) == str:
         error = True
-        st += "Error PROCS"
+        st = "\n--> Ejecucion finalizada debido a:\n--> Error PROCS☻"
         flag_runnig = False
         return
     procedimientos = procs
