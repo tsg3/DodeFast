@@ -79,7 +79,7 @@ def add_code(url):
         textCommand.config(state=NORMAL)
         textCommand.delete('1.0', END)
         textCommand.insert(END, code)
-        textCommand.delete(textCommand.index("end"))
+        textCommand.delete(END+'-1c',END)
 
         color_words()
 
@@ -151,8 +151,7 @@ def printTerminal(code, delete):
         textTerminal.config(state=DISABLED)
     if code != "":
         if code[-1] == "☻":
-            textTerminal.tag_add("code", str(int(textTerminal.index("end").split(".")[0]) - 4) + ".0",
-                                 textTerminal.index("end"))
+            textTerminal.tag_add("code", textTerminal.search("Ejecucion",'1.0',END).split(".")[0] + ".0",textTerminal.index("end"))
             textTerminal.tag_config("code", foreground="RED")
         elif "☺" in code:
             textTerminal.tag_add("code", str(int(textTerminal.index("end").split(".")[0]) - 2) + ".0",

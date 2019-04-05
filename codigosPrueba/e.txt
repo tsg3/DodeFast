@@ -10,8 +10,7 @@ DCL m DEFAULT 2/1;
 
 m = n;
 
-ENCASO 
-CUANDO x < 10 ENTONS
+ENCASO CUANDO x < 10 ENTONS
 { x = 100 }
 SINO
 { x = 0 }
@@ -44,13 +43,5 @@ DCL z2 DEFAULT x;
 DCL z3 DEFAULT y
 INICIO:
 Aleatorio();
-z2 = x + ggg
 FINAL;
 FINPROC
-
-
-
-
-
-
-
