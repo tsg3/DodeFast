@@ -2,16 +2,23 @@ import time
 import serial
 
 print("INICIA")
-port = "/dev/tty.HC-06-DevB"
+port = "COM6"
 bluetooth = serial.Serial(port, 9600)
 print("Conectado")
 bluetooth.flushInput()
-cola = [""]
-for i in range(len(cola)):
-    print("Enviando" + str(cola[i]))
-    bluetooth.write(b"BOOP " + str.encode(cola[i]))
-    respuesta = bluetooth.readline()
-    print(respuesta.decode())
+imput = ""
+respuesta = "y"
+
+while True:
+    imput = input("ENVIO: ")
+    if imput == 'f':
+        break
+    bluetooth.write(str.encode(imput))
+    while respuesta.strip()[-1] != '#':
+        respuesta += bluetooth.read().decode()
+    print(respuesta)
+    respuesta = "y"
     time.sleep(0.1)
+
 bluetooth.close()
 print("FINALIZADO")
