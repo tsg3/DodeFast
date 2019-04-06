@@ -141,7 +141,7 @@ def printTerminal(code, delete):
         while code[count].isdigit():
             len_line += code[count]
             count += 1
-        textCommand.tag_add("line_error",len_line+'.0',len_line+'.end')
+        textCommand.tag_add("line_error", len_line+'.0', len_line+'.end')
     if delete:
         textTerminal.delete('1.0', END)
         textTerminal.insert(END, titleMessage + code.replace("☺", "").replace("☻", "") + "\n")

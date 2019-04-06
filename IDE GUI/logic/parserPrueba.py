@@ -878,6 +878,7 @@ def run(p):
                     error = True
                     st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
                          "!\n--> No se ingreso la cantidad correcta de parametros para ejecutar este procedimiento."
+
                 else:
                     proc_called = True
                     i = 0
@@ -903,6 +904,7 @@ def run(p):
                     lvariables.clear()
                     if not error:
                         st += "\n--> Ejecucion de procedimiento finalizada"
+                    time.sleep(0.0005)
     else:
         return p
 
@@ -911,11 +913,11 @@ def run(p):
 
 
 def parse_code(code):
-    code = code.strip()
-    parser.parse(code)
     global st
     global error
     global line
+    code = code.strip()
+    parser.parse(code)
     final_st = st
     st = ''
     error_Found = error
@@ -947,9 +949,6 @@ def separate_code(code):
     n = len(repita)
     w = 0
     inside_while = False
-    if n != len(mientras):
-        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ No existe un balanceo correcto de 'REPITA-MIENTRAS'☻"
-        return 'error'
 
     haga = []
     findesde = []
@@ -966,9 +965,6 @@ def separate_code(code):
     p = len(haga)
     l = 0
     inside_do = False
-    if p != len(findesde):
-        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ No existe un balanceo correcto de 'HAGA-FINDESDE'☻"
-        return 'error'
 
     x = 0
     for i in code:
@@ -994,9 +990,6 @@ def separate_code(code):
     lista = []
     n = len(pos)
     y = 0
-    if openbrace != 0:
-        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ No existe un balanceo correcto de '{}'☻"
-        return 'error'
     if len(pos) == 0:
         return code
     else:
@@ -1007,20 +1000,22 @@ def separate_code(code):
                 lista.append(code[pos[y - 1] + 1:pos[y]])
             y += 1
         lista.append(code[pos[-1] + 1:])
-        if lista[-1] == "":
-            lista = lista[:-1]
         return lista
 
 
 def get_proc(code):
     global st
+    global lineError
+    global procedimientos
     if len(code) == 0:
         return {}
     else:
         if code.count("PROC") == 0:
             return {}
         elif code.count("PROC") != 2 * code.count("FINPROC"):
-            st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ Toda sentencia PROC debe ser encapsulado entre PROC - FINPROC☻"
+            st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ " \
+                 "Toda sentencia PROC debe ser encapsulado entre PROC - FINPROC☻"
+            time.sleep(0.0005)
             return "error"
         else:
             procs = {}
@@ -1053,50 +1048,130 @@ def get_proc(code):
                                     counter2 += 1
                                 counter1 += 1
                             if repetidos == True:
-                                st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ Parámetros repetidos en PROC "+proc_name+"☻"
+                                st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ " \
+                                     "Parámetros repetidos en PROC " + proc_name + "☻"
+                                time.sleep(0.0005)
                                 return "error"
 
                             count1 = proc.find("INICIO")
                             count2 = proc.find("FINAL")
                             if count1 != -1 and count2 != -1:
                                 declarations = proc[count4 + 1:count1].split(";")
+                                #print("DEC", declarations)
+                                if not verificar_ultimo(declarations[-1]):
+                                    lineError = declarations[-1]
+                                    procs[proc_name] = (tuple(params), [], list(filter(None, declarations)))
+                                    procedimientos = procs
+                                    #print(procedimientos)
+                                    st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ " \
+                                         "Ausencia de ';' en la linea " + str(get_line_error()) + "!☻"
+                                    time.sleep(0.0005)
+                                    return "error"
                                 proc_code = get_code(proc[count1:], True)
                                 if proc_code != "error":
                                     proc_code = separate_code(proc_code)
+                                    if type(proc_code) == str and proc_code.strip() != "":
+                                        lineError = proc_code
+                                        procs[proc_name] = (tuple(params), [proc_code], list(filter(None, declarations)))
+                                        procedimientos = procs
+                                        #print(procedimientos)
+                                        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ " \
+                                             "Ausencia de ';' en la linea " + str(get_line_error()) + "!☻"
+                                        time.sleep(0.0005)
+                                        return "error"
+                                    if not verificar_ultimo(proc_code[-1]):
+                                        lineError = proc_code[-1]
+                                        #print(lineError)
+                                        procs[proc_name] = (tuple(params), proc_code, list(filter(None, declarations)))
+                                        procedimientos = procs
+                                        #print(procedimientos)
+                                        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ " \
+                                             "Ausencia de ';' en la linea " + str(get_line_error()) + "!☻"
+                                        time.sleep(0.0005)
+                                        return "error"
                                     values = (tuple(params), proc_code, list(filter(None, declarations)))
                                     procs[proc_name] = values
                                     code = code[count3 + 7:]
                                 else:
                                     return "error"
                             else:
-                                st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ Error en PROC "+proc_name+" Estructura INICIO-FINAL incompleta☻"
+                                st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ " \
+                                     "Error en PROC " + proc_name + " Estructura INICIO-FINAL incompleta☻"
+                                time.sleep(0.0005)
                                 return "error"
                         else:
-                            st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ Procedimiento sin nombre la estructura es: PROC <nombre>(<parametros>) FINPROC☻"
+                            st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ " \
+                                 "Procedimiento sin nombre la estructura es: PROC <nombre>(<parametros>) FINPROC☻"
+                            time.sleep(0.0005)
                             return "error name"
                     else:
-                        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ Los parámetros del procedimiento deben encasillarse entre '( )'☻"
+                        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~" \
+                             " Los parámetros del procedimiento deben encasillarse entre '( )'☻"
+                        time.sleep(0.0005)
                         return "error"
             return procs
 
 
 def get_code(code, is_proc):
     global st
-    if code.replace("\n", " ").count("INICIO") == code.count("FINAL"):
-        if code.index('INICIO:') < code.index('FINAL;'):
-            count1 = code.index("INICIO")
-            blanco = code[:count1].replace("\n", " ").split()
-            if len(blanco) != 0 and not is_proc:
-                st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ Previo a INICIO del programa no debe existir código☻"
-                return "error"
-            count2 = code.index("FINAL;")
-            tr = code[(count1 + 7):count2]
-            return tr
+    if code.count("INICIO") == code.count("FINAL"):
+        if code[code.find("INICIO") + 6] == ":":
+            if code.find("INICIO:") != -1 and code.find("FINAL;") != -1:
+                if not is_proc:
+                    if code.find("INICIO:") < code.find("FINAL;"):
+                        if code[code.find("INICIO:"):code.find("FINAL;")].find("PROC") != -1:
+                            if code.find("INICIO:") == -1:
+                                st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ " \
+                                     "La sentencia INICIO debe finalizar con ':'☻"
+                                time.sleep(0.0005)
+                                return "error"
+                            else:
+                                st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~" \
+                                     " La sentencia FINAL debe finalizar con ';'☻"
+                                time.sleep(0.0005)
+                                return "error"
+                    else:
+                        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ " \
+                             "La sentencia INICIO debe finalizar con ':'☻"
+                        time.sleep(0.0005)
+                        return "error"
+                if code.index('INICIO:') < code.index('FINAL;'):
+                    count1 = code.find("INICIO:")
+                    blanco = code[:count1].replace("\n", " ").split()
+                    if len(blanco) != 0 and not is_proc:
+                        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO" \
+                             " ~~~ Previo a INICIO del programa no debe existir código☻"
+                        time.sleep(0.0005)
+                        return "error"
+                    count2 = code.index("FINAL;")
+                    tr = code[(count1 + 7):count2]
+
+                    return tr
+                else:
+                    st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ " \
+                         "El programa debe encasillarse entre INICIO - FINAL en ese orden☻"
+                    time.sleep(0.0005)
+                    return "error"
+            else:
+                if code.find("INICIO:") == -1:
+                    st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ " \
+                         "La sentencia INICIO debe finalizar con ':'☻"
+                    time.sleep(0.0005)
+                    return "error"
+                else:
+                    st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~" \
+                         " La sentencia FINAL debe finalizar con ';'☻"
+                    time.sleep(0.0005)
+                    return "error"
         else:
-            st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ El programa debe encasillarse entre INICIO - FINAL en ese orden☻"
+            st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~" \
+                 " La sentencia INICIO debe finalizar con ':'☻"
+            time.sleep(0.0005)
             return "error"
     else:
-        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ Sentencia INICIO - FINAL incompleta☻"
+        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ " \
+             "Sentencia INICIO - FINAL incompleta☻"
+        time.sleep(0.0005)
         return "error"
 
 
@@ -1110,8 +1185,8 @@ def get_line_error():
     global proc_called
     line_number = conteo_previo("INICIO")
     for i in codigo:
-        # print("Se evalua: " + i + " con " + lineError)
         for j in range(len(i)):
+            #print()
             if lineError == i and not proc_called:
                 while i[j] == "\n":
                     line_number += 1
@@ -1122,7 +1197,6 @@ def get_line_error():
     for i in procedimientos:
         line_number = conteo_previo("PROC " + i)
         for j in procedimientos[i][2]:
-            # print("Se evalua: " + j + " con " + lineError)
             for k in range(len(j)):
                 if lineError == j:
                     while j[k] == "\n":
@@ -1132,7 +1206,7 @@ def get_line_error():
                 if j[k] == "\n":
                     line_number += 1
         for j in procedimientos[i][1]:
-            # print("Se evalua: " + j + " con " + lineError)
+            print(lineError, j)
             for k in range(len(j)):
                 if lineError == j:
                     while j[k] == "\n":
@@ -1177,14 +1251,18 @@ def runParser(code):
         return
     procedimientos = procs
     codigo = separate_code(codigo)
-    if codigo == 'error':
-        time.sleep(0.05)
+    if not verificar_ultimo(codigo[-1]):
+        lineError = codigo[len(codigo) - 1]
+        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ " \
+             "Ausencia de ';' en la linea " + str(get_line_error()) + "☻"
+        time.sleep(0.0005)
+        flag_runnig = False
         return
     if type(codigo) == str:
         codigo = [codigo, ]
 
     for i in codigo:
-        time.sleep(0.05)
+        time.sleep(0.0005)
         lineError = i
         result = parse_code(i.replace("\n", " "))
         if len(result[0]) > 0:
@@ -1196,8 +1274,15 @@ def runParser(code):
         time.sleep(0.00001)
         st = ""
     gvariables.clear()
-    time.sleep(0.05)
+    time.sleep(0.0005)
     if st == "":
         st = "\n--> Ejecucion finalizada☺"
     time.sleep(0.00001)
     flag_runnig = False
+
+
+def verificar_ultimo(ultima):
+    for i in ultima:
+        if i != "\n":
+            return False
+    return True

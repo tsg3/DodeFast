@@ -34,13 +34,12 @@ DCL c DEFAULT 3;
 Ini(c,5);
 Inc(c,9);
 Dec(c,3);
-Mover(AA)
-
+Mover(AA);
+Aleatorio();
 FINAL;
 
 PROC proc1 (x, y)
 DCL z2 DEFAULT x;
-DCL z3 DEFAULT y
 INICIO:
 Aleatorio();
 FINAL;
