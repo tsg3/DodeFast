@@ -1,24 +1,24 @@
 import time
 import serial
 
-print("INICIA")
-port = "COM6"
-bluetooth = serial.Serial(port, 9600)
-print("Conectado")
-bluetooth.flushInput()
-imput = ""
-respuesta = "y"
+def send(comandos):
+    try:
+        port = "COM12"
+        bluetooth = serial.Serial(port, 9600)
+        print("Conectado")
+        bluetooth.flushInput()
 
-while True:
-    imput = input("ENVIO: ")
-    if imput == 'f':
-        break
-    bluetooth.write(str.encode(imput))
-    while respuesta.strip()[-1] != '#':
-        respuesta += bluetooth.read().decode()
-    print(respuesta)
-    respuesta = "y"
-    time.sleep(0.1)
-
-bluetooth.close()
-print("FINALIZADO")
+        for i in comandos:
+            j = 0
+            while j < 3:
+                bluetooth.write(str.encode(i[j*2:(j*2)+2]))
+                respuesta = "y"
+                while respuesta.strip()[-1] != '#':
+                    respuesta += bluetooth.read().decode()
+                time.sleep(0.5)
+                print(respuesta, i)
+                j += 1
+        bluetooth.close()
+        print("FINALIZADO")
+    except serial.serialutil.SerialException:
+        print('Error')

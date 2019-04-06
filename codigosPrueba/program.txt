@@ -1,0 +1,101 @@
+INICIO;
+DCL Var1;
+DCL Var2 DEFAULT 1;
+Ini(Var1,1);
+ENCASO
+CUANDO Var1 == 1 {
+ENCASO Var2
+ CUANDO = 1 ENTONS
+{ LLAMAR Movimiento1(1);
+LLAMAR Movimiento1(2);
+LLAMAR Movimiento1(3);
+LLAMAR Movimiento1(4);
+LLAMAR Movimiento1(5);
+ }
+SINO { LLAMAR Movimiento1(5); }
+FINCASO;
+SINO { LLAMAR Movimiento1(1); }
+FINCASO;
+LLAMAR Movimiento2(1);
+LLAMAR Movimiento2(2);
+LLAMAR Movimiento2(3);
+LLAMAR Movimiento2(4);
+LLAMAR Movimiento2(5);
+Ini(Var1,5)
+ENCASO
+CUANDO Var1 = 1 {
+ENCASO Var2
+ CUANDO = 1 ENTONS
+{ Inc(Var1, 9); }
+SINO { Inc(Var1, 4); }
+FINCASO;
+SINO { LLAMAR Movimiento3; }
+FINCASO;
+ENCASO
+CUANDO Var1 = 5 {
+ENCASO Var2
+ CUANDO = 100 ENTONS
+{ Inc(Var1, 9);
+ }
+SINO { LLAMAR Movimiento4; }
+FINCASO;
+SINO { Inc(Var1, 4); }
+FINCASO;
+FINAL;
+PROC Movimiento1 (Var1)
+DCL Var2 DEFAULT 1;
+INICIO:
+REPITA
+ENCASO
+CUANDO Var1 = 1
+ { Mover(AF); }
+CUANDO Var1 = 2
+ { Mover(F); }
+CUANDO Var1 = 3
+ { Mover(DFA); }
+CUANDO Var1 = 4
+ { Mover(IFA); }
+CUANDO Var1 = 5
+ { Mover(DFB); }
+SINO
+ { Inc(Var2,1); }
+FINCASO;
+MIENTRAS Var2 = 3;
+FINAL;
+PROC Movimiento2 (Var1)
+DCL Var2 DEFAULT 1;
+INICIO:
+DESDE Var2=5 HASTA 7 HAGA
+ENCASO Var1
+CUANDO = 1 ENTONS
+ { Mover(IFB); }
+CUANDO = 2 ENTONS
+ { Mover(A); }
+CUANDO = 3 ENTONS
+ { Mover(DAA); }
+CUANDO = 4 ENTONS
+ { Mover(IAA); } 
+CUANDO = 5 ENTONS
+ { Mover(DAB); }
+SINO
+ { Inc(Var2,1); }
+FINCASO;
+Fin-Desde;
+FINAL;
+PROC Movimiento3
+DCL Var2 DEFAULT 0;
+DCL Var3;
+INICIO:
+Ini(Var3,10);
+REPITA
+Mover(IAB);
+Mover(AA);
+Inc(Var2, 2);
+MIENTRAS Var2 > Var3;
+FINAL;
+PROC Movimiento4
+INICIO:
+Ini(Var3,10);
+REPITA
+Aleatorio();
+FINAL;

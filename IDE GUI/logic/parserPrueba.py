@@ -2,7 +2,9 @@ import lib.ply.lex as lex
 import lib.ply.yacc as yacc
 import random
 import time
+import logic.bluetooth
 
+buffer = []
 prevCode = ""
 codigo = []
 procedimientos = {}
@@ -22,9 +24,9 @@ error = False
 
 line = 0
 
-valid_movements = {'AF': 1, 'F': 2, 'DFA': 3, 'IFA': 4,
-                   'DFB': 5, 'IFB': 6, 'A': 7, 'DAA': 8,
-                   'IAA': 9, 'DAB': 10, 'IAB': 11, 'AA': 12}
+valid_movements = {'AF': '001011', 'F': '110121', 'DFA': '011120', 'IFA': '000010',
+                   'DFB': '011021', 'IFB': '111111', 'A': '111020', 'DAA': '201020',
+                   'IAA': '202120', 'DAB': '200020', 'IAB': '101010', 'AA': '010101'}
 
 ''' ------------------------------ ANALISIS LEXICO ------------------------------ '''
 
@@ -260,7 +262,7 @@ def p_parse(p):
           | IDEN
           | empty
     '''
-    # print(p[1])
+    #print(p[1])
     global error
     global st
     if error or type(p[1]) == str:
@@ -304,6 +306,7 @@ def p_sentence(p):
              | repeat
              | do
              | function
+             | proc
     '''
     p[0] = p[1]
 
@@ -540,9 +543,9 @@ def p_error(p):
             if parser.symstack[2].type == 'IDEN' or parser.symstack[2].type == 'CUANDO':
                 error_type += parser.symstack[2].type
 
-        stack_state_str = ' '.join([symbol.type for symbol in parser.symstack][1:])
+        #stack_state_str = ' '.join([symbol.type for symbol in parser.symstack][1:])
 
-        # print('Syntax error in input! Parser State:{} {} . {}'.format(parser.state, stack_state_str, p))
+        #print('Syntax error in input! Parser State:{} {} . {}'.format(parser.state, stack_state_str, p))
 
         # print(error_type)
         error_message = error_cases(error_type.strip())
@@ -682,13 +685,15 @@ def run(p):
 
         #   VARIABLE
         elif p[0] == 'var':
-            if p[1] not in variables:
+            if p[1].strip() not in variables:
                 error = True
                 st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
                      "!\n--> La variable " + p[1] + " no ha sido declarada."
+                print(variables)
+                print(p[1])
                 return ""
             else:
-                return variables[p[1]]
+                return variables[p[1].strip()]
 
         #   DECLARACION
         elif p[0] == 'DCL':
@@ -703,7 +708,7 @@ def run(p):
                          "!\n--> La variable " + p[1] + " ya ha sido declarada."
                 else:
                     assignment = run(p[2])
-                    if not assignment:
+                    if type(assignment) == bool and not assignment:
                         error = True
                     else:
                         variables[p[1]] = assignment
@@ -839,12 +844,13 @@ def run(p):
                 i = 1
                 while i < 11:
                     move = random.choice(list(valid_movements.items()))
-                    st += "\n--> Movimiento aleatorio " + str(i) + ": Mover hacia " + move[0] + " = " + str(
-                        move[1]) + "!\n"
+                    st += "\n--> Movimiento aleatorio: Mover hacia " + move[0] + " = " + move[1] + "!\n"
                     i += 1
+                    buffer.append(move[1])
             elif p[1] == 'Mover':
                 if p[2] in valid_movements:
-                    st += "\n--> Mover hacia " + p[2] + " = " + str(valid_movements[p[2]]) + "!"
+                    st += "\n--> Mover hacia " + p[2] + " = " + valid_movements[p[2]] + "!"
+                    buffer.append(valid_movements[p[2]])
                 else:
                     error = True
                     st = "\n--> ERROR SEMANTICO ~~~ Sentencia ejecutada en la linea " + str(get_line_error()) + \
@@ -947,6 +953,8 @@ def separate_code(code):
             mientras.append(digit)
         i += 1
     n = len(repita)
+    if len(mientras) < n:
+        n = len(mientras)
     w = 0
     inside_while = False
 
@@ -963,9 +971,10 @@ def separate_code(code):
             findesde.append(digit)
         y += 1
     p = len(haga)
+    if len(findesde) < p:
+        p = len(findesde)
     l = 0
     inside_do = False
-
     x = 0
     for i in code:
         if w < n:
@@ -1058,6 +1067,7 @@ def get_proc(code):
                             if count1 != -1 and count2 != -1:
                                 declarations = proc[count4 + 1:count1].split(";")
                                 #print("DEC", declarations)
+                                #print(declarations,verificar_ultimo(declarations[-1]))
                                 if not verificar_ultimo(declarations[-1]):
                                     lineError = declarations[-1]
                                     procs[proc_name] = (tuple(params), [], list(filter(None, declarations)))
@@ -1237,6 +1247,8 @@ def runParser(code):
     global codigo
     global prevCode
     global lineError
+    global buffer
+    buffer = []
     prevCode = code
     codigo = get_code(code, False)
     error = False
@@ -1277,12 +1289,13 @@ def runParser(code):
     time.sleep(0.0005)
     if st == "":
         st = "\n--> Ejecucion finalizada☺"
+        logic.bluetooth.send(buffer)
     time.sleep(0.00001)
     flag_runnig = False
 
 
 def verificar_ultimo(ultima):
     for i in ultima:
-        if i != "\n":
+        if i != "\n" and i != " ":
             return False
     return True

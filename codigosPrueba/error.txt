@@ -1,0 +1,26 @@
+INICIO;
+
+    DCL  5Identficador1;
+    DCL Ide%com;
+    DCL @_#;
+    DCL  B DEFAULT  "100";
+    DCL MiVariable;
+    DCL MiVariable;
+    DCL Var1;
+    DCL Var2 DEFAULT 1;
+    DCL  B DEFAULT 100 NOT NULL;
+
+    Inc(Var3, 5);
+
+    ENCASO
+    CUANDO Var4  < 5 { Mover(DFB);  }
+    FINCASO;
+    LLAMAR Proc1 (7);
+FINAL;
+FINAL;
+
+    PROC  Proc1
+    DCL  Var1;
+    INICIO:  Mover(5);
+
+    FINAL;
