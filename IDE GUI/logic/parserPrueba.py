@@ -928,6 +928,7 @@ def parse_code(code):
 
 
 def separate_code(code):
+    global st
     openbrace = 0
     pos = []
 
@@ -946,6 +947,9 @@ def separate_code(code):
     n = len(repita)
     w = 0
     inside_while = False
+    if n != len(mientras):
+        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ No existe un balanceo correcto de 'REPITA-MIENTRAS'☻"
+        return 'error'
 
     haga = []
     findesde = []
@@ -962,6 +966,9 @@ def separate_code(code):
     p = len(haga)
     l = 0
     inside_do = False
+    if p != len(findesde):
+        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ No existe un balanceo correcto de 'HAGA-FINDESDE'☻"
+        return 'error'
 
     x = 0
     for i in code:
@@ -987,6 +994,9 @@ def separate_code(code):
     lista = []
     n = len(pos)
     y = 0
+    if openbrace != 0:
+        st = "\n--> Ejecucion finalizada debido a:\n--> ERROR SINTÁCTICO ~~~ No existe un balanceo correcto de '{}'☻"
+        return 'error'
     if len(pos) == 0:
         return code
     else:
@@ -1167,6 +1177,9 @@ def runParser(code):
         return
     procedimientos = procs
     codigo = separate_code(codigo)
+    if codigo == 'error':
+        time.sleep(0.05)
+        return
     if type(codigo) == str:
         codigo = [codigo, ]
 
